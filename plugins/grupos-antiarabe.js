@@ -1,4 +1,4 @@
-let handler = async (m, { conn, isAdmin, isBotAdmin }) => {
+/*let handler = async (m, { conn, isAdmin, isBotAdmin }) => {
   // Comando de configuración
   if (m.text && ['!antiarabe', '!antiarab', '!antiarabic'].includes(m.text.toLowerCase().split(' ')[0])) {
     if (!m.isGroup) return m.reply('❌ Solo en grupos.')
@@ -64,4 +64,4 @@ handler.group = true
 handler.admin = true
 handler.botAdmin = true
 
-export default handler
+export default handler/*
