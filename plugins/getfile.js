@@ -100,7 +100,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
 
 handler.help = ['getfile <ruta|plugin>']
 handler.tags = ['owner']
-handler.command = /^(getfile|sendfile|file|get)$/i
+handler.command = /^(getfile|sendfile|file)$/i
 
 
 export default handler
