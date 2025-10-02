@@ -71,6 +71,9 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
     let failedCount = 0
     let results = []
 
+    // URL de imagen para invitaciones
+    const invitationImage = 'https://i.postimg.cc/PrMRZC2C/image.jpg' // Puedes cambiar esta URL
+
     // Procesar cada número/usuario
     for (let number of numbers) {
       try {
@@ -97,31 +100,52 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
               addedCount++
               results.push(`✅ ${number.split('@')[0]} (Contacto - Agregado)`)
               console.log('Contacto agregado exitosamente')
-              
+
             } catch (addError) {
               console.log('Error al agregar contacto:', addError)
               failedCount++
               results.push(`❌ ${number.split('@')[0]} (Contacto - No se pudo agregar)`)
             }
           } else {
-            // INTENTO 2: No es contacto - enviar enlace por privado
+            // INTENTO 2: No es contacto - enviar enlace por privado con imagen
             try {
-              const inviteMessage = `🔗 *Invitación al Grupo*\n\n` +
-                `¡Hola! Has sido invitado/a a unirte al grupo:\n\n` +
-                `*${groupName}*\n\n` +
+              const inviteMessage = `🎉 *¡INVITACIÓN AL GRUPO!* 🎉\n\n` +
+                `🔹 *Grupo:* ${groupName}\n` +
                 `👤 *Invitado por:* ${conn.getName(m.sender) || 'Un administrador'}\n\n` +
-                `🔗 *Enlace de invitación:*\n${inviteLink}\n\n` +
-                `¡Haz clic en el enlace para unirte!`
+                `📌 *Para unirte al grupo, haz clic en el siguiente enlace:*\n` +
+                `🔗 ${inviteLink}\n\n` +
+                `¡Te esperamos! 👋`
 
-              await conn.sendMessage(number, { text: inviteMessage })
+              // Enviar mensaje con imagen
+              await conn.sendMessage(number, { 
+                image: { url: invitationImage },
+                caption: inviteMessage
+              })
+              
               invitedCount++
-              results.push(`📨 ${number.split('@')[0]} (Enlace enviado)`)
-              console.log('Enlace enviado exitosamente')
+              results.push(`📨 ${number.split('@')[0]} (Invitación con imagen enviada)`)
+              console.log('Invitación con imagen enviada exitosamente')
 
             } catch (inviteError) {
-              console.log('Error enviando enlace:', inviteError)
-              failedCount++
-              results.push(`❌ ${number.split('@')[0]} (No se pudo enviar enlace)`)
+              console.log('Error enviando invitación:', inviteError)
+              
+              // Intentar sin imagen como respaldo
+              try {
+                const backupMessage = `🎉 *Invitación al Grupo*\n\n` +
+                  `*${groupName}*\n\n` +
+                  `👤 Invitado por: ${conn.getName(m.sender) || 'Administrador'}\n\n` +
+                  `🔗 Enlace: ${inviteLink}\n\n` +
+                  `¡Haz clic para unirte!`
+                  
+                await conn.sendMessage(number, { text: backupMessage })
+                invitedCount++
+                results.push(`📨 ${number.split('@')[0]} (Invitación enviada)`)
+                console.log('Invitación de respaldo enviada')
+                
+              } catch (backupError) {
+                failedCount++
+                results.push(`❌ ${number.split('@')[0]} (No se pudo enviar invitación)`)
+              }
             }
           }
 
@@ -143,12 +167,12 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
 
     // Mostrar resultados
     let resultMessage = `📊 **Resultado de Invitaciones**\n\n`
-    
+
     if (addedCount > 0) {
       resultMessage += `✅ **Agregados directamente:** ${addedCount}\n`
     }
     if (invitedCount > 0) {
-      resultMessage += `📨 **Enlaces enviados:** ${invitedCount}\n`
+      resultMessage += `📨 **Invitaciones enviadas:** ${invitedCount}\n`
     }
     if (failedCount > 0) {
       resultMessage += `❌ **Fallidos:** ${failedCount}\n`
@@ -165,7 +189,7 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
     resultMessage += `🔗 **Enlace del grupo:**\n${inviteLink}\n\n`
 
     if (addedCount > 0 || invitedCount > 0) {
-      resultMessage += `🎉 **¡Proceso completado!**`
+      resultMessage += `🎉 **¡Proceso completado exitosamente!**`
     } else {
       resultMessage += `📝 **Usa el enlace para invitar manualmente**`
     }
