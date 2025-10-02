@@ -55,8 +55,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       try {
         // Usar wa-sticker-formatter
         const stickerOptions = {
-          pack: 'Itsuki Nakano',
-          author: 'Tutora Virtual',
+          pack: 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ',
+          author: '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑',
           type: StickerTypes.FULL,
           categories: ['🎨', '✨'],
           quality: 50,
