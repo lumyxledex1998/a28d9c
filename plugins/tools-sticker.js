@@ -1,110 +1,65 @@
-import { Sticker, createSticker, StickerTypes } from 'wa-sticker-formatter'
-
-let handler = async (m, { conn, command, usedPrefix }) => {
+let handler = async (m, { conn, usedPrefix }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
   
-  // Verificar si hay imagen, video o sticker para convertir
   if (!m.quoted && !(m.message?.imageMessage || m.message?.videoMessage)) {
     return conn.reply(m.chat, `
-🍙🎨 *Itsuki Nakano - Creador de Stickers* ✨
+🍙🎨 *Itsuki Nakano - Creador de Stickers*
 
-🌟 ¡Como tutora creativa, puedo ayudarte a crear stickers!
-
-📝 *Formas de usar:*
+📝 *Cómo usar:*
 • Responde a una imagen con !s
-• Responde a un video con !s 
-• Responde a un sticker con !s
-• Envía una imagen/video con !s
+• Responde a un video con !s
+• Envía imagen/video con !s
 
-💡 *Ejemplos:*
-• Responde a una foto con !s
-• Envía un video corto con !s
-• Responde a un sticker con !s
-
-🎯 *Formatos soportados:*
-🖼️ Imágenes (JPG, PNG, GIF)
-🎥 Videos (MP4, cortos)
-📏 Stickers (convertir formato)
-
-🍱 ¡Dale vida a tus conversaciones! 🎨✨
+🎯 *Formatos:* 🖼️ Imágenes 🎥 Videos
     `.trim(), m, ctxWarn)
   }
 
   try {
-    await conn.reply(m.chat, '🍙🎨 *Creando tu sticker...* ⏳✨', m, ctxOk)
+    await conn.reply(m.chat, '🍙🎨 *Creando sticker...* ⏳', m, ctxOk)
     
     let media
-    let packname = 'Itsuki Nakano'
-    let author = 'Tutora Virtual'
+    let isVideo = false
     
-    // Obtener el medio (imagen, video o sticker citado)
+    // Obtener el medio
     if (m.quoted) {
       if (m.quoted.mtype === 'imageMessage') {
         media = await m.quoted.download()
       } else if (m.quoted.mtype === 'videoMessage') {
         media = await m.quoted.download()
+        isVideo = true
       } else if (m.quoted.mtype === 'stickerMessage') {
+        // Convertir sticker a imagen
         media = await m.quoted.download()
       } else {
-        return conn.reply(m.chat, '❌ *Formato no soportado*\nSolo imágenes, videos y stickers.', m, ctxErr)
+        return conn.reply(m.chat, '❌ Formato no soportado', m, ctxErr)
       }
     } else if (m.message?.imageMessage) {
       media = await conn.downloadMediaMessage(m)
     } else if (m.message?.videoMessage) {
       media = await conn.downloadMediaMessage(m)
-    } else {
-      return conn.reply(m.chat, '❌ *No se encontró medio válido*', m, ctxErr)
+      isVideo = true
     }
 
-    if (!media) {
-      return conn.reply(m.chat, '❌ *Error al descargar el medio*', m, ctxErr)
-    }
+    if (!media) return conn.reply(m.chat, '❌ Error al descargar', m, ctxErr)
 
-    // Configuración del sticker
-    const stickerOptions = {
-      pack: packname,
-      author: author,
-      type: StickerTypes.FULL,
-      categories: ['🤩', '🎉'],
-      id: '12345',
-      quality: 50,
-      background: 'transparent'
-    }
-
-    // Crear el sticker
-    const sticker = new Sticker(media, stickerOptions)
-    const stickerBuffer = await sticker.toBuffer()
-
-    // Enviar el sticker
+    // Usar el método nativo de Baileys para crear sticker
     await conn.sendMessage(m.chat, {
-      sticker: stickerBuffer
+      sticker: media,
+      isVideo: isVideo
     }, { quoted: m })
 
-    // Mensaje de confirmación
-    await conn.reply(m.chat, 
-      `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
-      `🏷️ *Pack:* ${packname}\n` +
-      `✍️ *Autor:* ${author}\n\n` +
-      `📖 *"¡Tu sticker está listo para usar!"* 🍱🎉`,
-      m, ctxOk
-    )
+    await conn.reply(m.chat, '🍙✅ *¡Sticker creado!* 🎨', m, ctxOk)
 
   } catch (error) {
-    console.error('Error creando sticker:', error)
-    await conn.reply(m.chat, 
-      `❌ *Error al crear el sticker*\n\n` +
-      `🍙 *"¡Lo siento! No pude crear tu sticker."*\n\n` +
-      `🔧 *Error:* ${error.message}\n\n` +
-      `📖 *¡Intenta con otra imagen o video!* 🍱✨`,
-      m, ctxErr
-    )
+    console.error('Error sticker:', error)
+    await conn.reply(m.chat, '❌ Error al crear sticker', m, ctxErr)
   }
 }
 
-handler.help = ['sticker', 's', 'stiker']
+handler.help = ['sticker', 's']
 handler.tags = ['tools']
-handler.command = ['sticker', 's', 'stiker', 'stick']
+handler.command = ['sticker', 's', 'stiker']
 
 export default handler
