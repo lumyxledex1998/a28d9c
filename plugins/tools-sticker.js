@@ -1,16 +1,16 @@
-import { sticker } from '../lib/sticker.js';
+import { Sticker, createSticker, StickerTypes } from 'wa-sticker-formatter'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
-  
-  let stiker = false;
-  
+
+  let stiker = false
+
   try {
-    let q = m.quoted ? m.quoted : m;
-    let mime = (q.msg || q).mimetype || q.mediaType || '';
-    
+    let q = m.quoted ? m.quoted : m
+    let mime = (q.msg || q).mimetype || q.mediaType || ''
+
     if (!/webp|image|video/g.test(mime) && !args[0]) {
       return conn.reply(m.chat, `
 🍙🎨 *Itsuki Nakano - Creador de Stickers* ✨
@@ -47,24 +47,48 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         }
       }
 
-      let img = await q.download?.();
+      let img = await q.download?.()
       if (!img) {
         return conn.reply(m.chat, '❌ *Error al descargar el archivo*', m, ctxErr)
       }
 
       try {
-        stiker = await sticker(img, false, 'Itsuki Nakano', 'Tutora Virtual');
+        // Usar wa-sticker-formatter
+        const stickerOptions = {
+          pack: 'Itsuki Nakano',
+          author: 'Tutora Virtual',
+          type: StickerTypes.FULL,
+          categories: ['🎨', '✨'],
+          quality: 50,
+          background: 'transparent'
+        }
+
+        const sticker = new Sticker(img, stickerOptions)
+        stiker = await sticker.toBuffer()
+
       } catch (e) {
-        console.error(e);
-        return conn.reply(m.chat, '❌ *Error al crear el sticker*', m, ctxErr)
+        console.error(e)
+        return conn.reply(m.chat, '❌ *Error al crear el sticker con wa-sticker-formatter*', m, ctxErr)
       }
-      
+
     } else if (args[0]) {
       if (isUrl(args[0])) {
         try {
-          stiker = await sticker(false, args[0], 'Itsuki Nakano', 'Tutora Virtual');
+          // Para URLs usar wa-sticker-formatter
+          const stickerOptions = {
+            pack: 'Itsuki Nakano',
+            author: 'Tutora Virtual',
+            type: StickerTypes.FULL,
+            categories: ['🎨', '✨'],
+            quality: 50,
+            background: 'transparent'
+          }
+
+          const sticker = new Sticker(args[0], stickerOptions)
+          stiker = await sticker.toBuffer()
+
         } catch (e) {
-          console.error(e);
+          console.error(e)
           return conn.reply(m.chat, '❌ *Error con la URL proporcionada*', m, ctxErr)
         }
       } else {
@@ -73,21 +97,11 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     }
 
     if (stiker) {
-      await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, true, { 
-        contextInfo: { 
-          'forwardingScore': 200, 
-          'isForwarded': false,
-          externalAdReply: {
-            showAdAttribution: false,
-            title: '🍙 Itsuki Nakano',
-            body: 'Sticker Creado',
-            mediaType: 2,
-            sourceUrl: 'https://chat.whatsapp.com/KkAYjIFHOGXKNjUN6IkUqf',
-            thumbnail: await conn.getFile('https://i.imgur.com/8S5eC0v.png').data
-          }
-        }
+      // Enviar el sticker
+      await conn.sendMessage(m.chat, {
+        sticker: stiker
       }, { quoted: m })
-      
+
       await conn.reply(m.chat, 
         `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
         `🏷️ *Pack:* Itsuki Nakano\n` +
@@ -109,14 +123,14 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       m, ctxErr
     )
   }
-};
+}
 
 handler.help = ['sticker', 's', 'stiker']
 handler.tags = ['tools']
 handler.command = ['s', 'sticker', 'stiker']
 
-export default handler;
+export default handler
 
 const isUrl = (text) => {
-  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png|webp)/, 'gi'));
-};
+  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png|webp)/, 'gi'))
+}
