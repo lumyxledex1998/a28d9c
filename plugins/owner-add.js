@@ -3,21 +3,19 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  if (!m.isGroup) return conn.reply(m.chat, '🍙 ❌ Este comando solo funciona en grupos.', m, ctxErr)
-  if (!isAdmin) return conn.reply(m.chat, '📚 ⚠️ Necesitas ser administrador.', m, ctxErr)
-  if (!isBotAdmin) return conn.reply(m.chat, '🍱 🚫 Necesito ser administradora.', m, ctxErr)
+  if (!m.isGroup) return conn.reply(m.chat, '❌ Este comando solo funciona en grupos.', m, ctxErr)
+  if (!isAdmin) return conn.reply(m.chat, '⚠️ Necesitas ser administrador.', m, ctxErr)
+  if (!isBotAdmin) return conn.reply(m.chat, '⚠️ Necesito ser administradora.', m, ctxErr)
 
   if (!text) {
     return conn.reply(m.chat, `
-🍙📚 Itsuki Nakano - Invitar al Grupo
+📝 **Uso:** !add <número>
 
-📝 *Uso:* !add <número>
-
-💡 *Ejemplos:*
+💡 **Ejemplos:**
 • !add 51987654321
 • !add 51999999999,51888888888
 
-🎯 *Agrega personas directamente al grupo*
+🎯 Agrega personas directamente al grupo
     `.trim(), m, ctxWarn)
   }
 
@@ -43,10 +41,9 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
       return conn.reply(m.chat, '❌ No se encontraron números válidos.', m, ctxErr)
     }
 
-    await conn.reply(m.chat, `🍙📱 Procesando ${numbers.length} número(s)... 👥`, m, ctxOk)
+    await conn.reply(m.chat, `📱 Procesando ${numbers.length} número(s)...`, m, ctxOk)
 
     let addedCount = 0
-    let invitedCount = 0
     let failedCount = 0
     let results = []
 
@@ -56,93 +53,64 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
         // Verificar si el número existe en WhatsApp
         const contact = await conn.onWhatsApp(number)
         if (contact && contact.length > 0 && contact[0].exists) {
-          
-          // INTENTO 1: Agregar directamente al grupo
+
+          // Intentar agregar directamente al grupo
           try {
             await conn.groupParticipantsUpdate(m.chat, [number], 'add')
             addedCount++
             results.push(`✅ ${number.split('@')[0]} (Agregado al grupo)`)
             
           } catch (addError) {
-            // INTENTO 2: Enviar invitación al privado
-            try {
-              await conn.sendMessage(number, {
-                text: `🍙📚 *Invitación de Itsuki Nakano*\n\n¡Hola! Has sido invitado/a a unirte al grupo:\n\n*${groupName}*\n\n🔗 ${inviteLink}\n\n*Invitado por:* @${m.sender.split('@')[0]}`,
-                mentions: [m.sender]
-              })
-              invitedCount++
-              results.push(`📨 ${number.split('@')[0]} (Invitación enviada)`)
-              
-            } catch (inviteError) {
-              failedCount++
-              results.push(`❌ ${number.split('@')[0]} (No se pudo invitar)`)
-            }
+            // Si falla la adición directa, simplemente contar como fallido
+            failedCount++
+            results.push(`❌ ${number.split('@')[0]} (No se pudo agregar)`)
           }
-          
+
         } else {
           failedCount++
           results.push(`❌ ${number.split('@')[0]} (No en WhatsApp)`)
         }
 
         // Esperar un poco entre procesamientos para evitar spam
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        await new Promise(resolve => setTimeout(resolve, 1000))
 
       } catch (error) {
         failedCount++
-        results.push(`❌ ${number.split('@')[0]} (Error: ${error.message})`)
-        console.log('Error procesando:', error)
+        results.push(`❌ ${number.split('@')[0]} (Error)`)
       }
     }
 
     // Mostrar resultados
-    let resultMessage = `🍙📊 *Resultado de Invitaciones*\n\n`
+    let resultMessage = `📊 **Resultado de Invitaciones**\n\n`
 
     if (addedCount > 0) {
-      resultMessage += `✅ *Agregados al grupo:* ${addedCount}\n`
-    }
-    if (invitedCount > 0) {
-      resultMessage += `📨 *Invitaciones enviadas:* ${invitedCount}\n`
+      resultMessage += `✅ **Agregados al grupo:** ${addedCount}\n`
     }
     if (failedCount > 0) {
-      resultMessage += `❌ *Fallidos:* ${failedCount}\n`
+      resultMessage += `❌ **Fallidos:** ${failedCount}\n`
     }
 
-    resultMessage += `\n🔗 *Enlace del grupo:*\n${inviteLink}\n\n`
+    resultMessage += `\n🔗 **Enlace del grupo:**\n${inviteLink}\n\n`
 
     // Mostrar detalles si hay pocos números
     if (numbers.length <= 5) {
-      resultMessage += `📋 *Detalles:*\n${results.join('\n')}\n\n`
+      resultMessage += `📋 **Detalles:**\n${results.join('\n')}\n\n`
     }
 
-    if (addedCount > 0 || invitedCount > 0) {
-      resultMessage += `🎯 *"¡Invitaciones procesadas exitosamente!"* 🍙`
+    if (addedCount > 0) {
+      resultMessage += `✅ Invitaciones procesadas exitosamente`
     } else {
-      resultMessage += `📝 *"Usa el enlace para invitar manualmente"* 🍙`
+      resultMessage += `📝 Usa el enlace para invitar manualmente`
     }
 
     await conn.reply(m.chat, resultMessage, m, ctxOk)
 
-    // Si no se pudo agregar/invitar a nadie, mostrar QR
-    if (addedCount === 0 && invitedCount === 0) {
-      try {
-        const qrCode = await conn.generateInviteQR(m.chat)
-        if (qrCode && qrCode.qr) {
-          await conn.sendMessage(m.chat, {
-            image: { url: qrCode.qr },
-            caption: `📱 *Código QR para unirse al grupo*`
-          }, { quoted: m })
-        }
-      } catch (qrError) {
-        console.log('Error generando QR:', qrError)
-      }
-    }
-
   } catch (error) {
     console.error('Error en add:', error)
     await conn.reply(m.chat, 
-      `❌ *Error*\n\n` +
+      `❌ **Error**\n\n` +
       `No se pudieron procesar las invitaciones.\n` +
-      `Intenta con el enlace manual: ${await conn.groupInviteCode(m.chat).then(code => `https://chat.whatsapp.com/${code}`)}`,
+      `Intenta con el enlace manual: ${inviteLink || 'Error obteniendo enlace'}`,
       m, ctxErr
     )
   }
