@@ -72,7 +72,7 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
     let results = []
 
     // URL de imagen para invitaciones
-    const invitationImage = 'https://i.postimg.cc/PrMRZC2C/image.jpg' // Puedes cambiar esta URL
+    const invitationImage = 'https://files.catbox.moe/w491g3.jpg' // Puedes cambiar esta URL
 
     // Procesar cada número/usuario
     for (let number of numbers) {
