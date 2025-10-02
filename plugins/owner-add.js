@@ -215,7 +215,7 @@ let handler = async (m, { conn, text, isBotAdmin, isAdmin }) => {
 }
 
 handler.help = ['add <número|@usuario|responder>']
-handler.tags = ['group']
+handler.tags = ['owner']
 handler.command = ['add', 'invitar', 'invite', 'agregar']
 handler.group = true
 handler.admin = true
