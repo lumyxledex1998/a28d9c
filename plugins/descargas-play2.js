@@ -2,7 +2,7 @@ import yts from 'yt-search';
 import fetch from 'node-fetch';
 
 async function apiJoseDev(url) {
-  const apiUrl = `https://xrljosedevapi.vercel.app/download/ytmp4?url=${encodeURIComponent(url)}&apikey=Play`;
+          const apiURL = `https://api.sylphy.xyz/download/ytmp4?url=${encodeURIComponent(url)}&apikey=sylphy-fbb9`;
   const res = await fetch(apiUrl);
   const data = await res.json();
 
