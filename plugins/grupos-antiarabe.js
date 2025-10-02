@@ -21,7 +21,7 @@ let handler = async (m, { conn, isAdmin, isBotAdmin }) => {
     }
 
     if (!global.antiArab) global.antiArab = {}
-    
+
     switch (action) {
       case 'activar':
       case 'on':
@@ -51,11 +51,11 @@ let handler = async (m, { conn, isAdmin, isBotAdmin }) => {
 }
 
 // Handler separado para la detección automática
-handler.before = async (m, { conn, isAdmin, isBotAdmin }) => {
+handler.before = async (m) => {
   if (m.isBaileys || !m.isGroup) return
-  
+
   // Verificar si el anti-árabe está activo
-  if (!global.antiArab || global.antiArab[m.chat] === false) return
+  if (!global.antiArab || global.antiArab[m.chat] !== true) return
 
   const messageText = m.text || m.caption || ''
 
@@ -65,37 +65,48 @@ handler.before = async (m, { conn, isAdmin, isBotAdmin }) => {
 
   if (!hasArabic) return
 
-  // Excepciones
-  const sender = m.sender
-  if (isAdmin) return // Los admins pueden escribir en árabe
-  if (sender === conn.user.jid) return
-
   try {
-    console.log(`🔍 Detectado texto árabe de: ${sender}`)
+    console.log(`🔍 Detectado texto árabe de: ${m.sender}`)
     
+    // Obtener información del grupo para verificar permisos
+    const groupMetadata = await m.conn.groupMetadata(m.chat).catch(() => null)
+    if (!groupMetadata) return
+    
+    const participants = groupMetadata.participants
+    const userParticipant = participants.find(p => p.id === m.sender)
+    const botParticipant = participants.find(p => p.id === m.conn.user.jid)
+    
+    // Verificar si el usuario es admin
+    if (userParticipant?.admin) {
+      console.log('✅ Usuario es admin, no se expulsa')
+      return
+    }
+    
+    // Verificar si el bot es admin
+    if (!botParticipant?.admin) {
+      console.log('❌ Bot no es admin, no puede expulsar')
+      return
+    }
+
     // 1. Eliminar el mensaje con texto árabe
-    if (isBotAdmin && m.key) {
-      await conn.sendMessage(m.chat, { 
+    if (m.key) {
+      await m.conn.sendMessage(m.chat, { 
         delete: { 
           remoteJid: m.chat, 
           fromMe: false, 
           id: m.key.id, 
-          participant: sender 
+          participant: m.sender 
         } 
       })
       console.log('✅ Mensaje eliminado')
     }
 
     // 2. EXPULSAR AL USUARIO DEL GRUPO
-    if (isBotAdmin) {
-      await conn.groupParticipantsUpdate(m.chat, [sender], 'remove')
-      console.log('✅ Usuario expulsado')
-      
-      // Mensaje corto de expulsión
-      await conn.reply(m.chat, '🚫 Usuario expulsado por texto árabe', m)
-    } else {
-      console.log('❌ Bot no es admin, no puede expulsar')
-    }
+    await m.conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+    console.log('✅ Usuario expulsado')
+
+    // Mensaje corto de expulsión
+    await m.conn.sendMessage(m.chat, { text: '🚫 Usuario expulsado por texto árabe' })
 
   } catch (error) {
     console.error('❌ Error en anti-árabe:', error)
