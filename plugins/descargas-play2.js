@@ -2,12 +2,12 @@ import yts from 'yt-search';
 import fetch from 'node-fetch';
 
 async function apiJoseDev(url) {
-          const apiURL = `https://api.sylphy.xyz/download/ytmp4?url=${encodeURIComponent(url)}&apikey=sylphy-fbb9`;
+  const apiURL = `https://api.sylphy.xyz/download/ytmp4?url=${encodeURIComponent(url)}&apikey=sylphy-fbb9`;
   const res = await fetch(apiURL);
   const data = await res.json();
 
-  if (!data.status || !data.result?.url) throw new Error('API JoseDev no devolvió datos válidos');
-  return { url: data.result.url, title: data.result.title || 'Video sin título' };
+  if (!data.status || !data.res?.url) throw new Error('API JoseDev no devolvió datos válidos');
+  return { url: data.res.url, title: data.res.title || 'Video sin título XD' }; 
 }
 
 async function ytdl(url) {
