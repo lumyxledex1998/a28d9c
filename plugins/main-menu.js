@@ -104,7 +104,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
 handler.help = ['menu']
 handler.tags = ['main']
-handler.command = ['menu', 'menunakano', 'menú']
+handler.command = ['menu', 'menunakano', 'help', 'menuitsuki']
 export default handler
 
 function clockString(ms) {
