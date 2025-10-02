@@ -66,7 +66,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       caption
     }, { quoted: m });
 
-    await conn.reply(m.chat, `🌸✅ ¡Video descargado con éxito! Disfrútalo 🌸`, m, ctxOk);
+    //await conn.reply(m.chat, `🌸✅ ¡Video descargado con éxito! Disfrútalo 🌸`, m, ctxOk);
 
   } catch (e) {
     console.error(e);
