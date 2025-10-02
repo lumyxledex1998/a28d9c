@@ -19,7 +19,7 @@ let tags = {
   'downloader': '👒 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗦',
   'sticker': '🎀 𝗦𝗧𝗜𝗖𝗞𝗘𝗥',
   'audio': '🫧 𝗔𝗨𝗗𝗜𝗢',
-  'search': '🪞 𝗕𝗨𝗦𝗤𝗨𝗘𝗗𝗔',
+  'search': '🪞 𝗕𝗨𝗦𝗤𝗨𝗘𝗃𝗔',
   'tools': '🧰 𝗛𝗘𝗥𝗔𝗠𝗜𝗘𝗡𝗧𝗔𝗦',
   'fun': '💃 𝗗𝗜𝗩𝗘𝗥𝗦𝗜𝗢𝗡',
   'anime': '🪭 𝗔𝗡𝗜𝗠𝗘',
@@ -61,14 +61,20 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let uptime = clockString(process.uptime() * 1000)
 
+    // Verificar si es bot oficial o sub-bot
+    const isOfficialBot = true // Cambia a false si es un sub-bot
+    const botType = isOfficialBot ? '🤖 *BOT OFICIAL*' : '🔰 *SUB-BOT*'
+    const botWarning = isOfficialBot ? '' : '\n┃ ⚠️ *Este es un SUB-BOT no oficial*'
+
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} soy *Itsuki Nakano*✨
+┃ ${botType}
+┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} ${saludo.toLowerCase()}✨
 ┃ 🫧 *Nombre*: *${botname}*
 ┃ 👑 *Creador*: *${creador}*
 ┃ ⏳️ *Uptime*: *${uptime}*
 ┃ 💎 *Premium*: *${totalPremium}*
-┃ 🪷 *Versión*: *${version}*
+┃ 🪷 *Versión*: *${version}*${botWarning}
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 `
 
@@ -85,8 +91,6 @@ ${comandos.map(menu => menu.help.map(cmd =>
 `
     }
 
-   
-
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
     let vidBuffer = await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer()
@@ -94,6 +98,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
       video: vidBuffer,
       gifPlayback: true,
       caption: menuText,
+      mentions: [m.sender], // MENCION CORREGIDA
       ...global.rcanalden2
     }, { quoted: m })
 
