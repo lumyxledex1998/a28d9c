@@ -8,7 +8,7 @@ let handler = async (m, { conn }) => {
     const start = Date.now()
 
     // Enviar mensaje de prueba
-    const sentMsg = await conn.reply(m.chat, '🍙🏓 *Calculando velocidad...* 📚✨', m, ctxOk)
+    await conn.reply(m.chat, '🍙🏓 *Calculando velocidad...* 📚✨', m, ctxOk)
 
     // Tiempo final
     const end = Date.now()
@@ -49,11 +49,8 @@ ${botInfo.emoji} **Itsuki Nakano - Estado del Sistema** 🍙📊
 🍙 *"¡Sistema listo para ayudar!"* 📚✨
     `.trim()
 
-    // Editar el mensaje original con los resultados
-    await conn.sendMessage(m.chat, {
-      text: pingMessage,
-      edit: sentMsg.key
-    }, { quoted: m })
+    // Enviar resultado directamente
+    await conn.reply(m.chat, pingMessage, m, ctxOk)
 
   } catch (error) {
     console.error('Error en ping:', error)
