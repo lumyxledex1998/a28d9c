@@ -60,7 +60,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // El bot oficial generalmente usa el número principal
     // Puedes ajustar esta lógica según cómo identifiques los sub-bots
     const botJid = conn.user.jid
-    const officialBotNumber = '18493907272@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+    const officialBotNumber = '50671976915@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
     
     const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🤖 *BOT OFICIAL*' : '🔰 *SUB-BOT*'
