@@ -26,6 +26,7 @@ let tags = {
   'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗠',
   'social': '📸 𝗥𝗘𝗗𝗘𝗦',
   'custom': '📕 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟'
+  'owner': '👑 𝗢𝗪𝗡𝗘𝗥'
 }
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
