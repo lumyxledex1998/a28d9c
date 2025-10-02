@@ -5,24 +5,22 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  // REEMPLAZA ESTE NÚMERO CON EL TUYO (con código de país, sin +)
-  const ownerNumber = "18493907272" // EJEMPLO: Cambia por "51987654321" (tu número)
+  // ID DEL GRUPO DE SOPORTE
+  const supportGroupId = "120363403185670214@g.us"
 
   if (!text) {
     return conn.reply(m.chat, `
-🍙📚 **Itsuki Nakano - Sistema de Reportes** ✨📖
+📋 **Sistema de Reportes**
 
-🌟 *¡Como tutora responsable, tomo muy en serio los reportes!*
-
-📝 *Forma correcta de reportar:*
+📝 **Forma correcta de reportar:**
 ${usedPrefix + command} [descripción del error]
 
-💡 *Ejemplos:*
+💡 **Ejemplos:**
 • ${usedPrefix + command} El comando !menu no funciona
 • ${usedPrefix + command} El bot no responde a !play
 • ${usedPrefix + command} Error en el comando !sticker
 
-🍱 *"¡Por favor, describe el error con detalles para poder estudiarlo y solucionarlo adecuadamente!"* 🎓
+⚡ **Los reportes se envían al grupo de soporte**
     `.trim(), m, ctxWarn)
   }
 
@@ -32,33 +30,31 @@ ${usedPrefix + command} [descripción del error]
   const chatType = m.isGroup ? `Grupo: ${await conn.getName(m.chat) || 'Sin nombre'}` : 'Chat privado'
   const commandUsed = m.text.split(' ')[0] || 'N/A'
 
-  const fullReport = `🌟📚 **REPORTE DE ERROR - ITSUKI NAKANO** 🍙✨
+  const fullReport = `📨 **NUEVO REPORTE RECIBIDO**
 
-👤 *Usuario:* ${userMention}
-🏷️ *Nombre:* ${userName}
-💬 *Lugar:* ${chatType}
-🔧 *Comando usado:* ${commandUsed}
+👤 **Usuario:** ${userMention}
+🏷️ **Nombre:** ${userName}
+💬 **Lugar:** ${chatType}
+🔧 **Comando usado:** ${commandUsed}
 
-🐛 *Error Reportado:*
+🐛 **Error Reportado:**
 ${text}
 
-⏰ *Fecha:* ${new Date().toLocaleString()}
+⏰ **Fecha:** ${new Date().toLocaleString()}
 
-🍱 *"¡Reporte recibido! Estudiaré este error detenidamente."* 📖💫`
+📊 **Estado:** 🟡 Pendiente de revisión`
 
   try {
-    // ENVIAR REPORTE DIRECTAMENTE AL PROPIETARIO
-    const ownerJid = ownerNumber + '@s.whatsapp.net'
-    
+    // ENVIAR REPORTE AL GRUPO DE SOPORTE
     await conn.sendMessage(
-      ownerJid,  // Esto envía DIRECTAMENTE a tu número
+      supportGroupId,  // ID del grupo de soporte
       {
         text: fullReport,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: '🐛📚 Nuevo Reporte Recibido',
-            body: 'Itsuki Nakano - Sistema de Tutoría',
+            title: '🐛 Nuevo Reporte',
+            body: 'Sistema de Reportes',
             thumbnailUrl: 'https://files.catbox.moe/w491g3.jpg',
             sourceUrl: 'https://chat.whatsapp.com/CYKX0ZR6pWMHCXgBgVoTGA',
             mediaType: 1,
@@ -70,29 +66,29 @@ ${text}
 
     // Notificar al usuario que reportó
     await conn.reply(m.chat, 
-      `🍙✨ *¡Reporte enviado con éxito!*\n\n` +
-      `📚 *"Gracias por reportar el error. He notificado al desarrollador para que lo solucione."*\n\n` +
-      `🎯 *Estado:* 📝 En revisión\n` +
-      `👨‍💻 *Desarrollador notificado:* ✅\n\n` +
-      `🍱 *¡El problema será estudiado!* 📖🌟`,
+      `✅ *¡Reporte enviado con éxito!*\n\n` +
+      `📋 *Tu reporte ha sido enviado al grupo de soporte.*\n\n` +
+      `🎯 **Estado:** 📝 En revisión\n` +
+      `👥 **Enviado a:** Grupo de soporte\n\n` +
+      `⚡ *El equipo lo revisará pronto*`,
       m, ctxOk
     )
 
     // Log en consola
-    console.log(`📨 REPORTE ENVIADO AL PROPIETARIO:
+    console.log(`📨 REPORTE ENVIADO AL GRUPO DE SOPORTE:
 👤 De: ${m.sender} (${userName})
 📝 Error: ${text}
 📍 Chat: ${m.chat}
-🕒 Hora: ${new Date().toLocaleString()}
+📬 Grupo Soporte: ${supportGroupId}
     `)
 
   } catch (error) {
     console.error('❌ Error al enviar reporte:', error)
     await conn.reply(m.chat, 
-      `❌📚 *¡Error al enviar el reporte!*\n\n` +
-      `🍙 *"No pude enviar el reporte al desarrollador. Por favor, intenta más tarde."*\n\n` +
-      `🔧 *Detalle:* ${error.message}\n` +
-      `📖 *"¡Reportaré este fallo también!"* 🍱✨`,
+      `❌ *¡Error al enviar el reporte!*\n\n` +
+      `No pude enviar el reporte al grupo de soporte.\n\n` +
+      `🔧 **Detalle:** ${error.message}\n` +
+      `📝 **Intenta nuevamente en unos minutos**`,
       m, ctxErr
     )
   }
