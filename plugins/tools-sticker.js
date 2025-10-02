@@ -104,8 +104,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
       await conn.reply(m.chat, 
         `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
-        `🏷️ *Pack:* Itsuki Nakano\n` +
-        `✍️ *Autor:* Tutora Virtual\n\n` +
+        `🏷️ *Pack:* ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ\n` +
+        `✍️ *Autor:* 𝙇𝙚𝙤 𝙓𝙯𝙯𝙮 👑\n\n` +
         `📖 *"¡Tu sticker está listo para usar!"* 🍱🎉`,
         m, ctxOk
       )
@@ -127,7 +127,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
 handler.help = ['sticker', 's', 'stiker']
 handler.tags = ['tools']
-handler.command = ['s', 'sticker', 'stiker']
+handler.command = ['s', 'sticker']
 
 export default handler
 
