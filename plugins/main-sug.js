@@ -3,31 +3,28 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  // REEMPLAZA CON TU NÚMERO (con código de país, sin +)
-  const ownerNumber = "18493907272" // EJEMPLO: Cambia por "51987654321" (tu número)
+  // ID DEL GRUPO DE SOPORTE
+  const supportGroupId = "120363403185670214@g.us"
 
   if (!text) {
     return conn.reply(m.chat, `
-🍙📚 **Itsuki Nakano - Sistema de Sugerencias** ✨🌟
+📋 **Sistema de Sugerencias**
 
-🎯 *¡Como futura maestra, valoro mucho tus ideas para mejorar!*
-
-📝 *Forma correcta de sugerir:*
+📝 **Forma correcta de sugerir:**
 ${usedPrefix + command} [tu sugerencia]
 
-💡 *Ejemplos de sugerencias:*
-• ${usedPrefix + command} Podrían agregar más juegos educativos
+💡 **Ejemplos de sugerencias:**
+• ${usedPrefix + command} Podrían agregar más juegos
 • ${usedPrefix + command} Sería útil un comando de recordatorios
-• ${usedPrefix + command} Me gustaría que tuviera más stickers de anime
+• ${usedPrefix + command} Me gustaría que tuviera más stickers
 
-🌟 *Tipos de sugerencias que acepto:*
+🌟 **Tipos de sugerencias:**
 ✨ Nuevos comandos
-📚 Funciones educativas
 🎮 Juegos interactivos
-🍱 Contenido de anime
 🔧 Mejoras técnicas
+📚 Funciones educativas
 
-🍙 *"¡Tus ideas son importantes para hacer del bot una mejor herramienta de aprendizaje!"* 📖💫
+⚡ **Las sugerencias se envían al grupo de soporte**
     `.trim(), m, ctxWarn)
   }
 
@@ -36,34 +33,30 @@ ${usedPrefix + command} [tu sugerencia]
   const userMention = `@${m.sender.split('@')[0]}`
   const chatType = m.isGroup ? `Grupo: ${await conn.getName(m.chat) || 'Sin nombre'}` : 'Chat privado'
 
-  const suggestionReport = `🌟📚 **NUEVA SUGERENCIA - ITSUKI NAKANO** 🍙✨
+  const suggestionReport = `💡 **NUEVA SUGERENCIA RECIBIDA**
 
-👤 *Usuario:* ${userMention}
-🏷️ *Nombre:* ${userName}
-💬 *Lugar:* ${chatType}
-⭐ *Tipo:* Sugerencia de mejora
+👤 **Usuario:** ${userMention}
+🏷️ **Nombre:** ${userName}
+💬 **Lugar:** ${chatType}
+⭐ **Tipo:** Sugerencia de mejora
 
-💡 *Sugerencia:*
+📝 **Sugerencia:**
 "${text}"
 
-📊 *Estado:* 🟡 Pendiente de revisión
-⏰ *Fecha:* ${new Date().toLocaleString()}
-
-🍱 *"¡Una idea brillante! La estudiaré con atención para mejorar el sistema de tutoría."* 📖🎓`
+📊 **Estado:** 🟡 Pendiente de revisión
+⏰ **Fecha:** ${new Date().toLocaleString()}`
 
   try {
-    // ENVIAR SUGERENCIA DIRECTAMENTE AL PROPIETARIO
-    const ownerJid = ownerNumber + '@s.whatsapp.net'
-    
+    // ENVIAR SUGERENCIA AL GRUPO DE SOPORTE
     await conn.sendMessage(
-      ownerJid,
+      supportGroupId,
       {
         text: suggestionReport,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: '💡🌟 Nueva Sugerencia Recibida',
-            body: 'Itsuki Nakano - Sistema de Mejoras',
+            title: '💡 Nueva Sugerencia',
+            body: 'Sistema de Mejoras',
             thumbnailUrl: 'https://files.catbox.moe/w491g3.jpg',
             sourceUrl: 'https://chat.whatsapp.com/CYKX0ZR6pWMHCXgBgVoTGA',
             mediaType: 1,
@@ -75,12 +68,12 @@ ${usedPrefix + command} [tu sugerencia]
 
     // Notificar al usuario que sugirió
     await conn.reply(m.chat, 
-      `🍙✨ *¡Sugerencia enviada con éxito!*\n\n` +
-      `📚 *"¡Gracias por tu valiosa idea! Como futura maestra, aprecio mucho las sugerencias que ayudan a mejorar."*\n\n` +
-      `💡 *Sugerencia registrada:*\n"${text}"\n\n` +
-      `📊 *Estado:* 🟡 En revisión\n` +
-      `👨‍💻 *Desarrollador notificado:* ✅\n\n` +
-      `🍱 *"¡Estudiaré tu propuesta con mucho cuidado!"* 📖🌟`,
+      `✅ *¡Sugerencia enviada con éxito!*\n\n` +
+      `📋 *Tu sugerencia ha sido enviada al grupo de soporte.*\n\n` +
+      `💡 **Sugerencia registrada:**\n"${text}"\n\n` +
+      `📊 **Estado:** 🟡 En revisión\n` +
+      `👥 **Enviado a:** Grupo de soporte\n\n` +
+      `⚡ *El equipo la revisará pronto*`,
       m, ctxOk
     )
 
@@ -90,14 +83,16 @@ ${usedPrefix + command} [tu sugerencia]
 💡 Sugerencia: ${text}
 📍 Chat: ${m.chat}
 🕒 Hora: ${new Date().toLocaleString()}
+📬 Grupo Soporte: ${supportGroupId}
     `)
 
   } catch (error) {
     console.error('❌ Error al enviar sugerencia:', error)
     await conn.reply(m.chat, 
-      `❌📚 *¡Error al enviar la sugerencia!*\n\n` +
-      `🍙 *"No pude enviar tu brillante idea al desarrollador. ¡Por favor, inténtalo de nuevo más tarde!"*\n\n` +
-      `📖 *"¡Me esforzaré más para que esto no vuelva a pasar!"* 🍱✨`,
+      `❌ *¡Error al enviar la sugerencia!*\n\n` +
+      `No pude enviar tu sugerencia al grupo de soporte.\n\n` +
+      `🔧 **Detalle:** ${error.message}\n` +
+      `📝 **Intenta nuevamente en unos minutos**`,
       m, ctxErr
     )
   }
