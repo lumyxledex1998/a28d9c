@@ -1,85 +1,122 @@
 import { sticker } from '../lib/sticker.js';
-//import uploadFile from '../lib/uploadFile.js';
-//import uploadImage from '../lib/uploadImage.js';
-//import { webp2png } from '../lib/webp2mp4.js';
-
-const redes = 'https://chat.whatsapp.com/KkAYjIFHOGXKNjUN6IkUqf'; // Define la URL aquí
-const icons = null; // Si "icons" es necesario, define su valor o cámbialo según corresponda
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
+  const ctxErr = (global.rcanalx || {})
+  const ctxWarn = (global.rcanalw || {})
+  const ctxOk = (global.rcanalr || {})
+  
   let stiker = false;
+  
   try {
     let q = m.quoted ? m.quoted : m;
     let mime = (q.msg || q).mimetype || q.mediaType || '';
+    
+    if (!/webp|image|video/g.test(mime) && !args[0]) {
+      return conn.reply(m.chat, `
+🍙🎨 *Itsuki Nakano - Creador de Stickers* ✨
+
+🌟 ¡Como tutora creativa, puedo ayudarte a crear stickers!
+
+📝 *Formas de usar:*
+• Responde a una imagen con !s
+• Responde a un video con !s 
+• Responde a un sticker con !s
+• Envía una imagen/video con !s
+• !s <url_de_imagen>
+
+💡 *Ejemplos:*
+• Responde a una foto con !s
+• Envía un video corto con !s
+• !s https://ejemplo.com/imagen.jpg
+
+🎯 *Formatos soportados:*
+🖼️ Imágenes (JPG, PNG, GIF, WEBP)
+🎥 Videos (MP4, máximo 8 segundos)
+🔗 URLs de imágenes
+
+🍱 ¡Dale vida a tus conversaciones! 🎨✨
+      `.trim(), m, ctxWarn)
+    }
+
+    await conn.reply(m.chat, '🍙🎨 *Creando tu sticker...* ⏳✨', m, ctxOk)
+
     if (/webp|image|video/g.test(mime)) {
-      if (/video/g.test(mime)) 
-        if ((q.msg || q).seconds > 8) 
-          return m.reply(`☁️ *¡El video no puede durar más de 8 segundos!*`);
-
-      let img = await q.download?.();
-      if (!img) 
-        return conn.reply(m.chat, `🐉 *_¿Y el video? Intenta enviar primero imagen/video/gif y luego responde con el comando._*`, m);
-
-      let out;
-      try {
-        stiker = await sticker(img, false, global.packname, global.author);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        if (!stiker) {
-          if (/webp/g.test(mime)) out = await webp2png(img);
-          else if (/image/g.test(mime)) out = await uploadImage(img);
-          else if (/video/g.test(mime)) out = await uploadFile(img);
-          if (typeof out !== 'string') out = await uploadImage(img);
-          stiker = await sticker(false, out, global.packname, global.author);
+      if (/video/g.test(mime)) {
+        if ((q.msg || q).seconds > 8) {
+          return conn.reply(m.chat, '❌ *El video no puede durar más de 8 segundos*', m, ctxErr)
         }
       }
+
+      let img = await q.download?.();
+      if (!img) {
+        return conn.reply(m.chat, '❌ *Error al descargar el archivo*', m, ctxErr)
+      }
+
+      try {
+        stiker = await sticker(img, false, 'Itsuki Nakano', 'Tutora Virtual');
+      } catch (e) {
+        console.error(e);
+        return conn.reply(m.chat, '❌ *Error al crear el sticker*', m, ctxErr)
+      }
+      
     } else if (args[0]) {
-      if (isUrl(args[0])) 
-        stiker = await sticker(false, args[0], global.packname, global.author);
-      else 
-        return m.reply(`💫 El URL es incorrecto`);
+      if (isUrl(args[0])) {
+        try {
+          stiker = await sticker(false, args[0], 'Itsuki Nakano', 'Tutora Virtual');
+        } catch (e) {
+          console.error(e);
+          return conn.reply(m.chat, '❌ *Error con la URL proporcionada*', m, ctxErr)
+        }
+      } else {
+        return conn.reply(m.chat, '❌ *URL no válida*', m, ctxErr)
+      }
     }
-  } catch (e) {
-    console.error(e);
-    if (!stiker) stiker = e;
-  } finally {
+
     if (stiker) {
-      conn.sendFile(
-        m.chat, 
-        stiker, 
-        'sticker.webp', 
-        '', 
-        m, 
-        true, 
-        { 
-          contextInfo: { 
-            'forwardingScore': 200, 
-            'isForwarded': false, 
-            externalAdReply: { 
-              showAdAttribution: false, 
-              title: global.packname, 
-              body: `𝚅𝙴𝙶𝙴𝚃𝙰 𝙱𝙾𝚃- 𝙼𝙱 `, 
-              mediaType: 2, 
-              sourceUrl: redes, // Usamos la variable definida
-              thumbnail: icons // Asegúrate de que "icons" tenga un valor definido
-            }
+      await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m, true, { 
+        contextInfo: { 
+          'forwardingScore': 200, 
+          'isForwarded': false,
+          externalAdReply: {
+            showAdAttribution: false,
+            title: '🍙 Itsuki Nakano',
+            body: 'Sticker Creado',
+            mediaType: 2,
+            sourceUrl: 'https://chat.whatsapp.com/KkAYjIFHOGXKNjUN6IkUqf',
+            thumbnail: await conn.getFile('https://i.imgur.com/8S5eC0v.png').data
           }
-        }, 
-        { quoted: m }
-      );
+        }
+      }, { quoted: m })
+      
+      await conn.reply(m.chat, 
+        `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
+        `🏷️ *Pack:* Itsuki Nakano\n` +
+        `✍️ *Autor:* Tutora Virtual\n\n` +
+        `📖 *"¡Tu sticker está listo para usar!"* 🍱🎉`,
+        m, ctxOk
+      )
     } else {
-      return conn.reply(m.chat, '⚡ *_¿Y el video? Intenta enviar primero imagen/video/gif y luego responde con el comando._*', m);
+      return conn.reply(m.chat, '❌ *No se pudo crear el sticker*', m, ctxErr)
     }
+
+  } catch (error) {
+    console.error('Error en sticker:', error)
+    await conn.reply(m.chat, 
+      `❌ *Error al crear el sticker*\n\n` +
+      `🍙 *"¡Lo siento! No pude crear tu sticker."*\n\n` +
+      `🔧 *Error:* ${error.message}\n\n` +
+      `📖 *¡Intenta con otro archivo!* 🍱✨`,
+      m, ctxErr
+    )
   }
 };
 
-handler.help = ['stiker <img>', 'sticker <url>'];
-handler.tags = ['sticker'];
-handler.command = ['s', 'sticker', 'stiker'];
+handler.help = ['sticker', 's', 'stiker']
+handler.tags = ['tools']
+handler.command = ['s', 'sticker', 'stiker']
 
 export default handler;
 
 const isUrl = (text) => {
-  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'));
+  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png|webp)/, 'gi'));
 };
