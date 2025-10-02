@@ -54,27 +54,27 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       hour12: false 
     })
 
-    let hour = date.getHours()
-    let saludo = '🌃 Buenas noches'
-    if (hour >= 5 && hour < 12) saludo = '🌄 Buenos días'
-    else if (hour >= 12 && hour < 19) saludo = '🌅 Buenas tardes'
-
     let uptime = clockString(process.uptime() * 1000)
 
-    // Verificar si es bot oficial o sub-bot
-    const isOfficialBot = true // Cambia a false si es un sub-bot
+    // Detectar automáticamente si es bot oficial o sub-bot
+    // El bot oficial generalmente usa el número principal
+    // Puedes ajustar esta lógica según cómo identifiques los sub-bots
+    const botJid = conn.user.jid
+    const officialBotNumber = '18493907272@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+    
+    const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🤖 *BOT OFICIAL*' : '🔰 *SUB-BOT*'
     const botWarning = isOfficialBot ? '' : '\n┃ ⚠️ *Este es un SUB-BOT no oficial*'
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ ${botType}
-┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} ${saludo.toLowerCase()}✨
+┃ ${botType}${botWarning}
+┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} ✨
 ┃ 🫧 *Nombre*: *${botname}*
 ┃ 👑 *Creador*: *${creador}*
 ┃ ⏳️ *Uptime*: *${uptime}*
 ┃ 💎 *Premium*: *${totalPremium}*
-┃ 🪷 *Versión*: *${version}*${botWarning}
+┃ 🪷 *Versión*: *${version}*
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 `
 
@@ -98,7 +98,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
       video: vidBuffer,
       gifPlayback: true,
       caption: menuText,
-      mentions: [m.sender], // MENCION CORREGIDA
+      mentions: [m.sender],
       ...global.rcanalden2
     }, { quoted: m })
 
