@@ -53,8 +53,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 🔗 URL: ${video.url}
 
 🌷 ¡Disfruta y no olvides sonreír! 🌷
-🍱 Gracias por elegirme para tus descargas 💕
-╰─☆ Itsuki Nakano te lo entrega con cariño ☆─╯
+> 🍱 Gracias por elegirme para tus descargas 
 `.trim();
 
     const buffer = await fetch(url).then(res => res.buffer());
