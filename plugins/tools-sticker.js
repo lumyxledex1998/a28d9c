@@ -105,7 +105,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       await conn.reply(m.chat, 
         `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
         `🏷️ *Pack:* ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ\n` +
-        `✍️ *Autor:* 𝙇𝙚𝙤 𝙓𝙯𝙯𝙮 👑\n\n` +
+        `✍️ *Autor:* 𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑\n\n` +
         `📖 *"¡Tu sticker está listo para usar!"* 🍱🎉`,
         m, ctxOk
       )
