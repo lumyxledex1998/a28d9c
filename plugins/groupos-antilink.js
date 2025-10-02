@@ -22,14 +22,14 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   if (['antilink', 'antienlace'].includes(command)) {
     if (!m.isGroup) return conn.reply(m.chat, '🍙 ❌ Este comando solo funciona en grupos.', m, ctxErr)
     if (!isAdmin) return conn.reply(m.chat, '📚 ⚠️ Necesitas ser administrador para configurar el antilink.', m, ctxErr)
-    
+
     const action = args[0]?.toLowerCase()
-    
+
     if (!action) {
       return conn.reply(m.chat, `
-🍙📚 **Itsuki Nakano - Sistema Antilink Estricto** 🔗🚫
+🔗 **Sistema Antilink** 🚫
 
-🌟 *¡Protección máxima activada! Enlaces no permitidos.*
+🌟 *Protección contra enlaces no autorizados*
 
 ⚙️ *Opciones de configuración:*
 • ${usedPrefix}antilink activar
@@ -38,11 +38,9 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
 🚫 *Acciones automáticas:*
 ⚠️ Advertencia al usuario
-🗑️ Eliminación del mensaje
-🔴 Expulsión inmediata del grupo
-📢 Notificación a administradores
+🗑️ Eliminación del mensaje con enlace
 
-🍱 *"¡Cero tolerancia con los enlaces no autorizados!"* 📖✨
+✨ *"Manteniendo el grupo libre de enlaces no autorizados"*
       `.trim(), m, ctxWarn)
     }
 
@@ -56,11 +54,11 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       case 'enable':
         global.antilinkStatus[m.chat] = true
         await conn.reply(m.chat, 
-          `🍙✅ *Antilink Estricto Activado*\n\n` +
-          `📚 *"¡Protección máxima activada! Los enlaces no autorizados resultarán en expulsión inmediata."*\n\n` +
+          `✅ *Antilink Activado*\n\n` +
+          `*Protección activada. Los enlaces no autorizados serán eliminados automáticamente.*\n\n` +
           `🔗 *Estado:* 🟢 ACTIVADO\n` +
-          `🚫 *Modo:* Expulsión automática\n` +
-          `🍱 *"¡El grupo ahora está bajo protección estricta!"* 📖✨`,
+          `🚫 *Modo:* Eliminación de mensajes\n` +
+          `✨ *El grupo ahora está protegido contra enlaces*`,
           m, ctxOk
         )
         break
@@ -70,11 +68,11 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       case 'disable':
         global.antilinkStatus[m.chat] = false
         await conn.reply(m.chat, 
-          `🍙❌ *Antilink Desactivado*\n\n` +
-          `📚 *"He desactivado el sistema antilink estricto. ¡Confío en su responsabilidad!"*\n\n` +
+          `❌ *Antilink Desactivado*\n\n` +
+          `*He desactivado el sistema antilink. Los enlaces ahora están permitidos.*\n\n` +
           `🔗 *Estado:* 🔴 DESACTIVADO\n` +
           `🚫 *Modo:* Permisivo\n` +
-          `🍱 *"¡Por favor, mantengan el orden en el grupo!"* 📖✨`,
+          `✨ *Por favor, mantengan el orden en el grupo*`,
           m, ctxWarn
         )
         break
@@ -84,11 +82,11 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       case 'state':
         const status = global.antilinkStatus[m.chat] ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'
         await conn.reply(m.chat, 
-          `🍙📊 *Estado del Antilink Estricto*\n\n` +
+          `📊 *Estado del Antilink*\n\n` +
           `🔗 *Sistema:* ${status}\n` +
-          `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'EXPULSIÓN AUTOMÁTICA' : 'PERMISIVO'}\n` +
+          `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'ELIMINACIÓN DE MENSAJES' : 'PERMISIVO'}\n` +
           `💬 *Grupo:* ${await conn.getName(m.chat) || 'Sin nombre'}\n\n` +
-          `📚 *"Protección ${global.antilinkStatus[m.chat] ? 'activa con expulsión' : 'desactivada'}"* 🍱✨`,
+          `✨ *Protección ${global.antilinkStatus[m.chat] ? 'activa' : 'desactivada'}*`,
           m, ctxOk
         )
         break
@@ -103,7 +101,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   if (!m.isGroup) return
   if (!global.antilinkStatus) global.antilinkStatus = {}
   if (global.antilinkStatus[m.chat] === false) return
-  
+
   const messageText = m.text || m.caption || ''
   let hasLink = false
   let detectedLink = ''
@@ -128,18 +126,13 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
     const userName = await conn.getName(sender) || 'Usuario'
     const userMention = `@${sender.split('@')[0]}`
 
-    // Mensaje de expulsión
-    const expulsionMessage = 
-      `🍙🚫 **Itsuki Nakano - Expulsión por Enlace** 📚🔗\n\n` +
-      `👤 *Usuario expulsado:* ${userMention}\n` +
-      `🏷️ *Nombre:* ${userName}\n` +
+    // Mensaje de advertencia
+    const warningMessage = 
+      `🚫 **Enlace Detectado** 🔗\n\n` +
+      `👤 *Usuario:* ${userMention}\n` +
       `🔗 *Enlace detectado:* ${detectedLink}\n\n` +
-      `📚 *"Como tutora estricta, debo aplicar las reglas del grupo. Los enlaces no autorizados resultan en expulsión inmediata."*\n\n` +
-      `⚡ *Acción tomada:*\n` +
-      `✅ Mensaje eliminado\n` +
-      `🔴 Usuario expulsado\n` +
-      `📢 Administradores notificados\n\n` +
-      `🍱 *"Las reglas son claras y deben respetarse para mantener un ambiente de aprendizaje adecuado."* 📖✨`
+      `⚠️ *Los enlaces no están permitidos en este grupo. El mensaje ha sido eliminado.*\n\n` +
+      `📝 *Recuerda:* Solo los administradores pueden compartir enlaces.`
 
     // 1. Eliminar el mensaje con enlace
     if (isBotAdmin && m.key) {
@@ -153,51 +146,19 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       }).catch(() => {})
     }
 
-    // 2. EXPULSAR AL USUARIO DEL GRUPO
-    if (isBotAdmin) {
-      await conn.groupParticipantsUpdate(m.chat, [sender], 'remove')
-      
-      // 3. Enviar mensaje de expulsión
-      await conn.sendMessage(m.chat, { 
-        text: expulsionMessage,
-        mentions: [sender]
-      })
+    // 2. Enviar mensaje de advertencia
+    await conn.sendMessage(m.chat, { 
+      text: warningMessage,
+      mentions: [sender]
+    })
 
-      // 4. Notificar a administradores
-      const admins = participants.filter(p => p.admin).map(p => p.id)
-      if (admins.length > 0) {
-        const adminAlert = 
-          `📢 **Alerta de Expulsión - Administradores** 👑\n\n` +
-          `🚫 *Usuario expulsado por enlace*\n` +
-          `👤 *Expulsado:* ${userMention}\n` +
-          `🔗 *Enlace:* ${detectedLink}\n` +
-          `⏰ *Hora:* ${new Date().toLocaleTimeString()}\n` +
-          `🤖 *Acción:* Automática por Itsuki\n\n` +
-          `🍙 *"He aplicado la expulsión automática según las reglas establecidas."* 📚`
-
-        await conn.sendMessage(m.chat, {
-          text: adminAlert,
-          mentions: admins
-        })
-      }
-
-      // Log en consola
-      console.log(`🔴 USUARIO EXPULSADO POR ENLACE:
+    // Log en consola
+    console.log(`🔗 ENLACE DETECTADO Y ELIMINADO:
 👤 Usuario: ${sender} (${userName})
 🔗 Enlace: ${detectedLink}
 💬 Grupo: ${m.chat}
 🕒 Hora: ${new Date().toLocaleString()}
-      `)
-    } else {
-      // Si el bot no es admin, solo enviar advertencia
-      await conn.reply(m.chat, 
-        `⚠️ *Itsuki - Enlace Detectado*\n\n` +
-        `👤 ${userMention} ha enviado un enlace\n` +
-        `🔗 ${detectedLink}\n\n` +
-        `❌ *Necesito ser administradora para expulsar*`,
-        m, { mentions: [sender] }
-      )
-    }
+    `)
 
   } catch (error) {
     console.error('❌ Error en antilink:', error)
