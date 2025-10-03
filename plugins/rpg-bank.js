@@ -2,6 +2,8 @@ let handler = async (m, { conn, usedPrefix }) => {
   const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Balance', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
+  
+  const currency = global.currency || 'Yenes'
 
   if (!db.data.chats[m.chat].economy && m.isGroup) {
     return conn.reply(m.chat, `🍙📚 *ITSUKI - Sistema de Economía*\n\n❌ Los comandos de economía están desactivados en este grupo\n\n*Administrador*, activa la economía con:\n${usedPrefix}economy on\n\n📖 "No puedo revisar tu balance si la economía está desactivada..."`, m, ctxErr)
@@ -32,10 +34,10 @@ let handler = async (m, { conn, usedPrefix }) => {
 📖 *Información del Usuario:*
 👤 Nombre: *${name}*
 
-📊 *Estado Financiero:*
-👛 Cartera: ¥${coin.toLocaleString()} ${currency}
+💵 *Estado Financiero:*
+🎒 Cartera: ¥${coin.toLocaleString()} ${currency}
 🏦 Banco: ¥${bank.toLocaleString()} ${currency}
-💴 Total: ¥${total.toLocaleString()} ${currency}
+💎 Total: ¥${total.toLocaleString()} ${currency}
 
 ${coin > bank ? '⚠️ *Advertencia:* Tienes mucho dinero en tu cartera' : '✅ *Excelente:* Tu dinero está bien protegido'}
 
@@ -49,7 +51,7 @@ ${coin > bank ? '⚠️ *Advertencia:* Tienes mucho dinero en tu cartera' : '✅
 }
 
 handler.help = ['bal']
-handler.tags = ['economy']
+handler.tags = ['rpg']
 handler.command = ['bal', 'balance', 'bank'] 
 handler.group = true 
 
