@@ -58,10 +58,10 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-    const officialBotNumber = '18493907272@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+        const officialBotNumber = '50671976915@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
     
     const isOfficialBot = botJid === officialBotNumber
-    const botType = isOfficialBot ? '🤖 *BOT OFICIAL*' : '🔰 *SUB-BOT*'
+    const botType = isOfficialBot ? '🌷 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁'
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
