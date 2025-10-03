@@ -1,70 +1,34 @@
 let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, participants }) => {
-  // Configurar canales de respuesta (con valores por defecto si no existen)
   const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Éxito', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
 
-  // Verificar si la economía está activada en el grupo
   if (!global.db.data.chats[m.chat].economy && m.isGroup) {
-    return conn.reply(m.chat, `╭━━━「 🍙 *ITSUKI - ECONOMÍA* 」━━━⬣
-┃ ✦ Estado: ❌ *DESACTIVADA*
-┃ ✦ Grupo: ${m.chat.split('@')[0]}
-┃ ✦ Comando: ${command}
-╰━━━━━━━━━━━━━━⬣
-
-❌ Los comandos de economía están desactivados en este grupo.
-
-👑 *Administrador*: Usa el comando:
-» ${usedPrefix}economy on
-
-📚 "No puedo ayudarte con la economía si está desactivada..."`, m, ctxErr)
+    return conn.reply(m.chat, `🍙 *ITSUKI - Sistema de Economía*\n\n❌ La economía está desactivada en este grupo\n\n*Administrador*, activa la economía con:\n${usedPrefix}economy on\n\n📚 "No puedo ayudarte si la economía está desactivada..."`, m, ctxErr)
   }
 
   let user = global.db.data.users[m.sender]
-  const cooldown = 2 * 60 * 1000 // 2 minutos de cooldown
+  const cooldown = 2 * 60 * 1000
 
-  // Inicializar lastwork si no existe
   if (!user.lastwork) user.lastwork = 0
 
-  // Verificar cooldown
   if (Date.now() - user.lastwork < cooldown) {
     const tiempoRestante = formatTime(user.lastwork + cooldown - Date.now())
-    return conn.reply(m.chat, `╭━━━「 ⏰ *ITSUKI COOLDOWN* 」━━━⬣
-┃ ✦ Estado: ⚠️ *EN ENFRIAMIENTO*
-┃ ✦ Usuario: @${m.sender.split('@')[0]}
-┃ ✦ Tiempo restante: *${tiempoRestante}*
-┃ ✦ Comando alternativo: *${usedPrefix}cooldown*
-╰━━━━━━━━━━━━━━⬣
-
-📚 "Un buen trabajo requiere descanso adecuado..."`, m, ctxWarn)
+    return conn.reply(m.chat, `⏰ *ITSUKI - Tiempo de Espera*\n\n⚠️ Debes descansar antes de trabajar de nuevo\n\n*Tiempo restante:* ${tiempoRestante}\n\n📚 "Un buen trabajo requiere descanso adecuado..."`, m, ctxWarn)
   }
 
-  // Actualizar último trabajo
   user.lastwork = Date.now()
 
-  // Generar ganancia aleatoria con bonus por suerte
   let baseGanancia = Math.floor(Math.random() * 1501) + 2000
-  let bonus = Math.random() < 0.2 ? Math.floor(baseGanancia * 0.3) : 0 // 20% de probabilidad de bonus
+  let bonus = Math.random() < 0.2 ? Math.floor(baseGanancia * 0.3) : 0
   let gananciaTotal = baseGanancia + bonus
 
   let mensajeTrabajo = pickRandom(trabajoItsuki)
   let emojiTrabajo = pickRandom(['🍙', '🍛', '📚', '✏️', '🎒', '🍱'])
-  let emojiExtra = bonus > 0 ? '🎊' : '📖'
 
-  // Añadir dinero al usuario
   user.coin += gananciaTotal
 
-  // Mensaje con formato recnal mejorado
-  await conn.reply(m.chat, `╭━━━「 🍙 *ITSUKI WORK* 」━━━⬣
-┃ ✦ Usuario: @${m.sender.split('@')[0]}
-┃ ✦ Trabajo: ${emojiTrabajo} ${mensajeTrabajo}
-┃ ✦ Ganancia base: ¥${baseGanancia.toLocaleString()}
-${bonus > 0 ? `┃ ✦ Bonus suerte: 🎉 +¥${bonus.toLocaleString()}\n` : ''}┃ ✦ Ganancia total: 💰 ¥${gananciaTotal.toLocaleString()}
-┃ ✦ Dinero total: 🏦 ¥${user.coin.toLocaleString()}
-╰━━━━━━━━━━━━━━⬣
-
-${emojiExtra} ${bonus > 0 ? '¡Bonus de suerte obtenido! 🎊' : '¡Trabajo completado!'}
-📚 "El conocimiento y el esfuerzo siempre son recompensados"`, m, ctxOk)
+  await conn.reply(m.chat, `${emojiTrabajo} *ITSUKI - Trabajo Completado*\n\n*Usuario:* @${m.sender.split('@')[0]}\n*Trabajo:* ${mensajeTrabajo}\n*Ganancia base:* ¥${baseGanancia.toLocaleString()}\n${bonus > 0 ? `*Bonus suerte:* 🎉 +¥${bonus.toLocaleString()}\n` : ''}*Ganancia total:* 💰 ¥${gananciaTotal.toLocaleString()}\n*Dinero total:* 🏦 ¥${user.coin.toLocaleString()}\n\n${bonus > 0 ? '🎊 ¡Bonus de suerte obtenido!' : '📖 ¡Trabajo completado!'}\n\n📚 "El conocimiento y el esfuerzo siempre son recompensados"`, m, ctxOk)
 }
 
 handler.help = ['trabajar']
@@ -88,7 +52,6 @@ function pickRandom(list) {
   return list[Math.floor(list.length * Math.random())]
 }
 
-// Trabajos temáticos de Itsuki Nakano
 const trabajoItsuki = [
   "Estudié diligentemente para mis exámenes y gané",
   "Ayudé en la librería familiar y recibí",
@@ -119,5 +82,56 @@ const trabajoItsuki = [
   "Organicé mi colección de libros y encontré dinero olvidado, sumando",
   "Gané una competencia de ortografía y recibí",
   "Ayudé a digitalizar archivos de la biblioteca y gané",
-  "Enseñé japonés tradicional a extranjeros y recibí"
+  "Enseñé japonés tradicional a extranjeros y recibí",
+  "Resolví problemas matemáticos complejos en una competencia y gané",
+  "Asistí como tutora en un curso intensivo y recibí",
+  "Escribí guías de estudio para universitarios y vendí",
+  "Organicé una conferencia académica y me pagaron",
+  "Ayudé a traducir documentos académicos del japonés y gané",
+  "Participé en un programa de intercambio estudiantil como mentora y recibí",
+  "Clasifiqué y catalogué libros antiguos en la biblioteca universitaria por",
+  "Gané el primer lugar en un concurso de ensayos y recibí",
+  "Revisé y edité trabajos de investigación de otros estudiantes por",
+  "Trabajé en una editorial revisando manuscritos académicos y gané",
+  "Di una charla motivacional sobre hábitos de estudio efectivos por",
+  "Desarrollé una aplicación educativa y vendí la licencia por",
+  "Participé como jurado en un concurso de oratoria y me pagaron",
+  "Escribí artículos para una revista académica y recibí",
+  "Organicé sesiones de estudio grupal pagadas y gané",
+  "Ayudé a preparar material didáctico para profesores y recibí",
+  "Traduje libros de texto del inglés al japonés por",
+  "Gané una competencia de debate interuniversitario con un premio de",
+  "Trabajé como correctora de estilo para trabajos universitarios y gané",
+  "Creé contenido educativo para plataformas online y recibí",
+  "Participé en un panel de expertos sobre métodos de estudio por",
+  "Ayudé en la organización de exámenes de admisión y gané",
+  "Escribí críticas literarias para un periódico estudiantil por",
+  "Di asesorías sobre elección de carrera universitaria y recibí",
+  "Trabajé en un proyecto de investigación del ministerio de educación por",
+  "Organicé un club de lectura privado y gané",
+  "Ayudé a estudiantes extranjeros con sus tesis en japonés por",
+  "Participé en un programa de radio educativo y me pagaron",
+  "Creé presentaciones profesionales para conferencias académicas por",
+  "Trabajé como asistente de investigación en la universidad y gané",
+  "Gané una beca internacional de investigación valorada en",
+  "Escribí la introducción para un libro académico importante por",
+  "Organicé talleres de técnicas de memorización y recibí",
+  "Ayudé a digitalizar archivos históricos de la biblioteca por",
+  "Participé en un documental educativo como experta y gané",
+  "Creé infografías educativas para instituciones y recibí",
+  "Trabajé en la corrección de exámenes de certificación por",
+  "Gané un concurso de conocimientos generales con premio de",
+  "Ayudé a diseñar el currículo de un curso universitario por",
+  "Escribí reseñas académicas para una base de datos especializada y gané",
+  "Organicé un simposio estudiantil internacional y recibí",
+  "Trabajé como traductora simultánea en una conferencia académica por",
+  "Desarrollé materiales de estudio personalizados para estudiantes y gané",
+  "Participé en un programa de mentoría universitaria pagada por",
+  "Ayudé a catalogar colecciones especiales en museos educativos por",
+  "Gané una competencia de análisis literario con premio de",
+  "Trabajé en la revisión de políticas educativas como consultora junior por",
+  "Creé un podcast educativo exitoso y gané en publicidad",
+  "Participé en la elaboración de exámenes estandarizados por",
+  "Ayudé en la coordinación de programas de becas estudiantiles y recibí",
+  "Escribí capítulos para un libro colaborativo de estudio por"
 ]
