@@ -11,8 +11,8 @@ let handler = async (m, { conn }) => {
       version: '𝗕𝗲𝘁𝗮',
       social: {
         whatsapp: 'https://chat.whatsapp.com/CYKX0ZR6pWMHCXgBgVoTGA',
-        instagram: 'https://www.instagram.com/leo_xzxsy',
-        tiktok: 'https://www.tiktok.com/@leo_xzxsy'
+        instagram: 'https://www.instagram.com/xzzys26',
+        tiktok: 'https://www.tiktok.com/@xzzys16'
       },
       contact: 'https://wa.me/18493907272'
     }
@@ -97,9 +97,9 @@ let handler = async (m, { conn }) => {
       `🪷 *Versión:* 𝗕𝗲𝘁𝗮\n` +
       `💬 *Contacto:* https://wa.me/18493907272\n\n` +
       `📱 *Redes:*\n` +
-      `📷 Instagram: https://www.instagram.com/leo_xzxsy\n` +
-      `🎵 TikTok: https://www.tiktok.com/@leo_xzxsy\n` +
-      `💬 Grupo: https://chat.whatsapp.com/CYKX0ZR6pWMHCXgBgVoTGA`,
+      `📷 Instagram: https://www.instagram.com/xzzys26\n` +
+      `🎵 TikTok: https://www.tiktok.com/@xzzys16\n` +
+      `💬 Canal: https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z`,
       m, ctxOk
     )
   }
