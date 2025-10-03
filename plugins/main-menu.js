@@ -65,7 +65,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} ✨
+┃ 👋🏻 *Hola* @ ${m.sender.split('@')[0]} ✨
 ┃ 🫧 *Nombre*: *${botname}*
 ┃ 👑 *Creador*: *${creador}*
 ┃ ${botType}
