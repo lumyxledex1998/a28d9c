@@ -67,7 +67,7 @@ let taguser = '@' + m.sender.split('@')[0]
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ 👋🏻 *Hola* ${taguser} ✨
+┃ 👋🏻 *Hola* @${userId.split('@')[0]} ✨
 ┃ 🫧 *Nombre*: *${botname}*
 ┃ 👑 *Creador*: *${creador}*
 ┃ ${botType}
@@ -97,7 +97,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
       video: vidBuffer,
       gifPlayback: true,
       caption: menuText,
-      mentions: [m.sender],
+      mentionedJid: [userId],
       ...global.rcanalden2
     }, { quoted: m })
 
