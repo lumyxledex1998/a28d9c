@@ -28,7 +28,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
   user.coin += gananciaTotal
 
-  await conn.reply(m.chat, `${emojiTrabajo} *ITSUKI - Trabajo Completado*\n\n*Usuario:* @${m.sender.split('@')[0]}\n*Trabajo:* ${mensajeTrabajo}\n*Ganancia base:* ¥${baseGanancia.toLocaleString()}\n${bonus > 0 ? `*Bonus suerte:* 🎉 +¥${bonus.toLocaleString()}\n` : ''}*Ganancia total:* 💰 ¥${gananciaTotal.toLocaleString()}\n*Dinero total:* 🏦 ¥${user.coin.toLocaleString()}\n\n${bonus > 0 ? '🎊 ¡Bonus de suerte obtenido!' : '📖 ¡Trabajo completado!'}\n\n📚 "El conocimiento y el esfuerzo siempre son recompensados"`, m, ctxOk)
+  await conn.reply(m.chat, `🍙📚 *ITSUKI NAKANO - Trabajo Completado* 📖✨\n\n${emojiTrabajo} *Trabajo realizado:*\n${mensajeTrabajo}\n\n💰 *Ganancias:*\n📊 Ganancia base: ¥${baseGanancia.toLocaleString()}\n${bonus > 0 ? `🎉 Bonus de suerte: +¥${bonus.toLocaleString()}\n` : ''}💵 Total ganado: ¥${gananciaTotal.toLocaleString()}\n🏦 Dinero total: ¥${user.coin.toLocaleString()}\n\n${bonus > 0 ? '🎊✨ ¡Bonus de suerte obtenido! ¡Excelente trabajo!' : '📖✏️ ¡Trabajo completado con éxito!'}\n\n🍱 "El conocimiento y el esfuerzo siempre son recompensados"\n📚💫 *¡Sigue así, el estudio es la clave del éxito!* 🎒`, m, ctxOk)
 }
 
 handler.help = ['trabajar']
