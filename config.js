@@ -39,7 +39,7 @@ global.prefix = ['.', '!', '/' , '#']
 
 // Números y settings globales para varios códigos
 
-global.botNumber = '50671976915'
+global.botNumber = '18097769423'
 global.packname = 'La Mejor Bot De WhatsApp'
 global.botname = '𝙄𝙩𝙨𝙪𝙠𝙞-𝙄𝘼 🌸'
 global.wm = '© 𝐋𝐞𝐨  𝐗𝐬𝐳𝐲'
