@@ -1,49 +1,15 @@
-// Versión ULTRA SIMPLE que SÍ funciona
-let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
-  if (!isOwner) return m.reply('❌ Solo owner')
-  
-  const action = args[0]?.toLowerCase()
-  
-  if (!global.antiprivado) global.antiprivado = false
-  
-  if (action === 'on') {
-    global.antiprivado = true
-    m.reply('✅ ANTIPRIVADO ON - Bloquearé privados')
-  } else if (action === 'off') {
-    global.antiprivado = false  
-    m.reply('❌ ANTIPRIVADO OFF')
-  } else if (action === 'status') {
-    m.reply(`📊 Antiprivado: ${global.antiprivado ? 'ON ✅' : 'OFF ❌'}`)
-  } else {
-    m.reply(`🔒 Antiprivado: ${global.antiprivado ? 'ACTIVADO' : 'DESACTIVADO'}\n\n${usedPrefix}antiprivado on/off`)
-  }
+export async function before(m, { conn, isAdmin, isBotAdmin, isROwner }) {
+if (m.isBaileys && m.fromMe) return !0
+if (m.isGroup) return !1
+if (!m.message) return !0
+if (m.sender === conn.user?.jid) return
+if (m.text.includes('PIEDRA') || m.text.includes('PAPEL') || m.text.includes('TIJERA') || m.text.includes('code') || m.text.includes('qr')) return !0
+const chat = global.db.data.chats[m.chat]
+const bot = global.db.data.settings[conn.user.jid] || {}
+if (m.chat === '120363401404146384@newsletter') return !0
+if (bot.antiPrivate && !isROwner) {
+await m.reply(`ꕥ Hola @${m.sender.split`@`[0]}, mi dueño a desactivado los comandos en los chats privados el cual serás bloqueado, si quieres usar los comandos del bot te invito a que te unas a nuestra comunidad.\n\n${community}`, false, {mentions: [m.sender]})
+await this.updateBlockStatus(m.chat, 'block')
 }
-
-// Handler BEFORE más confiable
-handler.before = async (m) => {
-  if (m.isGroup || m.isBaileys) return false
-  if (!global.antiprivado) return false
-  
-  console.log(`🚫 ANTIPRIVADO: Bloqueando ${m.sender}`)
-  
-  try {
-    // Bloquear inmediatamente
-    await m.conn.updateBlockStatus(m.sender, 'block')
-    console.log(`✅ BLOQUEADO: ${m.sender}`)
-    
-    // Enviar mensaje (opcional)
-    await m.conn.sendMessage(m.sender, {
-      text: '🚫 Acceso bloqueado. No se permiten mensajes privados.'
-    })
-    
-    return true
-  } catch (error) {
-    console.error('Error:', error)
-    return false
-  }
+return !1
 }
-
-handler.help = ['antiprivado <on/off/status>']
-handler.tags = ['owner'] 
-handler.command = ['antiprivado']
-export default handler
