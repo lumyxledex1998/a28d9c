@@ -1,8 +1,6 @@
 import ws from 'ws'
 
 async function handler(m, { conn: stars, usedPrefix, command }) {
-  const ctxWarn = global.rcanalw || {}
-  
   let uniqueUsers = new Map()
 
   global.conns.forEach((conn) => {
@@ -38,10 +36,12 @@ async function handler(m, { conn: stars, usedPrefix, command }) {
   await stars.sendMessage(m.chat, { 
     image: { url: 'https://files.catbox.moe/begfgc.jpg' }, // cambia la URL por la que quieras
     caption: responseMessage.trim(), 
-    ...ctxWarn
+    ...(typeof rcanal !== 'undefined' ? rcanal : {}) 
   }, { quoted: m })
 }
 
 handler.command = ['sockets', 'bots', 'listbots']
 handler.help = ['bots', 'sockets', 'listbots']
 handler.tags = ['jadibot']
+
+export default handler
