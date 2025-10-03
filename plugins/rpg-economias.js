@@ -36,16 +36,20 @@ const cofres = [
 
 // ==================== HANDLER PRINCIPAL ====================
 let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
+  const ctxErr = (global.rcanalx || {})
+  const ctxWarn = (global.rcanalw || {})
+  const ctxOk = (global.rcanalr || {})
+
   try {
     // Verificar si es grupo
     if (!m.isGroup) {
-      return conn.reply(m.chat, '🌸 ❌ Este comando solo funciona en grupos.', m);
+      return conn.reply(m.chat, '🌸 ❌ Este comando solo funciona en grupos.', m, ctxErr);
     }
 
     // COMANDO ECONOMY
     if (command === 'economy' || command === 'economia') {
       if (!isAdmin) {
-        return conn.reply(m.chat, '📚 ⚠️ Necesitas ser administrador.', m);
+        return conn.reply(m.chat, '📚 ⚠️ Necesitas ser administrador.', m, ctxErr);
       }
 
       // Inicializar chat si no existe
@@ -63,35 +67,35 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
           `🔧 *Comando:* ${usedPrefix}economy <on/off>\n` +
           `📊 *Estado actual:* ${estado}\n\n` +
           `💡 *Activa o desactiva los comandos de economía en este grupo.*`,
-          m
+          m, ctxWarn
         );
       }
 
       if (action === 'on' || action === 'activar') {
         if (currentStatus) {
-          return conn.reply(m.chat, '🌸 ✅ El sistema económico ya está activado.', m);
+          return conn.reply(m.chat, '🌸 ✅ El sistema económico ya está activado.', m, ctxWarn);
         }
         global.db.data.chats[m.chat].economy = true;
         return conn.reply(m.chat, 
           '🌸✅ *Sistema Económico Activado*\n\n' +
           '📚 *"¡Ahora pueden disfrutar del sistema económico en este grupo!"* 🍙',
-          m
+          m, ctxOk
         );
       }
 
       if (action === 'off' || action === 'desactivar') {
         if (!currentStatus) {
-          return conn.reply(m.chat, '🌸 ❌ El sistema económico ya está desactivado.', m);
+          return conn.reply(m.chat, '🌸 ❌ El sistema económico ya está desactivado.', m, ctxWarn);
         }
         global.db.data.chats[m.chat].economy = false;
         return conn.reply(m.chat, 
           '🌸❌ *Sistema Económico Desactivado*\n\n' +
           '📚 *"He desactivado el sistema económico en este grupo."* 🍙',
-          m
+          m, ctxWarn
         );
       }
 
-      return conn.reply(m.chat, '❌ Opción no válida. Usa: on u off', m);
+      return conn.reply(m.chat, '❌ Opción no válida. Usa: on u off', m, ctxErr);
     }
 
     // VERIFICAR SI LA ECONOMÍA ESTÁ ACTIVA PARA OTROS COMANDOS
@@ -100,14 +104,14 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
         `🌸❌ *Sistema Económico Desactivado*\n\n` +
         `📚 Un administrador puede activarlo con:\n` +
         `» ${usedPrefix}economy on`,
-        m
+        m, ctxErr
       );
     }
 
     // COMANDO BALANCE
     if (command === 'balance' || command === 'bal' || command === 'dinero') {
       let target = m.sender;
-      
+
       // Verificar si mencionaron a alguien
       if (m.mentionedJid && m.mentionedJid.length > 0) {
         target = m.mentionedJid[0];
@@ -146,7 +150,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
         `💰 *Total:* ¥${total.toLocaleString()} ${currency}\n\n` +
         `📚 *"¡Sigue esforzándote!"* ✨`;
 
-      await conn.reply(m.chat, texto, m);
+      await conn.reply(m.chat, texto, m, ctxOk);
     }
 
     // COMANDO DAILY
@@ -168,7 +172,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
           `🌸⏰ *Espera un poco más*\n\n` +
           `📚 Vuelve en: ${waitTime}\n` +
           `🍙 *"La paciencia es una virtud"* ✨`,
-          m
+          m, ctxWarn
         );
       }
 
@@ -193,7 +197,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
         `⭐ *Experiencia:* +${expGain} EXP\n` +
         `📅 *Racha:* Día ${user.streak}\n\n` +
         `📚 *"¡Excelente trabajo hoy!"* ✨`,
-        m
+        m, ctxOk
       );
     }
 
@@ -215,7 +219,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
           `🌸⏰ *Cofre en enfriamiento*\n\n` +
           `📚 Vuelve en: ${waitTime}\n` +
           `🍙 *"Los tesoros necesitan tiempo para regenerarse"* ✨`,
-          m
+          m, ctxWarn
         );
       }
 
@@ -234,7 +238,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
         `💰 *Recompensa:* ¥${reward.toLocaleString()} ${currency}\n` +
         `⭐ *Experiencia:* +${expGain} EXP\n\n` +
         `📚 *"¡Buen trabajo!"* ✨`,
-        m
+        m, ctxOk
       );
     }
 
@@ -256,7 +260,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
           `🌸📊 **TOP RICOS** 🍙\n\n` +
           `📝 *Aún no hay usuarios con dinero.*\n` +
           `💡 *Usa ${usedPrefix}daily para empezar*`,
-          m
+          m, ctxWarn
         );
       }
 
@@ -275,12 +279,12 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
         text += `   💰 Total: ¥${user.total.toLocaleString()} ${currency}\n\n`;
       }
 
-      await conn.reply(m.chat, text, m);
+      await conn.reply(m.chat, text, m, ctxOk);
     }
 
   } catch (error) {
     console.error('Error en economía:', error);
-    conn.reply(m.chat, '❌ Ocurrió un error. Intenta nuevamente.', m);
+    conn.reply(m.chat, '❌ Ocurrió un error. Intenta nuevamente.', m, ctxErr);
   }
 };
 
