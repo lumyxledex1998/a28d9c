@@ -8,13 +8,14 @@ let handler = async (m, { conn, isGroup }) => {
     const quoted = m.quoted
     const quotedJid = conn.decodeJid(quoted.sender)
 
-    const stanzaId = quoted.id || m.message?.extendedTextMessage?.contextInfo?.stanzaId
-    const participant = quotedJid || m.message?.extendedTextMessage?.contextInfo?.participant
+    const stanzaId = quoted.id
+    const participant = quoted.participant || quotedJid
 
     if (!stanzaId || !participant)
       return conn.reply(m.chat, '✧ No pude identificar el mensaje a eliminar.', m)
 
     if (quotedJid === botJid) {
+      // Eliminar mensaje propio
       await conn.sendMessage(m.chat, {
         delete: {
           remoteJid: m.chat,
@@ -28,12 +29,11 @@ let handler = async (m, { conn, isGroup }) => {
         const isAdmin = jid => participants.some(p => p.id === jid && /admin|superadmin/i.test(p.admin || ''))
 
         if (!isAdmin(senderJid))
-          return conn.reply(m.chat,${emoji} Solo los administradores pueden borrar mensajes de otros usuarios.', m)
+          return conn.reply(m.chat, '${emoji} Solo los administradores pueden borrar mensajes de otros usuarios.', m)
 
         if (!isAdmin(botJid))
-          return conn.reply(m.chat, handler.botAdmin, m)
+          return conn.reply(m.chat, '${emoji} Necesito ser administrador para borrar mensajes de otros usuarios.', m)
       }
-
       await conn.sendMessage(m.chat, {
         delete: {
           remoteJid: m.chat,
