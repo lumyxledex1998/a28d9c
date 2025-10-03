@@ -34,7 +34,7 @@ rtx2 +=     "💌 *Tu código:* 8 dígitos mágicos\n";
 rtx2 +=     "⏰ *Válido por 60 segundos*\n";
 rtx2 +=     "📝 *Consejo de Itsuki:* Copia y pega rápidito~";
 
-let imagenUrl = 'https://iili.io/KuLFIvs.jpg';
+let imagenUrl = 'https://files.catbox.moe/9cbbyf.jpg';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
