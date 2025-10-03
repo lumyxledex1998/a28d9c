@@ -44,7 +44,7 @@ let handler = async (m, { conn, isGroup }) => {
       })
     }
   } catch (err) {
-    console.error('[*{emoji} ERROR delete]', err)
+    console.error('[${emoji} ERROR delete]', err)
     conn.reply(m.chat, '${emoji} No se pudo eliminar el mensaje. WhatsApp podría estar limitando esta acción.', m)
   }
 }
