@@ -52,7 +52,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 }
 
 handler.help = ['depositar']
-handler.tags = ['rpg']
+handler.tags = ['economy']
 handler.command = ['deposit', 'depositar', 'd', 'dep']
 handler.group = true
 
