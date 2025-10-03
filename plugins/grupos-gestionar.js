@@ -11,46 +11,109 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text, usedPrefix }) => {
   }
 
   try {
+    // VERIFICAR MÉTODOS DISPONIBLES
+    console.log('🔍 Métodos disponibles en conn:')
+    console.log('- groupSettingUpdate:', typeof conn.groupSettingUpdate)
+    console.log('- groupUpdateSetting:', typeof conn.groupUpdateSetting)
+    console.log('- toggleGroupSettings:', typeof conn.toggleGroupSettings)
+
     if (action.includes('cerrar') || action === 'lock') {
-      // MÉTODO CORRECTO para Baileys v5+
-      await conn.groupSettingUpdate(m.chat, 'announcement')
-      m.reply(`✅ *GRUPO CERRADO*\n\n"${groupName}" ahora está cerrado.\nSolo administradores pueden enviar mensajes.`)
+      let success = false
+      
+      // INTENTAR TODOS LOS MÉTODOS POSIBLES
+      try {
+        // Método 1 - Más común
+        await conn.groupSettingUpdate(m.chat, 'announcement')
+        success = true
+        console.log('✅ Cerrado con groupSettingUpdate')
+      } catch (e) {
+        console.log('❌ groupSettingUpdate falló:', e.message)
+      }
+      
+      if (!success) {
+        try {
+          // Método 2 - Alternativo
+          await conn.groupUpdateSetting(m.chat, 'announcement')
+          success = true
+          console.log('✅ Cerrado con groupUpdateSetting')
+        } catch (e) {
+          console.log('❌ groupUpdateSetting falló:', e.message)
+        }
+      }
+      
+      if (!success) {
+        try {
+          // Método 3 - Otro nombre
+          await conn.toggleGroupSettings(m.chat, 'announcement')
+          success = true
+          console.log('✅ Cerrado con toggleGroupSettings')
+        } catch (e) {
+          console.log('❌ toggleGroupSettings falló:', e.message)
+        }
+      }
+      
+      if (success) {
+        m.reply(`🔒 *GRUPO CERRADO*\n\n"${groupName}" ahora está cerrado.\nSolo administradores pueden escribir.`)
+      } else {
+        m.reply('❌ No se pudo cerrar el grupo. Verifica los permisos del bot.')
+      }
       
     } else if (action.includes('abrir') || action === 'unlock') {
-      // MÉTODO CORRECTO para Baileys v5+
-      await conn.groupSettingUpdate(m.chat, 'not_announcement')
-      m.reply(`✅ *GRUPO ABIERTO*\n\n"${groupName}" ahora está abierto.\nTodos los miembros pueden enviar mensajes.`)
+      let success = false
+      
+      // INTENTAR TODOS LOS MÉTODOS POSIBLES
+      try {
+        await conn.groupSettingUpdate(m.chat, 'not_announcement')
+        success = true
+        console.log('✅ Abierto con groupSettingUpdate')
+      } catch (e) {
+        console.log('❌ groupSettingUpdate falló:', e.message)
+      }
+      
+      if (!success) {
+        try {
+          await conn.groupUpdateSetting(m.chat, 'not_announcement')
+          success = true
+          console.log('✅ Abierto con groupUpdateSetting')
+        } catch (e) {
+          console.log('❌ groupUpdateSetting falló:', e.message)
+        }
+      }
+      
+      if (!success) {
+        try {
+          await conn.toggleGroupSettings(m.chat, 'not_announcement')
+          success = true
+          console.log('✅ Abierto con toggleGroupSettings')
+        } catch (e) {
+          console.log('❌ toggleGroupSettings falló:', e.message)
+        }
+      }
+      
+      if (success) {
+        m.reply(`🔓 *GRUPO ABIERTO*\n\n"${groupName}" ahora está abierto.\nTodos pueden escribir.`)
+      } else {
+        m.reply('❌ No se pudo abrir el grupo. Verifica los permisos del bot.')
+      }
       
     } else if (action.includes('estado') || action === 'status') {
       const groupInfo = await conn.groupMetadata(m.chat)
       const estado = groupInfo.announce ? '🔒 CERRADO' : '🔓 ABIERTO'
-      m.reply(`📊 *ESTADO DE "${groupName}"*\n\n• Estado: ${estado}\n• Miembros: ${groupInfo.participants.length}\n• Admins: ${groupInfo.participants.filter(p => p.admin).length}`)
+      m.reply(`📊 *ESTADO*\nGrupo: ${groupName}\nEstado: ${estado}\nMiembros: ${groupInfo.participants.length}`)
       
     } else {
       m.reply(`❌ Comando no válido\n\nUsa:\n${usedPrefix}cerrargrupo\n${usedPrefix}abrirgrupo\n${usedPrefix}estadogrupo`)
     }
 
   } catch (error) {
-    console.error('Error:', error)
-    
-    // Si falla, probar método alternativo
-    try {
-      if (action.includes('cerrar')) {
-        await conn.groupUpdateSetting(m.chat, 'announcement')
-        m.reply(`✅ *GRUPO CERRADO* (método alternativo)\n\n"${groupName}" ahora está cerrado.`)
-      } else if (action.includes('abrir')) {
-        await conn.groupUpdateSetting(m.chat, 'not_announcement')
-        m.reply(`✅ *GRUPO ABIERTO* (método alternativo)\n\n"${groupName}" ahora está abierto.`)
-      }
-    } catch (error2) {
-      m.reply(`❌ Error grave: ${error.message}\n\nVerifica que el bot tenga permisos de administrador completos.`)
-    }
+    console.error('❌ Error general:', error)
+    m.reply(`❌ Error: ${error.message}`)
   }
 }
 
 handler.help = ['cerrargrupo', 'abrirgrupo', 'estadogrupo']
 handler.tags = ['group']
-handler.command = ['cerrargrupo', 'abrirgrupo', 'estadogrupo', 'lock', 'unlock', 'groupstatus']
+handler.command = ['cerrargrupo', 'abrirgrupo', 'estadogrupo', 'lock', 'unlock']
 handler.group = true
 handler.admin = true
 handler.botAdmin = true
