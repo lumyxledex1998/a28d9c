@@ -34,10 +34,10 @@ let handler = async (m, { conn, usedPrefix }) => {
 📖 *Información del Usuario:*
 👤 Nombre: *${name}*
 
-💵 *Estado Financiero:*
-🎒 Cartera: ¥${coin.toLocaleString()} ${currency}
+📊 *Estado Financiero:*
+👛 Cartera: ¥${coin.toLocaleString()} ${currency}
 🏦 Banco: ¥${bank.toLocaleString()} ${currency}
-💎 Total: ¥${total.toLocaleString()} ${currency}
+💴 Total: ¥${total.toLocaleString()} ${currency}
 
 ${coin > bank ? '⚠️ *Advertencia:* Tienes mucho dinero en tu cartera' : '✅ *Excelente:* Tu dinero está bien protegido'}
 
