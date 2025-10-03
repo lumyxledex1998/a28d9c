@@ -57,21 +57,18 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let uptime = clockString(process.uptime() * 1000)
 
     // Detectar automáticamente si es bot oficial o sub-bot
-    // El bot oficial generalmente usa el número principal
-    // Puedes ajustar esta lógica según cómo identifiques los sub-bots
     const botJid = conn.user.jid
-    const officialBotNumber = '50671976915@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+    const officialBotNumber = '18493907272@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
     
     const isOfficialBot = botJid === officialBotNumber
-    const botType = isOfficialBot ? '🌷 *BOT OFICIAL*' : '🌱 *SUB-BOT*'
-    const botWarning = isOfficialBot ? '' : '\n┃ ⚠️ *Este es un SUB-BOT no oficial*'
+    const botType = isOfficialBot ? '🤖 *BOT OFICIAL*' : '🔰 *SUB-BOT*'
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ ${botType}${botWarning}
 ┃ 👋🏻 *Hola* @${m.sender.split('@')[0]} ✨
 ┃ 🫧 *Nombre*: *${botname}*
 ┃ 👑 *Creador*: *${creador}*
+┃ ${botType}
 ┃ ⏳️ *Uptime*: *${uptime}*
 ┃ 💎 *Premium*: *${totalPremium}*
 ┃ 🪷 *Versión*: *${version}*
