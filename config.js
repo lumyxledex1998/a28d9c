@@ -1,20 +1,3 @@
-/*
-██████╗░██╗░░░██╗███████╗███████╗
-██╔══██╗╚██╗░██╔╝╚════██║██╔════╝
-██████╔╝░╚████╔╝░░░███╔═╝█████╗░░
-██╔══██╗░░╚██╔╝░░██╔══╝░░██╔══╝░░
-██║░░██║░░░██║░░░███████╗███████╗
-╚═╝░░╚═╝░░░╚═╝░░░╚══════╝╚══════╝
-Creado - By AyeitsRyze
-Contacto - https://wa.me/+15614809253
-Copyright 2025 - All rights reserved
-*/
-
-/*♡❀˖⁺. ༶🐻✨Este bot es oficialmente  de RyzeMD-David|Nino Nakano-@xrljose🌻♡⛓ ⋆˙⊹❀♡
-*.°•*.♡ ️ッ Prohibido  editar los creditos ☁✧•. • °
-☆ Creador RyzeMD y @xrljose
-˚ ༘♡ ·˚꒰Gracias por usar nuestro bot꒱ ₊˚ˑ༄
-*/
 
 import { watchFile, unwatchFile } from 'fs'
 import chalk from 'chalk'
@@ -29,8 +12,6 @@ import { dirname } from 'path'
 // Define global.__dirname, que es necesario si estás migrando código que lo usa (como tu función ffmpeg).
 global.__dirname = (url) => dirname(fileURLToPath(url));
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Owners / Mods / Prems
 global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
    ['18493907272', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
