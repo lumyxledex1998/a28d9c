@@ -99,7 +99,14 @@ ${comandos.map(menu => menu.help.map(cmd =>
       gifPlayback: true,
       caption: menuText,
       mentionedJid: [userId],
-      ...global.rcanalden2
+          contextInfo: {
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: idchannel,
+        serverMessageId: 100,
+        newsletterName: namechannel,
+      },
+    },
     }, { quoted: m })
 
   } catch (e) {
