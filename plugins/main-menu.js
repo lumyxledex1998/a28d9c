@@ -101,14 +101,12 @@ ${comandos.map(menu => menu.help.map(cmd =>
     gifPlayback: true,
     caption: menuText,
     mentionedJid: [userId],
-    contextInfo: {
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: idchannel,
-        serverMessageId: 100,
-        newsletterName: namechannel
-      }
-    }
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+     newsletterJid: idchannel,
+     serverMessageId: '',
+     newsletterName: namechannel
+ },
   },
   { quoted: m }
 )
