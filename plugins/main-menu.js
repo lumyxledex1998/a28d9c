@@ -94,20 +94,24 @@ ${comandos.map(menu => menu.help.map(cmd =>
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
     let vidBuffer = await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer()
-    await conn.sendMessage(m.chat, {
-      video: vidBuffer,
-      gifPlayback: true,
-      caption: menuText,
-      mentionedJid: [userId],
-          contextInfo: {
+    await conn.sendMessage(
+  m.chat,
+  {
+    video: vidBuffer,
+    gifPlayback: true,
+    caption: menuText,
+    mentionedJid: [userId],
+    contextInfo: {
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: idchannel,
         serverMessageId: 100,
-        newsletterName: namechannel,
-      },
-    },
-    }, { quoted: m })
+        newsletterName: namechannel
+      }
+    }
+  },
+  { quoted: m }
+)
 
   } catch (e) {
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
