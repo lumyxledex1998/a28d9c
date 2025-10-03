@@ -61,7 +61,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         const officialBotNumber = '50671976915@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
     
     const isOfficialBot = botJid === officialBotNumber
-    const botType = isOfficialBot ? '🌷 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁'
+    const botType = isOfficialBot ? '🌷 𝗪𝗮𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹' : '🌱 𝗪𝗮 𝗦𝘂𝗯-𝗕𝗼𝘁'
 
     let menuText = `
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
