@@ -100,13 +100,15 @@ ${comandos.map(menu => menu.help.map(cmd =>
     video: vidBuffer,
     gifPlayback: true,
     caption: menuText,
-    mentionedJid: [userId],
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-     newsletterJid: idchannel,
-     serverMessageId: '',
-     newsletterName: namechannel
- },
+    contextInfo: {
+      mentionedJid: [userId],
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: idchannel, 
+        serverMessageId: 100, 
+        newsletterName: namechannel 
+      }
+    }
   },
   { quoted: m }
 )
