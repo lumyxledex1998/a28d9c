@@ -1,4 +1,4 @@
-let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
+let handler = async (m, { conn, isAdmin, isBotAdmin, text, usedPrefix }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
@@ -25,7 +25,7 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
 
 ⚙️ *Opciones disponibles:*
 • ${usedPrefix}cerrargrupo
-• ${usedPrefix}abrirlgrupo
+• ${usedPrefix}abrirgrupo
 • ${usedPrefix}estadogrupo
 
 🔒 *Cerrar Grupo:*
@@ -67,7 +67,7 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
 
       case 'abrir':
       case 'open':
-      case 'abrirlgrupo':
+      case 'abrirgrupo':
       case 'unlock':
         // Abrir grupo - todos pueden enviar mensajes
         await conn.groupSettingUpdate(m.chat, 'not_announcement')
@@ -109,7 +109,7 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
           '❌📚 *Opción no válida*\n\n' +
           '🍙 *Usa:*\n' +
           `• ${usedPrefix}cerrargrupo\n` +
-          `• ${usedPrefix}abrirlgrupo\n` +
+          `• ${usedPrefix}abrirgrupo\n` +
           `• ${usedPrefix}estadogrupo`,
           m, ctxErr
         )
@@ -129,9 +129,9 @@ let handler = async (m, { conn, isAdmin, isBotAdmin, text }) => {
   }
 }
 
-handler.help = ['cerrargrupo', 'abrirlgrupo', 'estadogrupo']
+handler.help = ['cerrargrupo', 'abrirgrupo', 'estadogrupo']
 handler.tags = ['group']
-handler.command = ['cerrargrupo', 'abrirlgrupo', 'estadogrupo', 'lockgroup', 'unlockgroup', 'groupstatus']
+handler.command = ['cerrargrupo', 'abrirgrupo', 'estadogrupo', 'lockgroup', 'unlockgroup', 'groupstatus']
 handler.group = true
 handler.admin = true
 handler.botAdmin = true
