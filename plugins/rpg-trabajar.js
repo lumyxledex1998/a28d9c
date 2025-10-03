@@ -1,7 +1,7 @@
 let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, participants }) => {
-  const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
-  const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
-  const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Éxito', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
+  const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/FtdSt.jpg', sourceUrl: global.canalOficial || '' }}}
+  const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/FtdSt.jpg', sourceUrl: global.canalOficial || '' }}}
+  const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Éxito', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/FtdSt.jpg', sourceUrl: global.canalOficial || '' }}}
 
   if (!global.db.data.chats[m.chat].economy && m.isGroup) {
     return conn.reply(m.chat, `🍙 *ITSUKI - Sistema de Economía*\n\n❌ La economía está desactivada en este grupo\n\n*Administrador*, activa la economía con:\n${usedPrefix}economy on\n\n📚 "No puedo ayudarte si la economía está desactivada..."`, m, ctxErr)
