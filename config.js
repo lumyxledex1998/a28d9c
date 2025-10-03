@@ -9,8 +9,9 @@ import axios from 'axios'
 import moment from 'moment-timezone'
 import { dirname } from 'path' 
 
-// Define global.__dirname, que es necesario si estás migrando código que lo usa (como tu función ffmpeg).
 global.__dirname = (url) => dirname(fileURLToPath(url));
+
+// Configuraciones principales
 
 global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
@@ -23,8 +24,8 @@ global.mods = ['18493907272', '595972314588', '', '']
 global.suittag = ['18493907272', '595972314588', '']
 global.prems = ['18493907272', '595972314588', '', '']
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Bot Info
+// Información del bot 
+
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.9'
 global.languaje = 'Español'
@@ -37,8 +38,8 @@ global.jadi = 'jadibts'
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#']
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Número del bot (se autocompleta tras vinculación si usas pairing code)
+// Números y settings globales para varios códigos
+
 global.botNumber = '50671976915'
 global.packname = 'La Mejor Bot De WhatsApp'
 global.botname = '𝙄𝙩𝙨𝙪𝙠𝙞-𝙄𝘼 🌸'
@@ -51,24 +52,26 @@ global.etiqueta = '@Leo Xzsy'
 global.gt = '© creado Por Leo Xzsy'
 global.me = '𝐈𝐭𝐬𝐮𝐤𝐢-𝐖𝐀𝐁𝐎𝐓'
 global.listo = '* Aqui tiene*'
-
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Currency
 global.moneda = 'Yenes'
+global.multiplier = 69
+global.maxwarn = 3
+global.cheerio = cheerio
+global.fs = fs
+global.fetch = fetch
+global.axios = axios
+global.moment = moment
 
+// Enlaces oficiales del bot 
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Links
 global.gp1 = 'https://chat.whatsapp.com/EteP5pnrAZC14y9wReGF1V'
 global.comunidad1 = 'https://chat.whatsapp.com/DeJvBuS7QgB3Ybp1BZulWL'
 global.channel = 'https://whatsapp.com/channel/0029Vb4cQJu2f3EB7BS7o11M'
 global.channel2 = 'https://whatsapp.com/channel/0029ValMlRS6buMFL9d0iQ0S'
 global.md = 'https://github.com/xzzys26/Gaara-Ultra-MD'
-global.correo = 'xzzysultra@gmail.com'
+global.correo = 'correo@gmail.com'
 
+// Apis para las descargas y más
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// APIs & Keys (placeholders; replace as needed)
 global.APIs = {
   ryzen: 'https://api.ryzendesu.vip',
   xteam: 'https://api.xteam.xyz',
@@ -84,9 +87,8 @@ global.APIKeys = {
   // 'https://api.siputzx.my.id': 'API_KEY_OPCIONAL'
 }
 
+// Endpoints de IA
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Configurable: endpoint de IA (siputzx bard)
 global.SIPUTZX_AI = {
   base: global.APIs?.siputzx || 'https://api.siputzx.my.id',
   bardPath: '/api/ai/bard',
@@ -95,23 +97,6 @@ global.SIPUTZX_AI = {
 }
 
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Misc
-global.multiplier = 69
-global.maxwarn = 3
-
-
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Expose libs
-global.cheerio = cheerio
-global.fs = fs
-global.fetch = fetch
-global.axios = axios
-global.moment = moment
-
-
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-//Global En chats
 global.chatDefaults = {
   isBanned: false,
   sAutoresponder: '',
@@ -144,9 +129,8 @@ watchFile(file, () => {
   try { import(pathToFileURL(file).href + `?update=${Date.now()}`) } catch {}
 })
 
+// Configuraciones finales
 
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-// Export para consumidores que usan import default (index.js adaptado)
 export default {
   prefix: global.prefix,
   owner: global.owner,
