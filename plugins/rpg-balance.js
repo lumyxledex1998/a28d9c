@@ -2,6 +2,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
   const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Depósito', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
+  
+  const currency = global.currency || 'Yenes'
 
   if (!db.data.chats[m.chat].economy && m.isGroup) {
     return conn.reply(m.chat, `🍙📚 *ITSUKI - Sistema de Economía*\n\n❌ Los comandos de economía están desactivados en este grupo\n\n*Administrador*, activa la economía con:\n${usedPrefix}economy on\n\n📖 "No puedo gestionar depósitos si la economía está desactivada..."`, m, ctxErr)
@@ -48,11 +50,11 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   user.coin -= count * 1
   user.bank += count * 1
 
-  await conn.reply(m.chat, `🍙🏦 *ITSUKI - Depósito Exitoso* 📚✨\n\n✅ Depósito realizado correctamente\n\n💰 *Monto depositado:*\n¥${count.toLocaleString()} ${currency}\n\n📊 *Resumen financiero:*\n👛 Cartera: ¥${user.coin.toLocaleString()} ${currency}\n🏦 Banco: ¥${user.bank.toLocaleString()} ${currency}\n💴 Total: ¥${(user.coin + user.bank).toLocaleString()} ${currency}\n\n🔒 "¡Perfecto! Tu dinero está protegido"\n📚✨ "La administración inteligente es clave del éxito"`, m, ctxOk)
+  await conn.reply(m.chat, `🍙🏦 *ITSUKI - Depósito Exitoso* 📚✨\n\n✅ Depósito realizado correctamente\n\n💰 *Monto depositado:*\n¥${count.toLocaleString()} ${currency}\n\n📊 *Resumen financiero:*\n👛 Cartera: ¥${user.coin.toLocaleString()} ${currency}\n🏦 Banco: ¥${user.bank.toLocaleString()} ${currency}\n💎 Total: ¥${(user.coin + user.bank).toLocaleString()} ${currency}\n\n🔒 "¡Perfecto! Tu dinero está protegido"\n📚✨ "La administración inteligente es clave del éxito"`, m, ctxOk)
 }
 
 handler.help = ['depositar']
-handler.tags = ['economy']
+handler.tags = ['rpg']
 handler.command = ['deposit', 'depositar', 'd', 'dep']
 handler.group = true
 
