@@ -5,18 +5,18 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
   // Verificar si la economía está activada en el grupo
   if (!db.data.chats[m.chat].economy && m.isGroup) {
-    return m.reply(`╭━━━「 🍙 *ITSUNO - ECONOMÍA* 」━━━⬣
-┃ ✦ Estado: ❌ *DESACTIVADA*
-┃ ✦ Grupo: ${m.chat.split('@')[0]}
-┃ ✦ Comando: ${command}
+    return m.reply(`╭━━━「 🍙 ${ctxErr.itsuno || 'ITSUNO'} - ECONOMÍA 」━━━⬣
+┃ ${ctxErr.status || '✦ Estado'}: ${ctxErr.x || '❌'} *${ctxErr.desactivada || 'DESACTIVADA'}*
+┃ ${ctxErr.grupo || '✦ Grupo'}: ${m.chat.split('@')[0]}
+┃ ${ctxErr.comando || '✦ Comando'}: ${command}
 ╰━━━━━━━━━━━━━━⬣
 
-❌ Los comandos de economía están desactivados en este grupo.
+${ctxErr.x || '❌'} ${ctxErr.economy_disabled || 'Los comandos de economía están desactivados en este grupo.'}
 
-👑 *Administrador*: Usa el comando:
+${ctxErr.admin || '👑 *Administrador*'}: ${ctxErr.use_command || 'Usa el comando'}:
 » ${usedPrefix}economy on
 
-📚 "No puedo ayudarte con la economía si está desactivada..."`)
+${ctxErr.message || '📚 "No puedo ayudarte con la economía si está desactivada..."'}`)
   }
 
   let user = global.db.data.users[m.sender]
@@ -28,14 +28,14 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   // Verificar cooldown
   if (Date.now() - user.lastwork < cooldown) {
     const tiempoRestante = formatTime(user.lastwork + cooldown - Date.now())
-    return m.reply(`╭━━━「 ⏰ *ITSUKI COOLDOWN* 」━━━⬣
-┃ ✦ Estado: ⚠️ *EN ENFRIAMIENTO*
-┃ ✦ Usuario: @${m.sender.split('@')[0]}
-┃ ✦ Tiempo restante: *${tiempoRestante}*
-┃ ✦ Comando alternativo: *${usedPrefix}cooldown*
+    return m.reply(`╭━━━「 ⏰ ${ctxWarn.itsuki || 'ITSUKI'} ${ctxWarn.cooldown || 'COOLDOWN'} 」━━━⬣
+┃ ${ctxWarn.status || '✦ Estado'}: ${ctxWarn.warning || '⚠️'} *${ctxWarn.en_enfriamiento || 'EN ENFRIAMIENTO'}*
+┃ ${ctxWarn.usuario || '✦ Usuario'}: @${m.sender.split('@')[0]}
+┃ ${ctxWarn.tiempo_restante || '✦ Tiempo restante'}: *${tiempoRestante}*
+┃ ${ctxWarn.comando_alternativo || '✦ Comando alternativo'}: *${usedPrefix}cooldown*
 ╰━━━━━━━━━━━━━━⬣
 
-📚 "Un buen trabajo requiere descanso adecuado..."`)
+${ctxWarn.message || '📚 "Un buen trabajo requiere descanso adecuado..."'}`)
   }
 
   // Actualizar último trabajo
@@ -54,16 +54,19 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   user.coin += gananciaTotal
 
   // Mensaje con formato recnal mejorado
-  await m.reply(`╭━━━「 🍙 *ITSUKI WORK* 」━━━⬣
-┃ ✦ Usuario: @${m.sender.split('@')[0]}
-┃ ✦ Trabajo: ${emojiTrabajo} ${mensajeTrabajo}
-┃ ✦ Ganancia base: ¥${baseGanancia.toLocaleString()}
-${bonus > 0 ? `┃ ✦ Bonus suerte: 🎉 +¥${bonus.toLocaleString()}\n` : ''}┃ ✦ Ganancia total: 💰 ¥${gananciaTotal.toLocaleString()}
-┃ ✦ Dinero total: 🏦 ¥${user.coin.toLocaleString()}
+  await m.reply(`╭━━━「 🍙 ${ctxOk.itsuki_work || 'ITSUKI WORK'} 」━━━⬣
+┃ ${ctxOk.usuario || '✦ Usuario'}: @${m.sender.split('@')[0]}
+┃ ${ctxOk.trabajo || '✦ Trabajo'}: ${emojiTrabajo} ${mensajeTrabajo}
+┃ ${ctxOk.ganancia_base || '✦ Ganancia base'}: ${ctxOk.yen || '¥'}${baseGanancia.toLocaleString()}
+${bonus > 0 ? `┃ ${ctxOk.bonus_suerte || '✦ Bonus suerte'}: ${ctxOk.bonus_emoji || '🎉'} +${ctxOk.yen || '¥'}${bonus.toLocaleString()}\n` : ''}┃ ${ctxOk.ganancia_total || '✦ Ganancia total'}: ${ctxOk.dinero_emoji || '💰'} ${ctxOk.yen || '¥'}${gananciaTotal.toLocaleString()}
+┃ ${ctxOk.dinero_total || '✦ Dinero total'}: ${ctxOk.banco_emoji || '🏦'} ${ctxOk.yen || '¥'}${user.coin.toLocaleString()}
 ╰━━━━━━━━━━━━━━⬣
 
-${emojiExtra} ${bonus > 0 ? '¡Bonus de suerte obtenido! 🎊' : '¡Trabajo completado!'}
-📚 "El conocimiento y el esfuerzo siempre son recompensados"`)
+${emojiExtra} ${bonus > 0 ? 
+  `${ctxOk.bonus_message || '¡Bonus de suerte obtenido!'} ${ctxOk.celebration_emoji || '🎊'}` : 
+  `${ctxOk.trabajo_completado || '¡Trabajo completado!'}`
+}
+${ctxOk.final_message || '📚 "El conocimiento y el esfuerzo siempre son recompensados"}'}`)
 }
 
 handler.help = ['trabajar']
