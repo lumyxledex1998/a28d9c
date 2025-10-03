@@ -1,41 +1,42 @@
 let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, participants }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
+  // Configurar canales de respuesta (con valores por defecto si no existen)
+  const ctxErr = global.rcanalx || { contextInfo: { externalAdReply: { title: '❌ Error', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
+  const ctxWarn = global.rcanalw || { contextInfo: { externalAdReply: { title: '⚠️ Advertencia', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
+  const ctxOk = global.rcanalr || { contextInfo: { externalAdReply: { title: '✅ Éxito', body: 'Itsuki Nakano IA', thumbnailUrl: 'https://qu.ax/QGAVS.jpg', sourceUrl: global.canalOficial || '' }}}
 
   // Verificar si la economía está activada en el grupo
-  if (!db.data.chats[m.chat].economy && m.isGroup) {
-    return m.reply(`╭━━━「 🍙 ${ctxErr.itsuno || 'ITSUNO'} - ECONOMÍA 」━━━⬣
-┃ ${ctxErr.status || '✦ Estado'}: ${ctxErr.x || '❌'} *${ctxErr.desactivada || 'DESACTIVADA'}*
-┃ ${ctxErr.grupo || '✦ Grupo'}: ${m.chat.split('@')[0]}
-┃ ${ctxErr.comando || '✦ Comando'}: ${command}
+  if (!global.db.data.chats[m.chat].economy && m.isGroup) {
+    return conn.reply(m.chat, `╭━━━「 🍙 *ITSUKI - ECONOMÍA* 」━━━⬣
+┃ ✦ Estado: ❌ *DESACTIVADA*
+┃ ✦ Grupo: ${m.chat.split('@')[0]}
+┃ ✦ Comando: ${command}
 ╰━━━━━━━━━━━━━━⬣
 
-${ctxErr.x || '❌'} ${ctxErr.economy_disabled || 'Los comandos de economía están desactivados en este grupo.'}
+❌ Los comandos de economía están desactivados en este grupo.
 
-${ctxErr.admin || '👑 *Administrador*'}: ${ctxErr.use_command || 'Usa el comando'}:
+👑 *Administrador*: Usa el comando:
 » ${usedPrefix}economy on
 
-${ctxErr.message || '📚 "No puedo ayudarte con la economía si está desactivada..."'}`)
+📚 "No puedo ayudarte con la economía si está desactivada..."`, m, ctxErr)
   }
 
   let user = global.db.data.users[m.sender]
   const cooldown = 2 * 60 * 1000 // 2 minutos de cooldown
 
   // Inicializar lastwork si no existe
-  user.lastwork = user.lastwork || 0
+  if (!user.lastwork) user.lastwork = 0
 
   // Verificar cooldown
   if (Date.now() - user.lastwork < cooldown) {
     const tiempoRestante = formatTime(user.lastwork + cooldown - Date.now())
-    return m.reply(`╭━━━「 ⏰ ${ctxWarn.itsuki || 'ITSUKI'} ${ctxWarn.cooldown || 'COOLDOWN'} 」━━━⬣
-┃ ${ctxWarn.status || '✦ Estado'}: ${ctxWarn.warning || '⚠️'} *${ctxWarn.en_enfriamiento || 'EN ENFRIAMIENTO'}*
-┃ ${ctxWarn.usuario || '✦ Usuario'}: @${m.sender.split('@')[0]}
-┃ ${ctxWarn.tiempo_restante || '✦ Tiempo restante'}: *${tiempoRestante}*
-┃ ${ctxWarn.comando_alternativo || '✦ Comando alternativo'}: *${usedPrefix}cooldown*
+    return conn.reply(m.chat, `╭━━━「 ⏰ *ITSUKI COOLDOWN* 」━━━⬣
+┃ ✦ Estado: ⚠️ *EN ENFRIAMIENTO*
+┃ ✦ Usuario: @${m.sender.split('@')[0]}
+┃ ✦ Tiempo restante: *${tiempoRestante}*
+┃ ✦ Comando alternativo: *${usedPrefix}cooldown*
 ╰━━━━━━━━━━━━━━⬣
 
-${ctxWarn.message || '📚 "Un buen trabajo requiere descanso adecuado..."'}`)
+📚 "Un buen trabajo requiere descanso adecuado..."`, m, ctxWarn)
   }
 
   // Actualizar último trabajo
@@ -54,19 +55,16 @@ ${ctxWarn.message || '📚 "Un buen trabajo requiere descanso adecuado..."'}`)
   user.coin += gananciaTotal
 
   // Mensaje con formato recnal mejorado
-  await m.reply(`╭━━━「 🍙 ${ctxOk.itsuki_work || 'ITSUKI WORK'} 」━━━⬣
-┃ ${ctxOk.usuario || '✦ Usuario'}: @${m.sender.split('@')[0]}
-┃ ${ctxOk.trabajo || '✦ Trabajo'}: ${emojiTrabajo} ${mensajeTrabajo}
-┃ ${ctxOk.ganancia_base || '✦ Ganancia base'}: ${ctxOk.yen || '¥'}${baseGanancia.toLocaleString()}
-${bonus > 0 ? `┃ ${ctxOk.bonus_suerte || '✦ Bonus suerte'}: ${ctxOk.bonus_emoji || '🎉'} +${ctxOk.yen || '¥'}${bonus.toLocaleString()}\n` : ''}┃ ${ctxOk.ganancia_total || '✦ Ganancia total'}: ${ctxOk.dinero_emoji || '💰'} ${ctxOk.yen || '¥'}${gananciaTotal.toLocaleString()}
-┃ ${ctxOk.dinero_total || '✦ Dinero total'}: ${ctxOk.banco_emoji || '🏦'} ${ctxOk.yen || '¥'}${user.coin.toLocaleString()}
+  await conn.reply(m.chat, `╭━━━「 🍙 *ITSUKI WORK* 」━━━⬣
+┃ ✦ Usuario: @${m.sender.split('@')[0]}
+┃ ✦ Trabajo: ${emojiTrabajo} ${mensajeTrabajo}
+┃ ✦ Ganancia base: ¥${baseGanancia.toLocaleString()}
+${bonus > 0 ? `┃ ✦ Bonus suerte: 🎉 +¥${bonus.toLocaleString()}\n` : ''}┃ ✦ Ganancia total: 💰 ¥${gananciaTotal.toLocaleString()}
+┃ ✦ Dinero total: 🏦 ¥${user.coin.toLocaleString()}
 ╰━━━━━━━━━━━━━━⬣
 
-${emojiExtra} ${bonus > 0 ? 
-  `${ctxOk.bonus_message || '¡Bonus de suerte obtenido!'} ${ctxOk.celebration_emoji || '🎊'}` : 
-  `${ctxOk.trabajo_completado || '¡Trabajo completado!'}`
-}
-${ctxOk.final_message || '📚 "El conocimiento y el esfuerzo siempre son recompensados"}'}`)
+${emojiExtra} ${bonus > 0 ? '¡Bonus de suerte obtenido! 🎊' : '¡Trabajo completado!'}
+📚 "El conocimiento y el esfuerzo siempre son recompensados"`, m, ctxOk)
 }
 
 handler.help = ['trabajar']
