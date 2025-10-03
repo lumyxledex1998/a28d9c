@@ -60,6 +60,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     const botJid = conn.user.jid
         const officialBotNumber = '50671976915@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
 
+let name = conn.getName(m.sender) || 'Usuario'
 let taguser = '@' + m.sender.split('@')[0]
     
     const isOfficialBot = botJid === officialBotNumber
