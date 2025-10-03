@@ -34,9 +34,8 @@ async function handler(m, { conn: stars, usedPrefix, command }) {
 
   // Enviar mensaje con imagen
   await stars.sendMessage(m.chat, { 
-    image: { url: 'https://files.catbox.moe/begfgc.jpg' }, // cambia la URL por la que quieras
-    caption: responseMessage.trim(), 
-    ...(typeof rcanal !== 'undefined' ? rcanal : {}) 
+    image: { url: 'https://files.catbox.moe/begfgc.jpg' },
+    caption: responseMessage.trim()
   }, { quoted: m })
 }
 
