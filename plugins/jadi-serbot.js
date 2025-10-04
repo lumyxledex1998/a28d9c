@@ -99,7 +99,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 
 handler.help = ['qr', 'code']
 handler.tags = ['serbot']
-handler.command = ['qr', 'code', '']
+handler.command = ['qr', 'code']
 export default handler
 
 export async function startSubBot(options) {
