@@ -72,7 +72,7 @@ var handler = async (m, conn ) => {
             response = '❀ ¡Todo está en orden! No se detectaron errores.'
         }
 
-        await conn.reply(m.chat, response, m)
+        await m.reply(response)
         await m.react(hasErrors ? '⚠️' : '✅')
     } catch (err) {
         await m.react('✖️')
