@@ -42,6 +42,6 @@ let handler = async (m, { conn, args, command }) => {
 
 handler.help = ["play <canción>", "playvid <canción>"]
 handler.tags = ["downloader"]
-handler.command = /^play|playvid$/i
+handler.command = /^play7|playvid$/i
 
 export default handler
