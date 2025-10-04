@@ -76,7 +76,7 @@ var handler = async (m, conn ) => {
         await m.react(hasErrors ? '⚠️' : '✅')
     } catch (err) {
         await m.react('✖️')
-        await conn.reply(m.chat, `‼️ Error en el escaneo: ${err.message}`, m)
+        await m.reply(`‼️ Error en el escaneo: ${err.message}`)
     }
 }
 
