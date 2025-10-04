@@ -1,5 +1,5 @@
 //Creador del menu: BrayanOFC
-import { xpRange } from './levelling.js'
+//import { xpRange } from './levelling.js'
 import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
