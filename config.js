@@ -36,7 +36,7 @@ global.sessions = 'sessions'
 global.jadi = 'jadibts'
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#']
-
+global.apikey = 'ItsukiNakanoIA'
 // Números y settings globales para varios códigos
 
 global.botNumber = '18097769423'
