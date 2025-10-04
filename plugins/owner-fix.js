@@ -15,7 +15,6 @@ var handler = async (m, { conn, usedPrefix, command }) => {
 
     let response = `🍙📚 *ITSUKI - Revisión de Sintaxis* 🔍✨\n\n`
     response += `📂 *Archivos analizados:* ${files.length}\n`
-    response += `⏰ *Fecha:* ${new Date().toLocaleString('es-ES')}\n\n`
     response += `━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
 
     let hasErrors = false
