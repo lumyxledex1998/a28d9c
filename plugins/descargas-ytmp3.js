@@ -8,29 +8,34 @@ let handler = async (m, { conn, args }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key } })
 
-    let res
+    let res, fromBackup = false
+
     try {
       res = await fetch(`https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${encodeURIComponent(urlVideo)}`)
       if (!res.ok) throw new Error("Error en API principal")
       console.log("» Usando API principal (Zenkey)")
     } catch {
       console.warn("» Error con API principal, intentando respaldo...")
-      res = await fetch(`https://apiadonix.kozow.com/download/ytmp3?apikey=ItsukiNakanoIA&url=${encodeURIComponent(urlVideo)}`)
+      res = await fetch(`https://apiadonix.kozow.com/download/ytmp3?apikey=${global.apikey}&url=${encodeURIComponent(urlVideo)}`)
       if (!res.ok) throw new Error("Error en API de respaldo")
       console.log("» Usando API de respaldo (Adonix)")
+      fromBackup = true
     }
 
     const data = await res.json()
     console.log("📦 Respuesta completa del API:", JSON.stringify(data, null, 2))
 
-    const downloadUrl =
-      data.result?.download_url ??
-      data.download_url ??
-      data.url ??
-      data.result?.url ??
-      data.result?.link ??
-      data.result?.audio ??
-      null
+    const downloadUrl = fromBackup
+      ? data.url
+      : (
+        data.result?.download_url ??
+        data.download_url ??
+        data.url ??
+        data.result?.url ??
+        data.result?.link ??
+        data.result?.audio ??
+        null
+      )
 
     if (!downloadUrl) return m.reply("❌ No se pudo obtener el audio de la respuesta.")
 
