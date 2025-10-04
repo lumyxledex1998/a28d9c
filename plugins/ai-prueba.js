@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-var handler = async (m, conn, { usedPrefix, command }) => {
+var handler = async (m, conn ) => {
     try {
         await m.react('🕒')
         conn.sendPresenceUpdate('composing', m.chat)
