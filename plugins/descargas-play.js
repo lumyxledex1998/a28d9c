@@ -25,7 +25,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
-    await conn.reply(m.chat, '🎵 Buscando audio...', m, ctxOk)
+    await conn.reply(m.chat, '🎵 Buscando *audio*...', m, ctxOk)
 
     const search = await yts(text)
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
@@ -43,13 +43,13 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       }
     }
 
-    // ===== APIs para audio MP3 =====
     const fuentes = [
-      { api: 'ZenzzXD', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-      { api: 'ZenzzXD v2', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
-      { api: 'Vreden', endpoint: `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url },
-      { api: 'Delirius', endpoint: `https://api.delirius.my.id/download/ymp3?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download?.url },
-      { api: 'StarVoid', endpoint: `https://api.starvoidclub.xyz/download/youtube?url=${encodeURIComponent(url)}`, extractor: res => res.audio }
+      { api: 'Adonix', endpoint: `https://apiadonix.kozow.com/download/ytmp3?apikey=${global.apikey}&url=${encodeURIComponent(url)}`, extractor: res => res?.data?.url },
+      { api: 'ZenzzXD', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res?.download_url },
+      { api: 'ZenzzXD v2', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res?.download_url },
+      { api: 'Vreden', endpoint: `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res?.result?.download?.url },
+      { api: 'Delirius', endpoint: `https://api.delirius.my.id/download/ymp3?url=${encodeURIComponent(url)}`, extractor: res => res?.data?.download?.url },
+      { api: 'StarVoid', endpoint: `https://api.starvoidclub.xyz/download/youtube?url=${encodeURIComponent(url)}`, extractor: res => res?.audio }
     ]
 
     let audioUrl, apiUsada, exito = false
@@ -60,7 +60,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         if (!response.ok) continue
         const data = await response.json()
         const link = fuente.extractor(data)
-        if (link) {
+        if (link && typeof link === 'string' && link.startsWith('http')) {
           audioUrl = link
           apiUsada = fuente.api
           exito = true
@@ -83,12 +83,12 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         mimetype: 'audio/mpeg',
         ptt: false,
         jpegThumbnail: thumbBuffer,
-        caption: `🎼 ${title} | API: ${apiUsada}`
+        caption: `🎼 ${title}\n🌐 API usada: ${apiUsada}`
       },
       { quoted: m }
     )
 
-    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎼 ${title}`, m, ctxOk)
+    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m, ctxOk)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
