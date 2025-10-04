@@ -12,6 +12,9 @@ let handler = async (m, { conn, args, command }) => {
   let apiUrl = `https://brayanofc.vercel.app/api/savetube?url=${encodeURIComponent(video.url)}&type=${type}`
 
   try {
+    // ⏳ Reacción de espera
+    await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key } })
+
     let res = await fetch(apiUrl)
     let data = await res.json()
 
@@ -43,6 +46,9 @@ let handler = async (m, { conn, args, command }) => {
         fileName: `${video.title}.mp4`
       }, { quoted: m })
     }
+
+    // ✅ Reacción de listo
+    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
 
   } catch (e) {
     console.error(e)
