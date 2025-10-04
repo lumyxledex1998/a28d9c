@@ -12,7 +12,7 @@ async function handler(m, { conn: stars, usedPrefix, command }) {
   let users = [...uniqueUsers.values()]
 
   let message = users.map((v, index) => 
-    `🌷 *#${index + 1} »* ${v.user.name || 'Sin nombre~'}\n   ↳ wa.me/${v.user.jid.replace(/[^0-9]/g, '')}`
+    `✏ *#${index + 1} »* ${v.user.name || 'Sin nombre~'}\n   ⤷ wa.me/${v.user.jid.replace(/[^0-9]/g, '')}`
   ).join('\n\n')
 
   let replyMessage = message.length === 0 ? '' : message
