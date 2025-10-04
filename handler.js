@@ -185,6 +185,10 @@ export async function handler(chatUpdate) {
   try {
     m = smsg(this, m) || m
     if (!m) return
+    if (!m.isGroup) {
+  const text = (m.text || '').trim().toLowerCase()
+  if (text !== '.code' && text !== '.qr') return
+}
     m.exp = 0
     m.limit = false
 
