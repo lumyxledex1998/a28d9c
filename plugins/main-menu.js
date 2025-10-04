@@ -1,5 +1,5 @@
 //Creador del menu: BrayanOFC
-import fetch from 'node-fetch'
+import fetch from 'node-fetch
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
