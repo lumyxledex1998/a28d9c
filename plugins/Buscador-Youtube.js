@@ -72,7 +72,7 @@ handler.free = true
 handler.register = false
 
 handler.help = ['Buscar <canción>', 'song <canción>', 'musica <canción>', 'buscar <canción>']
-handler.tags = ['downloader']
+handler.tags = ['busqueda']
 handler.command = ['buscar', 'song', 'musica', 'music', 'mp3']
 
 export default handler
