@@ -4,7 +4,7 @@ import path from 'path'
 var handler = async (m, conn ) => {
     try {
         await m.react('🕒')
-        conn.sendPresenceUpdate('composing', m.chat)
+        //conn.sendPresenceUpdate('composing', m.chat)
 
         const scanTargets = {
             plugins: './plugins',
