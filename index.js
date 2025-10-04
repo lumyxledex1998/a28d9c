@@ -13,6 +13,7 @@ import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import config from './config.js'
 import { sendWelcomeOrBye } from './lib/welcome.js'
 import { loadDatabase, saveDatabase, DB_PATH } from './lib/db.js'
+import { watchFile } from 'fs'
 
 const phoneUtil = (libPhoneNumber.PhoneNumberUtil || libPhoneNumber.default?.PhoneNumberUtil).getInstance()
 
@@ -23,7 +24,7 @@ global.prefixes = Array.isArray(config.prefix) ? [...config.prefix] : []
 global.owner = Array.isArray(config.owner) ? config.owner : []
 global.opts = global.opts && typeof global.opts === 'object' ? global.opts : {}
 
-import { watchFile } from 'fs'
+
 const CONFIG_PATH = path.join(__dirname, 'config.js')
 watchFile(CONFIG_PATH, async () => {
   try {
