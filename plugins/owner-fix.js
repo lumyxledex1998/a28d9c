@@ -83,7 +83,7 @@ var handler = async (m, { conn, usedPrefix, command }) => {
   }
 }
 
-handler.command = ['syntax', 'detectar', 'errores', 'checksyntax']
+handler.command = ['syntax', 'detectar', 'errores', 'checksyntax', 'nk','revsall']
 handler.help = ['syntax']
 handler.tags = ['tools']
 handler.rowner = true
