@@ -70,12 +70,45 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 
         let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
         let id = `${who.split('@')[0]}`
-        
-        // Evita conexiones duplicadas
+
+        // Limpiar conexiones muertas primero
         try {
-                const already = global.conns.some(s => s?.authState?.creds?.me?.jid?.startsWith(id))
-                if (already) {
-                        return conn.reply(m.chat, `🌸 ¡Oh! Este número ya está conectado como Sub-Bot~`, m, (typeof rcanalr !== 'undefined' ? rcanalr : (typeof rcanal !== 'undefined' ? rcanal : {})))
+                global.conns = global.conns.filter(s => {
+                        try {
+                                return s?.user && s?.ws?.socket && s.ws.socket.readyState !== ws.CLOSED
+                        } catch {
+                                return false
+                        }
+                })
+        } catch {}
+
+        // Verificar si hay una conexión activa válida
+        try {
+                const existingConn = global.conns.find(s => s?.user?.jid?.startsWith(id))
+                if (existingConn) {
+                        // Verificar si realmente está conectada
+                        if (existingConn.ws?.socket?.readyState === ws.OPEN) {
+                                return conn.reply(m.chat, `🌸 ¡Oh! Este número ya está conectado como Sub-Bot~`, m, (typeof rcanalr !== 'undefined' ? rcanalr : (typeof rcanal !== 'undefined' ? rcanal : {})))
+                        } else {
+                                // Si la conexión está muerta, limpiarla
+                                try {
+                                        existingConn.ws?.close()
+                                } catch {}
+                                
+                                const index = global.conns.indexOf(existingConn)
+                                if (index > -1) {
+                                        global.conns.splice(index, 1)
+                                }
+                                
+                                // Limpiar carpeta de sesión huérfana si existe
+                                const baseDir = (global.jadi || 'jadibts')
+                                let oldSubBotPath = path.join(`./${baseDir}/`, id)
+                                if (fs.existsSync(oldSubBotPath)) {
+                                        try {
+                                                fs.rmSync(oldSubBotPath, { recursive: true, force: true })
+                                        } catch {}
+                                }
+                        }
                 }
         } catch {}
 
@@ -84,7 +117,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
         if (!fs.existsSync(subBotPath)){
                 fs.mkdirSync(subBotPath, { recursive: true })
         }
-        
+
         subBotOptions.subBotPath = subBotPath
         subBotOptions.m = m
         subBotOptions.conn = conn
@@ -92,7 +125,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
         subBotOptions.usedPrefix = usedPrefix
         subBotOptions.command = command
         subBotOptions.fromCommand = true
-        
+
         startSubBot(subBotOptions)
         global.db.data.users[m.sender].Subs = new Date * 1
 }
@@ -104,26 +137,26 @@ export default handler
 
 export async function startSubBot(options) {
         let { subBotPath, m, conn, args, usedPrefix, command } = options
-        
+
         if (command === 'code') {
                 command = 'qr';
                 args.unshift('code')
         }
-        
+
         const mcode = args[0] && /(--code|code)/.test(args[0].trim()) ? true : args[1] && /(--code|code)/.test(args[1].trim()) ? true : false
         let txtCode, codeBot, txtQR
-        
+
         if (mcode) {
                 args[0] = args[0].replace(/^--code$|^code$/, "").trim()
                 if (args[1]) args[1] = args[1].replace(/^--code$|^code$/, "").trim()
                 if (args[0] == "") args[0] = undefined
         }
-        
+
         const pathCreds = path.join(subBotPath, "creds.json")
         if (!fs.existsSync(subBotPath)){
                 fs.mkdirSync(subBotPath, { recursive: true })
         }
-        
+
         try {
                 if (args[0] && args[0] !== undefined) {
                         const decoded = Buffer.from(args[0], "base64").toString("utf-8")
@@ -196,7 +229,7 @@ export async function startSubBot(options) {
                                 }
                                 return
                         }
-                        
+
                         if (qr && mcode) {
                                 let secret = await sock.requestPairingCode((m.sender.split('@')[0]))
                                 secret = secret.match(/.{1,4}/g)?.join("-")
@@ -208,7 +241,7 @@ export async function startSubBot(options) {
                                 codeBot = await conn.reply(m.chat, `✨ ${secret}`, m);
                                 console.log(secret)
                         }
-                        
+
                         if (txtCode && txtCode.key) {
                                 setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key })}, 30000)
                         }
@@ -231,7 +264,7 @@ export async function startSubBot(options) {
                         }
 
                         const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
-                        
+
                         if (connection === 'close') {
                                 if (sock.pingInterval) {
                                         clearInterval(sock.pingInterval);
@@ -283,7 +316,7 @@ export async function startSubBot(options) {
                                         try { fs.rmSync(subBotPath, { recursive: true, force: true }) } catch {}
                                 }
                         }
-                        
+
                         if (global.db.data == null) loadDatabase()
                         if (connection == 'open') {
                                 if (!global.db.data?.users) loadDatabase()
