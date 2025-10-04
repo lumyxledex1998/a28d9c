@@ -2,10 +2,10 @@ import yts from "yt-search"
 import fetch from "node-fetch"
 
 let handler = async (m, { conn, args, command }) => {
-  if (!args[0]) throw `⚠️ Ingresa el nombre de la canción.\n\nEjemplo:\n.${command} Bad Bunny Un Verano Sin Ti`
+  if (!args.length) throw `⚠️ Ingresa el nombre de la canción o video.\n\nEjemplo:\n.${command} Rick Astley Never Gonna Give You Up`
 
   let search = await yts(args.join(" "))
-  let video = search.videos[0]
+  let video = search.videos[0] // toma el primer resultado
   if (!video) throw "❌ No encontré resultados."
 
   let type = command === "play" ? "mp3" : "mp4"
@@ -15,27 +15,38 @@ let handler = async (m, { conn, args, command }) => {
     let res = await fetch(apiUrl)
     let data = await res.json()
 
-    if (!data?.result?.url) throw "⚠️ No se pudo obtener el archivo."
+    if (!data?.resultado?.descarga) throw "⚠️ No se pudo obtener el archivo."
 
-    let caption = `🎶 *${video.title}*\n📌 Duración: ${video.timestamp}\n👀 Vistas: ${video.views}`
+    let caption = `
+🎶 *${data.resultado.título}*
+📌 Formato: ${data.resultado.formato}
+👀 Vistas: ${video.views}
+⏳ Duración: ${video.timestamp}
+    `.trim()
 
+    // Enviar miniatura + info primero
+    await conn.sendMessage(m.chat, {
+      image: { url: data.resultado.miniatura },
+      caption
+    }, { quoted: m })
+
+    // Luego mandar el archivo
     if (type === "mp3") {
       await conn.sendMessage(m.chat, {
-        audio: { url: data.result.url },
+        audio: { url: data.resultado.descarga },
         mimetype: "audio/mpeg",
-        fileName: `${video.title}.mp3`,
-        caption
+        fileName: `${video.title}.mp3`
       }, { quoted: m })
     } else {
       await conn.sendMessage(m.chat, {
-        video: { url: data.result.url },
-        fileName: `${video.title}.mp4`,
-        caption
+        video: { url: data.resultado.descarga },
+        fileName: `${video.title}.mp4`
       }, { quoted: m })
     }
+
   } catch (e) {
     console.error(e)
-    throw "⚠️ Error al descargar, revisa si tu API está respondiendo."
+    throw "⚠️ Error al descargar, revisa tu API."
   }
 }
 
