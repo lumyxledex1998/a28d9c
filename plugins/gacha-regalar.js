@@ -16,7 +16,7 @@ async function saveCharacters(characters) {
     try {
         await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.')
+        throw new Error('No se pudo guardar el archivo characters.json.')
     }
 }
 
@@ -33,15 +33,28 @@ async function saveHarem(harem) {
     try {
         await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2))
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo harem.json.')
+        throw new Error('No se pudo guardar el archivo harem.json.')
     }
 }
 
-let handler = async (m, { conn, args }) => {
+let handler = async (m, { conn, args, usedPrefix, command }) => {
+    const ctxErr = global.rcanalx || {}
+    const ctxWarn = global.rcanalw || {}
+    const ctxOk = global.rcanalr || {}
+
     const userId = m.sender
 
     if (args.length < 2) {
-        await conn.reply(m.chat, '《✧》Debes especificar el nombre del personaje y mencionar a quien quieras regalarlo.', m)
+        await conn.reply(m.chat, 
+            `🍙📚 *ITSUKI - Regalar Personaje* 🎁\n\n` +
+            `❌ Faltan datos para el regalo\n\n` +
+            `📝 *Uso correcto:*\n` +
+            `${usedPrefix}${command} <nombre del personaje> @usuario\n\n` +
+            `💡 *Ejemplo:*\n` +
+            `${usedPrefix}${command} Itsuki Nakano @usuario\n\n` +
+            `📖 "Especifica el personaje y menciona a quien se lo regalarás"`,
+            m, ctxWarn
+        )
         return
     }
 
@@ -49,7 +62,24 @@ let handler = async (m, { conn, args }) => {
     let who = m.mentionedJid[0]
 
     if (!who) {
-        await conn.reply(m.chat, '《✧》Debes mencionar a un usuario válido.', m)
+        await conn.reply(m.chat, 
+            `🍙❌ *ITSUKI - Usuario No Mencionado*\n\n` +
+            `⚠️ Debes mencionar a un usuario válido\n\n` +
+            `📝 *Formato:*\n` +
+            `${usedPrefix}${command} ${characterName} @usuario\n\n` +
+            `📚 "No olvides mencionar al destinatario"`,
+            m, ctxErr
+        )
+        return
+    }
+
+    if (who === userId) {
+        await conn.reply(m.chat, 
+            `🍙😅 *ITSUKI - Regalo Inválido*\n\n` +
+            `❌ No puedes regalarte un personaje a ti mismo\n\n` +
+            `📚 "Regala tus personajes a otros usuarios"`,
+            m, ctxWarn
+        )
         return
     }
 
@@ -58,7 +88,17 @@ let handler = async (m, { conn, args }) => {
         const character = characters.find(c => c.name.toLowerCase() === characterName && c.user === userId)
 
         if (!character) {
-            await conn.reply(m.chat, `《✧》*${characterName}* no está reclamado por ti.`, m)
+            await conn.reply(m.chat, 
+                `🍙❌ *ITSUKI - Personaje No Encontrado*\n\n` +
+                `⚠️ *${characterName}* no está en tu harem\n\n` +
+                `📝 *Posibles causas:*\n` +
+                `• No tienes este personaje\n` +
+                `• El nombre está mal escrito\n` +
+                `• Ya lo regalaste\n\n` +
+                `💡 Usa ${usedPrefix}harem para ver tus personajes\n\n` +
+                `📚 "Verifica el nombre del personaje"`,
+                m, ctxErr
+            )
             return
         }
 
@@ -82,15 +122,34 @@ let handler = async (m, { conn, args }) => {
 
         await saveHarem(harem)
 
-        await conn.reply(m.chat, `✰ *${character.name}* ha sido regalado a @${who.split('@')[0]}!`, m, { mentions: [who] })
+        await conn.reply(m.chat, 
+            `🍙🎁 *ITSUKI - Regalo Entregado* 📚✨\n\n` +
+            `🎉 Has regalado a *${character.name}* exitosamente\n\n` +
+            `📊 *Detalles del regalo:*\n` +
+            `🎴 Personaje: ${character.name}\n` +
+            `👤 De: @${userId.split('@')[0]}\n` +
+            `👤 Para: @${who.split('@')[0]}\n` +
+            `💎 Valor: ${character.value}\n\n` +
+            `🍱 "¡Qué gesto tan generoso!" ✨\n` +
+            `📚 "@${who.split('@')[0]} ahora es el nuevo propietario"`,
+            m, 
+            { ...ctxOk, mentions: [userId, who] }
+        )
     } catch (error) {
-        await conn.reply(m.chat, `✘ Error al regalar el personaje: ${error.message}`, m)
+        await conn.reply(m.chat, 
+            `🍙❌ *ITSUKI - Error al Regalar*\n\n` +
+            `⚠️ No se pudo completar el regalo\n\n` +
+            `📝 *Error:* ${error.message}\n\n` +
+            `💡 Intenta nuevamente o contacta al owner\n\n` +
+            `📚 "Algo salió mal en el proceso"`,
+            m, ctxErr
+        )
     }
 }
 
 handler.help = ['regalar <nombre del personaje> @usuario']
 handler.tags = ['anime']
-handler.command = ['regalar', 'givewaifu', 'givechar']
+handler.command = ['regalar', 'givewaifu', 'givechar', 'gift']
 handler.group = true
 
 export default handler
