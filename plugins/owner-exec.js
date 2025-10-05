@@ -1,16 +1,24 @@
-// 🌸 De BrayanOFC-Li para — Itsuki Nakano
 import cp, { exec as _exec } from 'child_process'
 import { promisify } from 'util'
 const exec = promisify(_exec).bind(cp)
 
-const handler = async (m, { conn, isROwner, command, text }) => {
-  if (!isROwner) return m.reply('⚠️ *Acceso denegado.* Solo mi creador puede usar este comando 💢')
+const handler = async (m, { conn, isOwner, command, text, usedPrefix, args, isROwner }) => {
+  if (!isROwner) return
 
-  if (!global.conn?.user || !conn?.user) {
-    console.log('⚠️ conn.user o global.conn.user no definidos todavía.')
-  } else if (global.conn.user.jid !== conn.user.jid) return
 
-  await m.reply('🌸 *Itsuki Nakano está ejecutando la orden...* ⏳')
+  if (!conn?.user || !conn?.user?.id) {
+    console.log('⚠️ conn.user no está definido aún.')
+    return
+  }
+
+  const botNumber = conn.user?.id?.split(':')[0]
+  const senderNumber = m.sender?.split('@')[0]
+  if (botNumber !== senderNumber) {
+    console.log('⚠️ Comando ejecutado desde otra instancia, ignorado.')
+    return
+  }
+
+  m.reply('💫 *Ejecutando orden.*')
 
   let o
   try {
@@ -18,11 +26,9 @@ const handler = async (m, { conn, isROwner, command, text }) => {
   } catch (e) {
     o = e
   } finally {
-    const stdout = o?.stdout ?? ''
-    const stderr = o?.stderr ?? ''
-
-    if (stdout.trim()) await m.reply(`✅ *Resultado obtenido:*\n\`\`\`\n${stdout}\n\`\`\``)
-    if (stderr.trim()) await m.reply(`⚠️ *Error detectado:*\n\`\`\`\n${stderr}\n\`\`\``)
+    const { stdout, stderr } = o
+    if (stdout?.trim()) m.reply(stdout)
+    if (stderr?.trim()) m.reply(stderr)
   }
 }
 
