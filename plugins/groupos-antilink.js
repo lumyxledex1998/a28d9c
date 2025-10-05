@@ -38,6 +38,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
 🚫 *Acciones automáticas:*
 ⚠️ Eliminación silenciosa del mensaje con enlace
+👑 *Los administradores pueden enviar enlaces libremente*
 
 ✨ *"Manteniendo el grupo libre de enlaces no autorizados"*
       `.trim(), m, ctxWarn)
@@ -57,6 +58,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
           `*Protección activada. Los enlaces no autorizados serán eliminados automáticamente.*\n\n` +
           `🔗 *Estado:* 🟢 ACTIVADO\n` +
           `🚫 *Modo:* Eliminación silenciosa\n` +
+          `👑 *Admins:* Pueden enviar enlaces\n` +
           `✨ *El grupo ahora está protegido contra enlaces*`,
           m, ctxOk
         )
@@ -84,6 +86,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
           `📊 *Estado del Antilink*\n\n` +
           `🔗 *Sistema:* ${status}\n` +
           `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'ELIMINACIÓN SILENCIOSA' : 'PERMISIVO'}\n` +
+          `👑 *Admins:* ${global.antilinkStatus[m.chat] ? 'PUEDEN ENVIAR ENLACES' : 'TODOS PUEDEN ENVIAR ENLACES'}\n` +
           `💬 *Grupo:* ${await conn.getName(m.chat) || 'Sin nombre'}\n\n` +
           `✨ *Protección ${global.antilinkStatus[m.chat] ? 'activa' : 'desactivada'}*`,
           m, ctxOk
@@ -116,9 +119,12 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
   if (!hasLink) return
 
-  // Excepciones
+  // Excepciones - Los administradores pueden enviar enlaces libremente
   const sender = m.sender
-  if (isAdmin) return // Los admins pueden enviar enlaces
+  if (isAdmin) {
+    // Los admins pueden enviar enlaces, el bot no hace nada
+    return
+  }
   if (sender === conn.user.jid) return
 
   try {
@@ -142,6 +148,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 🔗 Enlace: ${detectedLink}
 💬 Grupo: ${m.chat}
 🕒 Hora: ${new Date().toLocaleString()}
+👥 Tipo: Usuario normal
     `)
 
   } catch (error) {
