@@ -37,8 +37,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 • ${usedPrefix}antilink estado
 
 🚫 *Acciones automáticas:*
-⚠️ Advertencia al usuario
-🗑️ Eliminación del mensaje con enlace
+⚠️ Eliminación silenciosa del mensaje con enlace
 
 ✨ *"Manteniendo el grupo libre de enlaces no autorizados"*
       `.trim(), m, ctxWarn)
@@ -57,7 +56,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
           `✅ *Antilink Activado*\n\n` +
           `*Protección activada. Los enlaces no autorizados serán eliminados automáticamente.*\n\n` +
           `🔗 *Estado:* 🟢 ACTIVADO\n` +
-          `🚫 *Modo:* Eliminación de mensajes\n` +
+          `🚫 *Modo:* Eliminación silenciosa\n` +
           `✨ *El grupo ahora está protegido contra enlaces*`,
           m, ctxOk
         )
@@ -84,7 +83,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
         await conn.reply(m.chat, 
           `📊 *Estado del Antilink*\n\n` +
           `🔗 *Sistema:* ${status}\n` +
-          `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'ELIMINACIÓN DE MENSAJES' : 'PERMISIVO'}\n` +
+          `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'ELIMINACIÓN SILENCIOSA' : 'PERMISIVO'}\n` +
           `💬 *Grupo:* ${await conn.getName(m.chat) || 'Sin nombre'}\n\n` +
           `✨ *Protección ${global.antilinkStatus[m.chat] ? 'activa' : 'desactivada'}*`,
           m, ctxOk
@@ -124,17 +123,8 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
   try {
     const userName = await conn.getName(sender) || 'Usuario'
-    const userMention = `@${sender.split('@')[0]}`
 
-    // Mensaje de advertencia
-    const warningMessage = 
-      `🚫 **Enlace Detectado** 🔗\n\n` +
-      `👤 *Usuario:* ${userMention}\n` +
-      `🔗 *Enlace detectado:* ${detectedLink}\n\n` +
-      `⚠️ *Los enlaces no están permitidos en este grupo. El mensaje ha sido eliminado.*\n\n` +
-      `📝 *Recuerda:* Solo los administradores pueden compartir enlaces.`
-
-    // 1. Eliminar el mensaje con enlace
+    // 1. Eliminar el mensaje con enlace (acción silenciosa)
     if (isBotAdmin && m.key) {
       await conn.sendMessage(m.chat, { 
         delete: { 
@@ -146,13 +136,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       }).catch(() => {})
     }
 
-    // 2. Enviar mensaje de advertencia
-    await conn.sendMessage(m.chat, { 
-      text: warningMessage,
-      mentions: [sender]
-    })
-
-    // Log en consola
+    // Log en consola (solo para administradores del bot)
     console.log(`🔗 ENLACE DETECTADO Y ELIMINADO:
 👤 Usuario: ${sender} (${userName})
 🔗 Enlace: ${detectedLink}
@@ -162,11 +146,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
   } catch (error) {
     console.error('❌ Error en antilink:', error)
-    await conn.reply(m.chat, 
-      `❌ *Error al procesar enlace*\n` +
-      `🔧 ${error.message}`,
-      m
-    )
+    // No enviar mensaje de error al grupo para evitar spam
   }
 }
 
