@@ -88,5 +88,3 @@ handler.command = ['ver', 'rw', 'rollwaifu']
 handler.group = true
 
 export default handler
-
-Eso también
