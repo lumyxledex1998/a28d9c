@@ -46,7 +46,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
     if (m.quoted && m.quoted.sender === conn.user.jid) {
         try {
             const characters = await loadCharacters()
-            const characterIdMatch = m.quoted.text.match(/✦ ID: \*(.+?)\*/)
+            const characterIdMatch = m.quoted.text.match(/🆔 \*ID:\* (.+)|✦ ID: \*(.+?)\*/i)
 
             if (!characterIdMatch) {
                 await conn.reply(m.chat, 
@@ -59,7 +59,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
                 return
             }
 
-            const characterId = characterIdMatch[1]
+            const characterId = characterIdMatch[1] || characterIdMatch[2]
             const character = characters.find(c => c.id === characterId)
 
             if (!character) {
@@ -99,11 +99,11 @@ let handler = async (m, { conn, usedPrefix, command }) => {
                 `• Origen: ${character.source}\n` +
                 `• Valor: ${character.value}\n` +
                 `• Estado: Reclamado\n\n` +
-                `⏰ *Cooldown:* 30 minutos\n\n` +
+                `⏰ *Cooldown:* 5 minutos\n\n` +
                 `🍱 "¡Felicidades! Ahora es parte de tu colección" ✨`,
                 m, ctxOk
             )
-            cooldowns[userId] = now + 30 * 60 * 1000
+            cooldowns[userId] = now + 5 * 60 * 1000 // 5 minutos
 
         } catch (error) {
             await conn.reply(m.chat, 
@@ -133,5 +133,3 @@ handler.help = ['claim']
 handler.tags = ['gacha']
 handler.command = ['c', 'claim', 'reclamar']
 handler.group = true
-
-export default handler
