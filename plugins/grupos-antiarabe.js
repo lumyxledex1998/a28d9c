@@ -1,4 +1,4 @@
-let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin }) => {
+/*let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
@@ -395,4 +395,4 @@ handler.group = true
 handler.admin = true
 handler.botAdmin = true
 
-export default handler
+export default handler*/
