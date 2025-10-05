@@ -89,7 +89,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             await saveCharacters(characters)
         }
 
-        cooldowns[userId] = now + 15 * 60 * 1000
+        cooldowns[userId] = now + 10 * 1000
 
     } catch (error) {
         await conn.reply(m.chat, 
