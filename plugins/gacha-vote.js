@@ -162,7 +162,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 }
 
 handler.help = ['vote <nombre>']
-handler.tags = ['anime']
+handler.tags = ['gacha']
 handler.command = ['vote', 'votar', 'voto']
 handler.group = true
 handler.register = true
