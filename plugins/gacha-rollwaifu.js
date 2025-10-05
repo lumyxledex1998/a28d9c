@@ -40,10 +40,6 @@ async function saveHarem(harem) {
 }
 
 let handler = async (m, { conn, usedPrefix, command }) => {
-    const ctxErr = global.rcanalx || {}
-    const ctxWarn = global.rcanalw || {}
-    const ctxOk = global.rcanalr || {}
-
     const userId = m.sender
     const now = Date.now()
 
@@ -56,7 +52,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             `⚠️ Debes esperar para obtener otro personaje\n\n` +
             `⏱️ *Tiempo restante:* ${minutes} minuto${minutes !== 1 ? 's' : ''} y ${seconds} segundo${seconds !== 1 ? 's' : ''}\n\n` +
             `📖 "La paciencia es importante, espera un poco más"`,
-            m, ctxWarn
+            m
         )
     }
 
@@ -83,7 +79,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             `📚 "Cita este mensaje y usa .claim para reclamar" ✨`
 
         const mentions = randomCharacter.user ? [randomCharacter.user] : []
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { ...ctxOk, mentions })
+        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
 
         if (!randomCharacter.user) {
             await saveCharacters(characters)
@@ -98,7 +94,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
             `📝 *Error:* ${error.message}\n\n` +
             `💡 Intenta nuevamente o contacta al owner\n\n` +
             `📚 "Verifica que los archivos de base de datos existan"`,
-            m, ctxErr
+            m
         )
     }
 }
