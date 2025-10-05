@@ -36,7 +36,7 @@ let handler = async (m, { conn }) => {
     if (m.quoted && m.quoted.sender === conn.user.jid) {
         try {
             const characters = await loadCharacters();
-        const characterIdMatch = m.quoted.text.match(/🆔️: \*(.+?)\*/);
+        const characterIdMatch = m.quoted.text.match(/🆔️ ID: \*(.+?)\*/);
 
             if (!characterIdMatch) {
                 await conn.reply(m.chat, '《🌟》No se pudo encontrar el ID del personaje en el mensaje citado.', m);
