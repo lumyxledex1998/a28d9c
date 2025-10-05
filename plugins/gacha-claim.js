@@ -79,5 +79,3 @@ handler.command = ['c', 'claim', 'reclamar'];
 handler.group = true;
 
 export default handler;
-
-Eso también
