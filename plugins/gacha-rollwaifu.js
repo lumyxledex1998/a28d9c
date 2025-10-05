@@ -104,7 +104,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 }
 
 handler.help = ['ver', 'rw', 'rollwaifu']
-handler.tags = ['rpg']
+handler.tags = ['gacha']
 handler.command = ['ver', 'rw', 'rollwaifu', 'roll']
 handler.group = true
 
