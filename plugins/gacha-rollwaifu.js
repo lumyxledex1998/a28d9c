@@ -10,7 +10,7 @@ async function loadCharacters() {
         const data = await fs.readFile(charactersFilePath, 'utf-8')
         return JSON.parse(data)
     } catch (error) {
-        throw new Error('❀ No se pudo cargar el archivo characters.json.')
+        throw new Error('No se pudo cargar el archivo characters.json.')
     }
 }
 
@@ -18,7 +18,7 @@ async function saveCharacters(characters) {
     try {
         await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.')
+        throw new Error('No se pudo guardar el archivo characters.json.')
     }
 }
 
@@ -35,11 +35,15 @@ async function saveHarem(harem) {
     try {
         await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo harem.json.')
+        throw new Error('No se pudo guardar el archivo harem.json.')
     }
 }
 
-let handler = async (m, { conn }) => {
+let handler = async (m, { conn, usedPrefix, command }) => {
+    const ctxErr = global.rcanalx || {}
+    const ctxWarn = global.rcanalw || {}
+    const ctxOk = global.rcanalr || {}
+
     const userId = m.sender
     const now = Date.now()
 
@@ -47,7 +51,13 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
         const minutes = Math.floor(remainingTime / 60)
         const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+        return await conn.reply(m.chat, 
+            `🍙⏰ *ITSUKI - Tiempo de Espera* 📚\n\n` +
+            `⚠️ Debes esperar para obtener otro personaje\n\n` +
+            `⏱️ *Tiempo restante:* ${minutes} minuto${minutes !== 1 ? 's' : ''} y ${seconds} segundo${seconds !== 1 ? 's' : ''}\n\n` +
+            `📖 "La paciencia es importante, espera un poco más"`,
+            m, ctxWarn
+        )
     }
 
     try {
@@ -59,17 +69,21 @@ let handler = async (m, { conn }) => {
         const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
         const statusMessage = randomCharacter.user 
             ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
-            : 'Libre'
+            : '🟢 Libre'
 
-        const message = `❀ Nombre » *${randomCharacter.name}*
-⚥ Género » *${randomCharacter.gender}*
-✰ Valor » *${randomCharacter.value}*
-♡ Estado » ${statusMessage}
-❖ Fuente » *${randomCharacter.source}*
-✦ ID: *${randomCharacter.id}*`
+        const message = 
+            `🍙🎴 *ITSUKI - Personaje Aleatorio* 📚✨\n\n` +
+            `📖 *Nombre:* ${randomCharacter.name}\n` +
+            `⚥ *Género:* ${randomCharacter.gender}\n` +
+            `💎 *Valor:* ${randomCharacter.value}\n` +
+            `📊 *Estado:* ${statusMessage}\n` +
+            `🎬 *Fuente:* ${randomCharacter.source}\n` +
+            `🆔 *ID:* ${randomCharacter.id}\n\n` +
+            `${!randomCharacter.user ? `💡 Usa ${usedPrefix}claim para reclamarlo\n\n` : ''}` +
+            `📚 "Cita este mensaje y usa .claim para reclamar" ✨`
 
-        const mentions = userEntry ? [userEntry.userId] : []
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+        const mentions = randomCharacter.user ? [randomCharacter.user] : []
+        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { ...ctxOk, mentions })
 
         if (!randomCharacter.user) {
             await saveCharacters(characters)
@@ -78,13 +92,20 @@ let handler = async (m, { conn }) => {
         cooldowns[userId] = now + 15 * 60 * 1000
 
     } catch (error) {
-        await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+        await conn.reply(m.chat, 
+            `🍙❌ *ITSUKI - Error al Cargar*\n\n` +
+            `⚠️ No se pudo cargar el personaje\n\n` +
+            `📝 *Error:* ${error.message}\n\n` +
+            `💡 Intenta nuevamente o contacta al owner\n\n` +
+            `📚 "Verifica que los archivos de base de datos existan"`,
+            m, ctxErr
+        )
     }
 }
 
 handler.help = ['ver', 'rw', 'rollwaifu']
 handler.tags = ['gacha']
-handler.command = ['ver', 'rw', 'rollwaifu']
+handler.command = ['ver', 'rw', 'rollwaifu', 'roll']
 handler.group = true
 
 export default handler
