@@ -52,7 +52,7 @@ let handler = async (m, { conn }) => {
             }
 
             if (character.user && character.user !== userId) {
-                await conn.reply(m.chat, `🧧 El personaje ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`, m, { mentions: [character.user] });
+                await conn.reply(m.chat, '🧧 El personaje ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`, m, { mentions: [character.user] });
                 return;
             }
 
