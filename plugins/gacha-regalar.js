@@ -148,7 +148,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 }
 
 handler.help = ['regalar <nombre del personaje> @usuario']
-handler.tags = ['anime']
+handler.tags = ['gacha']
 handler.command = ['regalar', 'givewaifu', 'givechar', 'gift']
 handler.group = true
 
