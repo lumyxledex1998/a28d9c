@@ -1,17 +1,13 @@
 import fetch from 'node-fetch'
 
-let handler = async (m, { conn }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
-
+let handler = async (m, { conn, usedPrefix, command }) => {
 try {
     // Reaccionar al mensaje
-    await m.react('💗')
+    await m.react('🧧')
     
     // Mensaje de espera estilo Itsuki Nakano-IA
     conn.sendPresenceUpdate('composing', m.chat)
-    let waiting = await conn.reply(m.chat, `🎀 *Itsuki Nakano-IA buscando waifus...* ✨\n╰ 📚 Analizando base de datos de chicas kawaii...`, m, ctxWarn)
+    let waiting = await conn.reply(m.chat, `🔎 *Itsuki Nakano-IA buscando waifus...* ✨\n╰ 📚 Analizando base de datos de chicas kawaii...`, m)
 
     let res = await fetch('https://api.waifu.pics/sfw/waifu')
     if (!res.ok) throw new Error('Error en la API')
@@ -29,12 +25,12 @@ try {
         `✨ Una waifu virtual perfecta para ti\n` +
         `📚 ¿No es absolutamente kawaii? (◕‿◕✿)\n` +
         `🍜 ~ Disfruta de tu compañera virtual ~`, 
-    m, ctxOk)
+    m)
     
 } catch (error) {
     console.error(error)
     await m.react('❌')
-    await conn.reply(m.chat, `🧧 *Itsuki Nakano-IA dice:*\n╰ ❌ Ocurrió un error al buscar waifus...\n╰ 📚 Por favor, intenta de nuevo más tarde.`, m, ctxErr)
+    await conn.reply(m.chat, `💙 *Itsuki Nakano-IA dice:*\n╰ ❌ Ocurrió un error al buscar waifus...\n╰ 📚 Por favor, intenta de nuevo más tarde.`, m)
 }
 }
 
