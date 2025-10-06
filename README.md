@@ -45,7 +45,7 @@ tengo 17años y
 Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
 
 
-## 🌟 Características
+## 🌟 Características Del Bot
 
 - Sistema NK by LeoXzzsy 
 - Sistema De Gestión Para Grupos
