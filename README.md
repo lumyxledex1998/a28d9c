@@ -46,14 +46,16 @@ Soy una persona apasionada por la tecnología, la programación y la creación d
 
 
 #### Características 🛡
-Configuración avanzada de grupos 
-Bienvenidas personalizadas  
-Herramientas útiles  
-Juegos RPG (Gacha y Economía)    
-Descargas actualizada
-Sub-Bots Actualizado NK
-Extensiones adicionales
-</details>
+- [🌷] Sistema De Sub-Bots Actualizado NK
+- [🌷] Sistema Para Gestionar Los Grupos 
+- [🌷] antidelete, antilink
+- [🌷] Bienvenida personalizada
+- [🌷] Sistema De Economía Actualizado NK
+- [🌷] Sistema De RPG Actualizado NK
+- [🌷] Sistema De Gachas Actualizado NK
+
+
+---------
 
 ## Instalación por Termux 🌱
 
