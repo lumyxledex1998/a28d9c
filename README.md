@@ -86,20 +86,4 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
 
 
-## 📊 **Estadísticas del Repositorio**
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Repositorio-Itsuki--Nakano-FF69B4?style=for-the-badge&logo=github&labelColor=000000" height="30">
-  <img src="https://img.shields.io/badge/Creado%20por-xzzys26-FF69B4?style=for-the-badge&logo=github&labelColor=000000" height="30">
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/⭐_Stars-Actualizable_Manualmente-FF69B4?style=for-the-badge&labelColor=000000">
-  <img src="https://img.shields.io/badge/🍴_Forks-Disponible-FF69B4?style=for-the-badge&labelColor=000000">
-  <img src="https://img.shields.io/badge/👁️_Watchers-Activos-FF69B4?style=for-the-badge&labelColor=000000">
-</p>
-
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=xzzys26&label=Visitas+al+perfil&color=FF69B4&style=flat-square&labelColor=000000" height="28">
-  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/xzzys26/Itsuki-Nakano&count_bg=FF69B4&title_bg=000000&icon=github.svg&icon_color=FFFFFF&title=Visitas+Repo&edge_flat=false" height="28">
-</p>
+[![Estadísticas del Repositorio](https://github-readme-stats.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&bg_color=000000&title_color=ff69b4&text_color=ffffff&icon_color=ff69b4&border_color=ff69b4)](https://github.com/xzzys26/Itsuki-Nakano)
