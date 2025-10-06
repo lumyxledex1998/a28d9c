@@ -2,7 +2,7 @@
 
 <!-- Banner -->
 <h1 align="center">
-  <img src="https://files.catbox.moe/dm5qgl.jpg" width="700" alt="Gaara Ultra MD Banner"/>
+  <img src="https://files.catbox.moe/15voeu.jpg" width="700" alt="Gaara Ultra MD Banner"/>
 
 </h1>
 
