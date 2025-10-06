@@ -60,7 +60,7 @@ Soy una persona apasionada por la tecnología, la programación y la creación d
 > **No garantizamos un funcionamiento perfecto en Termux, aunque trabajamos constantemente para asegurar una buena compatibilidad. Si experimentas lentitud o errores, por favor envía una solicitud con la evidencia correspondiente para que nuestro equipo pueda solucionarlo. Si el problema persiste, te recomendamos considerar los servicios de alojamiento de bots de nuestros patrocinadores.**
 
 <details>
-  <summary><b>📌 Instalación Manual</b></summary>
+  <summary><b>Instalación Manual Por Termux 📲</b></summary>
 
 > *Comandos para instalar de forma manual*
 ```bash
@@ -87,7 +87,7 @@ npm start
 ### **`🪷 Enlaces De ItsukiNakano-IA`**
 
 <details>
-<summary><b>🏷 Enlaces Oficiales </b></summary>
+<summary><b>Enlaces Oficiales</b></summary>
 
  * Canal Oficial  [`¡Unete Aqui!`](https://whatsapp.com/channel/0029Vb64nWqLo4hb8cuxe23n)
 * Grupo Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/HaKf6ezcwdbGzmH782eBal)
