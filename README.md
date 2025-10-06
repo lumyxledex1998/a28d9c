@@ -27,19 +27,3 @@
 <a href="https://github.com/xzzys26/Itsuki-IA/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA&cache=bust" alt="Contribuidores">
 </a>
-
-### **Colaboradores Destacados** ✨
-
-<div align="center">
-
-<img src='https://avatars.githubusercontent.com/BrayanOFC-Li'width='80' height='80' style='border-radius:50%'><br>
-**[BrayanOFC](https://github.com/BrayanOFC-Li)**<br>
-𝗠𝗮𝗻𝗼 𝗗𝗲𝗿𝗲𝗰𝗵𝗮 𝗱𝗲𝗹 𝗣𝗿𝗼𝘆𝗲𝗰𝘁𝗼 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 🌱
-
-<br>
-
-<img src='https://avatars.githubusercontent.com/usuario1' width='80' height='80' style='border-radius:50%'><br>
-**[Nombre colaborador](https://github.com/usuario1)**<br>
-Rol/Contribución
-
-</div>
