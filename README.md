@@ -86,4 +86,8 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
 
 
-[![Estadísticas del Repositorio](https://github-readme-stats.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&bg_color=000000&title_color=ff69b4&text_color=ffffff&icon_color=ff69b4&border_color=ff69b4)](https://github.com/xzzys26/Itsuki-Nakano)
+<p align="center">
+  <a href="https://github.com/xzzys26/Itsuki-Nakano">
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&bg_color=000000&title_color=ff69b4&text_color=ffffff&icon_color=ff69b4&border_color=ff69b4&show_owner=true" />
+  </a>
+</p>
