@@ -54,3 +54,7 @@ Soy una persona apasionada por la tecnología, la programación y la creación d
 - Sistema De Sub-Bots Actualizado 
 
 ---
+
+## Instalación por Termux
+> [!ADVERTENCIA]
+> **No garantizamos un funcionamiento perfecto en Termux, aunque trabajamos constantemente para asegurar una buena compatibilidad. Si experimentas lentitud o errores, por favor envía una solicitud con la evidencia correspondiente para que nuestro equipo pueda solucionarlo. Si el problema persiste, te recomendamos considerar los servicios de alojamiento de bots de nuestros patrocinadores.**
