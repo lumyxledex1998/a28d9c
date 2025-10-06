@@ -96,3 +96,9 @@ npm start
 ➪ Coloboracion Oficial [`¡Unete
 Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
+
+## Repo Stats 🔭
+
+![github card](https://github-readme-stats.vercel.app/api/pin/?username=Crissdavi&repoItsuki-Nakano&theme=chartreuse-dark)
+
+---------
