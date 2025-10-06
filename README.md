@@ -37,3 +37,7 @@
   <a href="https://github.com/BrayanOFC-Li" style="text-decoration: none;">
     <img src="https://github.com/BrayanOFC-Li.png" width="130" height="130" alt="BrayanOFC" style="border-radius: 50%;" />
   </a>
+![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/Line-Neon.jpg)
+
+## 💫 Hola, soy BrayanOFC Owner Supremo de este proyecto y tengo 17años y
+Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
