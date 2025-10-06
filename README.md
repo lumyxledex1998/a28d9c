@@ -88,4 +88,22 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 
 ## 📊 **Estadísticas del Repositorio**
 
-<img src="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&theme=radical&bg_color=000000&title_color=FF69B4&text_color=ffffff&hide_border=true" height="130">
+<p align="center">
+  <img src="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&theme=radical&bg_color=000000&title_color=FF69B4&text_color=ffffff&hide_border=true&cache_seconds=60" height="130">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/xzzys26/Itsuki-Nakano?style=for-the-badge&logo=github&color=FF69B4&labelColor=000000" height="28">
+  <img src="https://img.shields.io/github/forks/xzzys26/Itsuki-Nakano?style=for-the-badge&logo=github&color=FF69B4&labelColor=000000" height="28">
+  <img src="https://img.shields.io/github/watchers/xzzys26/Itsuki-Nakano?style=for-the-badge&logo=github&color=FF69B4&labelColor=000000" height="28">
+  <img src="https://img.shields.io/github/issues/xzzys26/Itsuki-Nakano?style=for-the-badge&logo=github&color=FF69B4&labelColor=000000" height="28">
+</p>
+
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=xzzys26&label=Visitas+al+perfil&color=FF69B4&style=flat-square&labelColor=000000" height="28">
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/xzzys26/Itsuki-Nakano&count_bg=FF69B4&title_bg=000000&icon=github.svg&icon_color=FFFFFF&title=Visitas+Repo&edge_flat=false" height="28">
+</p>
+
+<p align="center">
+  <img src="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api/top-langs/?username=xzzys26&layout=compact&theme=radical&bg_color=000000&title_color=FF69B4&text_color=ffffff&hide_border=true&cache_seconds=60" height="130">
+</p>
