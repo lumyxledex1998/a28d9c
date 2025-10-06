@@ -1,8 +1,10 @@
 # 🎀 Itsuki Nakano - IA ✨
 
-<div align="center">
+<!-- Banner -->
+<h1 align="center">
+  <img src="https://files.catbox.moe/dm5qgl.jpg" width="700" alt="Gaara Ultra MD Banner"/>
 
-![Itsuki Nakano](https://i.imgur.com/xy6Q3a2.png)
+</h1>
 
 **Un bot de WhatsApp ultra-rápido y potente**  
 *Construido con amor y mucha comida 💕*
