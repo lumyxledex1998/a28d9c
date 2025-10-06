@@ -70,7 +70,7 @@ termux-setup-storage
 apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 ```bash
-git clone https://github.com/DevZyxlJs/SenkoBot-MD && cd Itsuki-Nakano
+git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
 ```
 ```bash
 yarn install
