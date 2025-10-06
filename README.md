@@ -27,3 +27,8 @@
 <a href="https://github.com/xzzys26/Itsuki-IA/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA&cache=bust" alt="Contribuidores">
 </a>
+
+### **Colaboradores Destacados** ✨
+- **[xzzys26](https://github.com/xzzys26)** - Creator & Maintainer
+- **[Nombre del colaborador](https://github.com/usuario)** - Rol/Contribución
+- **[Otro colaborador](https://github.com/usuario)** - Rol/Contribución
