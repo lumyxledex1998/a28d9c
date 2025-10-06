@@ -17,5 +17,6 @@
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
 </div>
+
 > [!IMPORTANT]
 > **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro nuevo canal!](https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z)**
