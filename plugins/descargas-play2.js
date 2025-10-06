@@ -53,7 +53,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
-    await conn.reply(m.chat, '🌸🎬 Itsuki está buscando tu video...', m, ctxOk)
+    await conn.reply(m.chat, '🌸🎬 Itsuki está buscando tu *video*', m, ctxOk)
 
     const searchResults = await yts(text)
     if (!searchResults.videos.length) throw new Error('No se encontraron resultados')
