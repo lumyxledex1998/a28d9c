@@ -24,6 +24,6 @@
 
 ## Colaboradores y Agradecimiento ❤️
 
-<img src="https://gh-contrib.rocks/image/xzzys26/Itsuki-IA?random=1" alt="Contribuidores">
-
-**¡Gracias a nuestros colaboradores!** 🎉
+<a href="https://github.com/xzzys26/Itsuki-IA/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA&cache=bust" alt="Contribuidores">
+</a>
