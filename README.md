@@ -40,5 +40,6 @@
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/Line-Neon.jpg)
 
-## 💫 Hola, soy BrayanOFC Owner Supremo de este proyecto y tengo 17años y
+## 💫 Hola, soy BrayanOFC Owner Supremo de este proyecto
+## tengo 17años y
 Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
