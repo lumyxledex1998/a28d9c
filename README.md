@@ -29,6 +29,17 @@
 </a>
 
 ### **Colaboradores Destacados** ✨
-- **[xzzys26](https://github.com/xzzys26)** - Creator & Maintainer
-- **[Nombre del colaborador](https://github.com/usuario)** - Rol/Contribución
-- **[Otro colaborador](https://github.com/usuario)** - Rol/Contribución
+
+<div align="center">
+
+<img src='https://avatars.githubusercontent.com/xzzys26' width='80' height='80' style='border-radius:50%'><br>
+**[xzzys26](https://github.com/xzzys26)**<br>
+Creator & Maintainer
+
+<br>
+
+<img src='https://avatars.githubusercontent.com/usuario1' width='80' height='80' style='border-radius:50%'><br>
+**[Nombre colaborador](https://github.com/usuario1)**<br>
+Rol/Contribución
+
+</div>
