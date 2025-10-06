@@ -21,6 +21,9 @@
 > [!IMPORTANT]
 > **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro nuevo canal!](https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z)**
 
-<a href="https://github.com/xzzys26/Itsuki-IA/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA" alt="Contribuidores">
-</a>
+
+## Colaboradores y Agradecimiento ❤️
+
+<img src="https://gh-contrib.rocks/image/xzzys26/Itsuki-IA?random=1" alt="Contribuidores">
+
+**¡Gracias a nuestros colaboradores!** 🎉
