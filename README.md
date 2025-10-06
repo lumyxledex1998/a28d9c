@@ -13,7 +13,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-**Un bot de WhatsApp ultra-rápido y potente**  
+**Una Bot De WhatsApp Actualizada con plugin únicos**  
 *Construido con amor y mucha comida 💕*
 
 </div>
