@@ -25,6 +25,6 @@
 
 Conoce a los **colaboradores** que han aportado al desarrollo de este proyecto. Su apoyo ha sido clave para **mejorar** y **expandir** las funcionalidades del proyecto.
 
-<a href="https://github.com/BrunoSobrino/TheMystic-Bot-MD/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=BrunoSobrino/TheMystic-Bot-MD" /> 
+<a href="https://github.com/xzzys26/Itsuki-IA/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA" /> 
 </a>
