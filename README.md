@@ -17,14 +17,5 @@
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
 </div>
-
-## 🌟 **Características Principales**
-
-### 🚀 **Rendimiento Extremo**
-```javascript
-// Código optimizado al máximo
-⚡ Procesamiento en milisegundos
-🎯 Cache inteligente L1/L2/L3
-🔧 Zero bloating - Sin peso muerto
-💾 Memory mapping avanzado
-🚀 Compilación JIT de plugins
+> [!IMPORTANT]
+> **Este proyecto está en constante evolución. Estamos comprometidos en ofrecer a nuestra comunidad un Bot increíble. Te invitamos a instalarlo y para estar al tanto de todas las novedades. [¡Únete a nuestro nuevo canal!](https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z)**
