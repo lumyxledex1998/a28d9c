@@ -1,43 +1,28 @@
-# Baileys Super Bot
+# 🎀 Itsuki Nakano - IA ✨
 
-Estructura lista para 1000+ plugins con Baileys.
+<div align="center">
 
-- index.js: arranque y conexión
-- handler.js: router de mensajes y permisos
-- lib/simple.js: helpers (reply, sendFile, buttons, normalizeJid, parseMention)
-- lib/db.js: base JSON con lowdb
-- plugins/: tus comandos aqui (carga dinámica)
-- config.js: dueños, keys y ajustes
+![Itsuki Nakano](https://i.imgur.com/xy6Q3a2.png)
 
-## Ejecutar
+**Un bot de WhatsApp ultra-rápido y potente**  
+*Construido con amor y mucha comida 💕*
 
-1) Instala dependencias
+[![Version](https://img.shields.io/badge/Version-2.0.0-pink.svg)]()
+[![Baileys](https://img.shields.io/badge/Baileys-Multi--Device-blue.svg)]()
+[![Plugins](https://img.shields.io/badge/Plugins-1000+-success.svg)]()
+[![Speed](https://img.shields.io/badge/Speed-⚡Ultra--Fast-yellow.svg)]()
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-```
-npm install
-```
+</div>
 
-2) Inicia el bot y escanea el QR
+## 🌟 **Características Principales**
 
-```
-npm start
-```
-
-Los datos de sesión quedan en `sessions/`.
-
-## Plugins
-
-Crea un archivo `.js` en `plugins/` exportando por defecto una función:
-
-```js
-export default async function (m, extra) {
-  if (extra.command === 'hola') {
-    return m.reply('Hola!')
-  }
-}
-
-export const command = ['hola']
-export const tags = ['main']
-```
-
-El handler detecta prefijos a partir de `global.prefix` (define si gustas) y `plugin.command`.
+### 🚀 **Rendimiento Extremo**
+```javascript
+// Código optimizado al máximo
+⚡ Procesamiento en milisegundos
+🎯 Cache inteligente L1/L2/L3
+🔧 Zero bloating - Sin peso muerto
+💾 Memory mapping avanzado
+🚀 Compilación JIT de plugins
