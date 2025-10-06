@@ -99,6 +99,4 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 
 ## Repo Stats 🔭
 
-![github card](https://github-readme-stats.vercel.app/api/pin/?username=Crissdavi&repoItsuki-Nakano&theme=chartreuse-dark)
-
----------
+![github card](https://github-readme-stats.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&theme=radical&bg_color=ffb6c1&title_color=fff&icon_color=fff&text_color=333)
