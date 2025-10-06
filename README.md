@@ -84,6 +84,3 @@ npm start
 ➪ Coloboracion Oficial [`¡Unete
 Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
-
-### 👑⚡️ Autor Del Proyecto
-[![xzzys26](https://github.com/xzzys26.png?size=100)](https://github.com/xzzys26) 
