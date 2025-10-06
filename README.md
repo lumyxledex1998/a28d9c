@@ -83,3 +83,13 @@ npm start
 ```
 > *Si aparece **(Y/I/N/O/D/Z) [default=N] ?** use la letra **"y"** y luego **"ENTER"** para continuar con la instalación.*
 </details>
+
+### **`🪷 Enlaces De ItsukiNakano-IA`**
+
+<details>
+<summary><b>🏷 Enlaces Oficiales </b></summary>
+
+ * Canal Oficial  [`¡Unete Aqui!`](https://whatsapp.com/channel/0029Vb64nWqLo4hb8cuxe23n)
+* Grupo Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/HaKf6ezcwdbGzmH782eBal)
+* Comunidad Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/BgIcqDiiTEmL5ChFpq76y0?mode=ems_copy_t)
+</details>
