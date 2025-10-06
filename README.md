@@ -90,6 +90,6 @@ npm start
 <summary><b>Enlaces Oficiales</b></summary>
 
  * Canal Oficial  [`¡Unete Aqui!`](https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z)
-* Grupo Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/HaKf6ezcwdbGzmH782eBal)
+* Grupo Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/EuWgpSFHceLJjT8ayxZ6KE?mode=ems_copy_t)
 * Comunidad Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/BgIcqDiiTEmL5ChFpq76y0?mode=ems_copy_t)
 </details>
