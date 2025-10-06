@@ -45,15 +45,15 @@ tengo 17años y
 Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
 
 
-## 🌟 Características Del Bot
-
-- Sistema NK by LeoXzzsy 
-- Sistema De Gestión Para Grupos
-- Sistema De Economía x RPG Actualizado
-- Sistema Optimizado Para Grupos
-- Sistema De Sub-Bots Actualizado 
-
----
+#### Características 🛡
+Configuración avanzada de grupos 
+Bienvenidas personalizadas  
+Herramientas útiles  
+Juegos RPG (Gacha y Economía)    
+Descargas actualizada
+Sub-Bots Actualizado NK
+Extensiones adicionales
+</details>
 
 ## Instalación por Termux 🌱
 
