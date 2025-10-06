@@ -28,7 +28,6 @@
   <img src="https://contrib.rocks/image?repo=xzzys26/Itsuki-IA&cache=bust" alt="Contribuidores">
 </a>
 
-!-- GIF Neon Principal -->
 <p align="center">
   <img src="https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif" width="400"/>
 </p>
