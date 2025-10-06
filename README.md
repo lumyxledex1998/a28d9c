@@ -32,9 +32,9 @@
 
 <div align="center">
 
-<img src='https://avatars.githubusercontent.com/xzzys26' width='80' height='80' style='border-radius:50%'><br>
-**[xzzys26](https://github.com/xzzys26)**<br>
-Creator & Maintainer
+<img src='https://avatars.githubusercontent.com/BrayanOFC-Li'width='80' height='80' style='border-radius:50%'><br>
+**[BrayanOFC](https://github.com/BrayanOFC-Li)**<br>
+𝗠𝗮𝗻𝗼 𝗗𝗲𝗿𝗲𝗰𝗵𝗮 𝗱𝗲𝗹 𝗣𝗿𝗼𝘆𝗲𝗰𝘁𝗼 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 🌱
 
 <br>
 
