@@ -43,12 +43,29 @@ let handler = async (m, { conn }) => {
     const userId = m.sender
     const now = Date.now()
 
+    // Reaccionar al mensaje del usuario inmediatamente
+    await conn.sendMessage(m.chat, {
+        react: {
+            text: '⏳',
+            key: m.key
+        }
+    })
+
     // Tiempo reducido de 15 minutos a 3 minutos
     if (cooldowns[userId] && now < cooldowns[userId]) {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
         const minutes = Math.floor(remainingTime / 60)
         const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《🌟》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+        await conn.reply(m.chat, `《🌟》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+        
+        // Reacción de error por cooldown
+        await conn.sendMessage(m.chat, {
+            react: {
+                text: '❎️',
+                key: m.key
+            }
+        })
+        return
     }
 
     try {
@@ -70,15 +87,15 @@ let handler = async (m, { conn }) => {
 🆔️ ID: *${randomCharacter.id}*`
 
         const mentions = userEntry ? [userEntry.userId] : []
-        
+
         // Enviar el mensaje con el personaje
-        const sentMsg = await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
-        
-        // Añadir reacción de emoji al mensaje
+        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+
+        // Reacción de éxito al mensaje del usuario
         await conn.sendMessage(m.chat, {
             react: {
-                text: '🍨', // Puedes cambiar este emoji por el que prefieras
-                key: sentMsg.key
+                text: '✅️',
+                key: m.key
             }
         })
 
@@ -91,6 +108,13 @@ let handler = async (m, { conn }) => {
 
     } catch (error) {
         await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+        // Reacción de error por excepción
+        await conn.sendMessage(m.chat, {
+            react: {
+                text: '❎️',
+                key: m.key
+            }
+        })
     }
 }
 
