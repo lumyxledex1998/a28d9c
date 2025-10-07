@@ -1,13 +1,13 @@
 "author": "LeoXzzsy",
 "license": "MIT-License",
 "bugs": {
-"url": "https://github.com/The-King-Destroy/YukiBot-MD/issues"
+"url": "https://github.com/xzzys26/Itsuki-Nakano/issues"
 },
-"homepage": "https://github.com/The-King-Destroy/YukiBot-MD#readme",
+"homepage": "https://github.com/xzzys26/Itsuki-Nakano#readme",
 "dependencies": {
 "@hapi/boom": "^10.0.1",
 "@vitalets/google-translate-api": "^8.0.0",
-"@whiskeysockets/baileys": "github:gatanina-li/baileys",
+"@whiskeysockets/baileys": "github:this-xyz/bails",
 "acrcloud": "^1.4.0",
 "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
 "awesome-phonenumber": "^3.4.0",
@@ -28,6 +28,7 @@
 "lowdb": "^3.0.0",
 "megajs": "^1.1.3",
 "mime-types": "^3.0.1",
+"@napi-rs/canvas": "^0.1.53",
 "mongoose": "^6.6.5",
 "node-cache": "^5.1.2",
 "node-fetch": "^3.2.10",
