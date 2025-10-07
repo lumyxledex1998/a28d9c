@@ -43,6 +43,7 @@ let handler = async (m, { conn }) => {
     const userId = m.sender
     const now = Date.now()
 
+    // Tiempo reducido de 15 minutos a 3 minutos
     if (cooldowns[userId] && now < cooldowns[userId]) {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
         const minutes = Math.floor(remainingTime / 60)
@@ -75,7 +76,8 @@ let handler = async (m, { conn }) => {
             await saveCharacters(characters)
         }
 
-        cooldowns[userId] = now + 15 * 60 * 1000
+        // Cooldown reducido de 15 minutos a 3 minutos (180 segundos)
+        cooldowns[userId] = now + 3 * 60 * 1000
 
     } catch (error) {
         await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
