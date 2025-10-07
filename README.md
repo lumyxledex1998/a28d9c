@@ -57,7 +57,7 @@ Soy una persona apasionada por la tecnología, la programación y la creación d
 termux-setup-storage
 ```
 ```bash
-pkg install git nodejs ffmpeg imagemagick -y
+apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 ```bash
 git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
