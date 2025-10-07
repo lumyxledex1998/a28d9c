@@ -62,7 +62,7 @@ let handler = async (m, { conn }) => {
             ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
             : 'Libre'
 
-        const message = `*📄 Nombre* ➪ *${randomCharacter.name}*
+        const message = `📄 Nombre ➪ *${randomCharacter.name}*
 🌸 Género ➪ *${randomCharacter.gender}*
 💰 Valor ➪ *${randomCharacter.value}*
 📌 Estado ➪ ${statusMessage}
