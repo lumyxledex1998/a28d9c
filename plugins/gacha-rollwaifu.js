@@ -62,15 +62,25 @@ let handler = async (m, { conn }) => {
             ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
             : 'Libre'
 
-                const message = `📃 Nombre » *${randomCharacter.name}*
-🌸 Género » *${randomCharacter.gender}*
-💰 Valor » *${randomCharacter.value}*
-📌 Estado » ${statusMessage}
-🧬 Fuente » *${randomCharacter.source}*
+        const message = `*📄 Nombre* ➪ *${randomCharacter.name}*
+🌸 Género ➪ *${randomCharacter.gender}*
+💰 Valor ➪ *${randomCharacter.value}*
+📌 Estado ➪ ${statusMessage}
+🧬 Fuente ➪ *${randomCharacter.source}*
 🆔️ ID: *${randomCharacter.id}*`
 
         const mentions = userEntry ? [userEntry.userId] : []
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+        
+        // Enviar el mensaje con el personaje
+        const sentMsg = await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+        
+        // Añadir reacción de emoji al mensaje
+        await conn.sendMessage(m.chat, {
+            react: {
+                text: '🍨', // Puedes cambiar este emoji por el que prefieras
+                key: sentMsg.key
+            }
+        })
 
         if (!randomCharacter.user) {
             await saveCharacters(characters)
