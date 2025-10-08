@@ -3,106 +3,111 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, text }) => {
   if (!text) {
     return m.reply(`
-⚙️ *Uso del comando .cmd (multi-mensaje)*
+⚙️ *Uso del comando .cmd*
 
 Ejemplos:
 .cmd text /msg=Hola /to=573001234567
-.cmd image /url=https://telegra.ph/file/test.jpg /caption=Foto bonita
-.cmd text /msg=Hola /to=120363XXXXXX@g.us
-.cmd text /msg=Hola /to=573001234567 image /url=https://telegra.ph/file/test.jpg /caption=Foto bonita
-.cmd text /msg=Hola location /lat=6.24 /lon=-75.58 /name=Medellín
+.cmd image /url=https://telegra.ph/file/test.jpg /to=573001234567
+.cmd audio /url=https://telegra.ph/file/test.mp3 /to=573001234567
+.cmd video /url=https://telegra.ph/file/test.mp4 /to=573001234567
+.cmd sticker /url=https://telegra.ph/file/test.webp /to=573001234567
+.cmd location /lat=6.244 /lon=-75.581 /name=Medellin /to=573001234567
+.cmd contact /name=Andres /num=573001234567 /to=573009876543
+
+📍 También puedes usar grupos:
+.cmd text /msg=Hola grupo! /to=Mi grupo
+.cmd text /msg=Hola /to=12036302xxxx@g.us
 `)
   }
 
-  // --- dividir por tipos (text, image, audio, video, etc.) ---
-  const parts = text.match(/(text|image|audio|video|sticker|location|contact)(?=\s|$)/gi)
-  if (!parts) return m.reply('❌ No se detectó ningún tipo de mensaje válido.')
-
-  const toMatch = text.match(/\/to=([^\s]+)/)
-  const globalTo = toMatch
-    ? (toMatch[1].includes('@') ? toMatch[1] : toMatch[1] + '@s.whatsapp.net')
-    : m.chat
-
-  let results = []
-
-  for (let type of parts) {
-    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|location|contact|$))`, 'i')
-    const section = text.match(regex)?.[1]?.trim() || ''
-    const paramsArr = section
-      .split(' ')
+  const [type, ...paramsArr] = text.trim().split(' ')
+  const params = Object.fromEntries(
+    paramsArr
       .filter(p => p.startsWith('/'))
       .map(p => {
         const [key, ...rest] = p.slice(1).split('=')
         return [key, rest.join('=')]
       })
-    const params = Object.fromEntries(paramsArr)
+  )
 
-    const to = params.to
-      ? (params.to.includes('@s.whatsapp.net') || params.to.includes('@g.us')
-          ? params.to
-          : params.to + '@s.whatsapp.net')
-      : globalTo
+  let to
 
-    try {
-      switch (type.toLowerCase()) {
-        case 'text':
-          await conn.sendMessage(to, { text: params.msg || '(sin mensaje)' })
-          results.push('📝 Texto enviado')
-          break
-
-        case 'image':
-          await conn.sendMessage(to, { image: { url: params.url }, caption: params.caption || '' })
-          results.push('🖼️ Imagen enviada')
-          break
-
-        case 'audio':
-          await conn.sendMessage(to, { audio: { url: params.url }, mimetype: 'audio/mp4', ptt: params.ptt === 'true' })
-          results.push('🎵 Audio enviado')
-          break
-
-        case 'video':
-          await conn.sendMessage(to, { video: { url: params.url }, caption: params.caption || '' })
-          results.push('🎬 Video enviado')
-          break
-
-        case 'sticker':
-          await conn.sendMessage(to, { sticker: { url: params.url } })
-          results.push('💠 Sticker enviado')
-          break
-
-        case 'location':
-          await conn.sendMessage(to, {
-            location: {
-              degreesLatitude: parseFloat(params.lat) || 0,
-              degreesLongitude: parseFloat(params.lon) || 0,
-              name: params.name || 'Ubicación'
-            }
-          })
-          results.push('📍 Ubicación enviada')
-          break
-
-        case 'contact':
-          await conn.sendMessage(to, {
-            contacts: {
-              displayName: params.name || 'Contacto',
-              contacts: [
-                {
-                  displayName: params.name || 'Sin nombre',
-                  vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${params.name || 'Sin nombre'}\nTEL;type=CELL;type=VOICE;waid=${params.num || '000'}:${params.num || '000'}\nEND:VCARD`
-                }
-              ]
-            }
-          })
-          results.push('📇 Contacto enviado')
-          break
-      }
-    } catch (err) {
-      console.error(err)
-      results.push(`⚠️ Error al enviar ${type}: ${err.message}`)
+  // Detectar si es número, grupo o nombre de grupo
+  if (params.to) {
+    if (params.to.includes('@g.us')) {
+      to = params.to // ID de grupo
+    } else if (/^\d+$/.test(params.to)) {
+      to = `${params.to}@s.whatsapp.net`
+    } else {
+      // Buscar grupo por nombre
+      let chats = Object.values(conn.chats).filter(c => c.id.endsWith('@g.us'))
+      let group = chats.find(g => (g.subject || '').toLowerCase().includes(params.to.toLowerCase()))
+      to = group ? group.id : m.chat
     }
+  } else {
+    to = m.chat // si no se indica, usa el chat actual
   }
 
-  await m.reply(`✅ *Resultados del envío:*\n${results.join('\n')}`)
+  try {
+    switch (type) {
+      case 'text':
+        if (!params.msg) return m.reply('⚠️ Falta el parámetro /msg=')
+        await conn.sendMessage(to, { text: params.msg })
+        break
+
+      case 'image':
+        if (!params.url) return m.reply('⚠️ Falta /url=')
+        await conn.sendMessage(to, { image: { url: params.url }, caption: params.caption || '' })
+        break
+
+      case 'audio':
+        if (!params.url) return m.reply('⚠️ Falta /url=')
+        await conn.sendMessage(to, { audio: { url: params.url }, mimetype: 'audio/mp4', ptt: params.ptt === 'true' })
+        break
+
+      case 'video':
+        if (!params.url) return m.reply('⚠️ Falta /url=')
+        await conn.sendMessage(to, { video: { url: params.url }, caption: params.caption || '' })
+        break
+
+      case 'sticker':
+        if (!params.url) return m.reply('⚠️ Falta /url=')
+        await conn.sendMessage(to, { sticker: { url: params.url } })
+        break
+
+      case 'location':
+        if (!params.lat || !params.lon) return m.reply('⚠️ Faltan /lat= y /lon=')
+        await conn.sendMessage(to, {
+          location: {
+            degreesLatitude: parseFloat(params.lat),
+            degreesLongitude: parseFloat(params.lon),
+            name: params.name || 'Ubicación'
+          }
+        })
+        break
+
+      case 'contact':
+        if (!params.name || !params.num) return m.reply('⚠️ Faltan /name= y /num=')
+        await conn.sendMessage(to, {
+          contacts: {
+            displayName: params.name,
+            contacts: [{
+              displayName: params.name,
+              vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${params.name}\nTEL;type=CELL;type=VOICE;waid=${params.num}:${params.num}\nEND:VCARD`
+            }]
+          }
+        })
+        break
+
+      default:
+        return m.reply('❌ Tipo de mensaje no reconocido.\nUsa .cmd text, .cmd image, .cmd audio, etc.')
+    }
+
+    await m.reply(`✅ *Mensaje ${type} enviado correctamente a* ${to.includes('@g.us') ? 'grupo' : to.split('@')[0]}`)
+  } catch (err) {
+    console.error(err)
+    await m.reply('❌ Error al ejecutar el comando.\n' + err.message)
+  }
 }
 
 handler.command = /^cmd$/i
