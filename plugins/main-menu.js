@@ -7,7 +7,7 @@ const version = '𝗕𝗲𝘁𝗮'
 
 // Array de videos aleatorios para el menú
 const menuVideos = [ 
-  'https://files.catbox.moe/ool7kc.mp4'
+  'https://files.catbox.moe/isga3o.mp4'
 ]
 
 let tags = {
