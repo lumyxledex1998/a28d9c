@@ -5,12 +5,6 @@ const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊�
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
 const version = '𝗕𝗲𝘁𝗮' 
 
-// Array de videos aleatorios para el menú
-const menuVideos = [ 
-  'https://files.catbox.moe/isga3o.mp4'
-  'https://files.catbox.moe/nl3zrv.mp4'
-]
-
 let tags = {
   'serbot': '❤️‍🩹 𝗦𝗨𝗕-𝗕𝗢𝗧𝗦',
   'info': '🌸 𝗜𝗡𝗙𝗢𝗦',
@@ -30,7 +24,7 @@ let tags = {
   'tools': '🧰 𝗛𝗘𝗥𝗔𝗠𝗜𝗘𝗡𝗧𝗔𝗦',
   'fun': '💃 𝗗𝗜𝗩𝗘𝗥𝗦𝗜𝗢𝗡',
   'anime': '🪭 𝗔𝗡𝗜𝗠𝗘',
-  'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗆',
+  'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗠',
   'social': '📸 𝗥𝗘𝗗𝗘𝗦',
   'custom': '📕 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟'
 }
@@ -65,16 +59,16 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-    const officialBotNumber = '50671854223@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+        const officialBotNumber = '51907930545@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
 
-    let name = conn.getName(m.sender) || 'Usuario'
-    let taguser = '@' + m.sender.split('@')[0]
-
+let name = conn.getName(m.sender) || 'Usuario'
+let taguser = '@' + m.sender.split('@')[0]
+    
     const isOfficialBot = botJid === officialBotNumber
-    const botType = isOfficialBot ? '🌷 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼' : '🌱𝗦𝘂𝗯-𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 𝗡𝗞:'
+    const botType = isOfficialBot ? '🌷 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '⭐ 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
     let menuText = `
-╭━━━〔 🌸 *ITSUKI NAKANO-IA MENU* 🌸 〕━━━⬣
+╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
 ┃ 👋🏻 *Hola* @${userId.split('@')[0]} ✨
 ┃ 👑 *Creador*: *${creador}*
 ┃ ${botType}
@@ -99,28 +93,25 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    // Seleccionar video aleatorio manteniendo la estructura original
-    const randomVideo = menuVideos[Math.floor(Math.random() * menuVideos.length)]
-    let vidBuffer = await (await fetch(randomVideo)).buffer()
-    
+    let vidBuffer = await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer()
     await conn.sendMessage(
-      m.chat,
-      {
-        video: vidBuffer,
-        gifPlayback: true,
-        caption: menuText,
-        contextInfo: {
-          mentionedJid: [userId],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363417252896376@newsletter', 
-            serverMessageId: 100, 
-            newsletterName: 'ᴵᴬᴹ 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼-𝗜𝗔 𝗨𝗽𝗱𝗮𝘁𝗲 𝗖𝗵𝗮𝗻𝗻𝗲𝗹⏤͟͟͞͞🌺' 
-          }
-        }
-      },
-      { quoted: m }
-    )
+  m.chat,
+  {
+    video: vidBuffer,
+    gifPlayback: true,
+    caption: menuText,
+    contextInfo: {
+      mentionedJid: [userId],
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: idchannel, 
+        serverMessageId: 100, 
+        newsletterName: namechannel 
+      }
+    }
+  },
+  { quoted: m }
+)
 
   } catch (e) {
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
