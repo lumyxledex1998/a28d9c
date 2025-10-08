@@ -72,6 +72,5 @@ handler.help = ['invite <link>']
 // Permisos modificados para que más usuarios puedan usar el comando
 handler.owner = true
 handler.group = false
-handler.private = true
 
 export default handler
