@@ -1,135 +1,130 @@
-import fetch from 'node-fetch'
+import fs from 'fs'
+import { proto } from '@whiskeysockets/baileys'
 
-let handler = async (m, { conn, text }) => {
-  if (!text) {
-    return m.reply(`
-⚙️ *Uso del comando .cmd (multi-mensaje extendido con lista funcional)*
+let handler = async (m, { conn, text, args, command }) => {
+  const [type, ...params] = text?.trim()?.split(' ') || []
+  const content = params.join(' ') || '' // texto del mensaje
 
-Ejemplos:
-.cmd list /title=Menú principal /desc=Selecciona una opción /button=Ver opciones /list1=Perfil /list2=Ayuda /list3=Soporte
-.cmd event /msg=Reunión en 10 min /time=10m
-.cmd text /msg=Hola mundo
-`)
+  // Si no hay parámetros → mostrar lista de comandos
+  if (!type) {
+    const help = `
+╭━━━ ⪩ 𝗠𝗘𝗡𝗨 𝗖𝗠𝗗 ⪨ ━━━╮
+┃ .cmd text Hola mundo
+┃ .cmd image url|texto
+┃ .cmd video url
+┃ .cmd audio url
+┃ .cmd sticker url
+┃ .cmd document texto
+┃ .cmd location lat,long|nombre
+┃ .cmd list titulo|desc|pie|op1,op2,op3
+┃ .cmd button texto|Botón 1, Botón 2
+┃ .cmd event titulo|fecha|hora|lugar
+┃ .cmd contact nombre|número
+┃ .cmd note texto
+┃ .cmd blank
+╰━━━━━━━━━━━━━━━━━╯
+`.trim()
+    return m.reply(help)
   }
 
-  const parts = text.match(/(text|image|audio|video|sticker|document|location|contact|button|list|poll|event)(?=\s|$)/gi)
-  if (!parts) return m.reply('❌ No se detectó ningún tipo de mensaje válido.')
+  try {
+    switch (type.toLowerCase()) {
+      // TEXTO
+      case 'text':
+        return conn.sendMessage(m.chat, { text: content || '‎' }, { quoted: m })
 
-  const globalToMatch = text.match(/\/to=([^\s]+)/)
-  const globalTo = globalToMatch
-    ? (globalToMatch[1].includes('@') ? globalToMatch[1] : globalToMatch[1] + '@s.whatsapp.net')
-    : m.chat
-
-  let results = []
-
-  for (let type of parts) {
-    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|document|location|contact|button|list|poll|event|$))`, 'i')
-    const section = text.match(regex)?.[1]?.trim() || ''
-    const paramsArr = section.split(' ').filter(p => p.startsWith('/')).map(p => {
-      const [key, ...rest] = p.slice(1).split('=')
-      return [key, rest.join('=')]
-    })
-    const params = Object.fromEntries(paramsArr)
-
-    const to = params.to
-      ? (params.to.includes('@s.whatsapp.net') || params.to.includes('@g.us')
-          ? params.to
-          : params.to + '@s.whatsapp.net')
-      : globalTo
-
-    try {
-      switch (type.toLowerCase()) {
-        case 'text':
-          await conn.sendMessage(to, { text: params.msg || '' })
-          results.push('📝 Texto enviado')
-          break
-
-        case 'list': {
-          // ✅ nuevo formato de lista (interactivo)
-          const rows = []
-          for (let i = 1; i <= 10; i++) {
-            if (params[`list${i}`]) {
-              rows.push({
-                header: `Opción ${i}`,
-                title: params[`list${i}`],
-                id: `list_option_${i}`
-              })
-            }
-          }
-
-          if (rows.length === 0) {
-            rows.push({ header: 'Sin opciones', title: 'Vacío', id: 'empty' })
-          }
-
-          const listMessage = {
-            viewOnceMessage: {
-              message: {
-                interactiveMessage: {
-                  body: { text: params.desc || 'Selecciona una opción del menú' },
-                  footer: { text: '📋 Lista generada automáticamente' },
-                  header: {
-                    title: params.title || 'Menú principal',
-                    hasMediaAttachment: false
-                  },
-                  nativeFlowMessage: {
-                    buttons: [
-                      {
-                        name: 'single_select',
-                        buttonParamsJson: JSON.stringify({
-                          title: params.button || 'Ver opciones',
-                          sections: [{ title: 'Opciones disponibles', rows }]
-                        })
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-
-          await conn.relayMessage(to, listMessage, {})
-          results.push('📑 Lista interactiva enviada')
-          break
-        }
-
-        case 'event': {
-          const msg = params.msg || 'Evento sin mensaje'
-          let delay = 0
-
-          if (params.time) {
-            const match = params.time.match(/(\d+)([smhd])/)
-            if (match) {
-              const value = parseInt(match[1])
-              const unit = match[2]
-              const multipliers = { s: 1000, m: 60000, h: 3600000, d: 86400000 }
-              delay = value * (multipliers[unit] || 0)
-            }
-          }
-
-          if (delay > 0) {
-            setTimeout(async () => {
-              await conn.sendMessage(to, { text: `⏰ *Evento:* ${msg}` })
-            }, delay)
-            results.push(`🕒 Evento programado en ${params.time}`)
-          } else {
-            await conn.sendMessage(to, { text: `⏰ *Evento inmediato:* ${msg}` })
-            results.push('🕒 Evento enviado ahora')
-          }
-          break
-        }
-
-        default:
-          await conn.sendMessage(to, { text: params.msg || '' })
-          results.push(`📤 ${type} enviado (modo genérico)`)
+      // IMAGEN
+      case 'image': {
+        const [url, caption] = content.split('|')
+        return conn.sendMessage(m.chat, { image: { url }, caption: caption || '' }, { quoted: m })
       }
-    } catch (err) {
-      console.error(err)
-      results.push(`⚠️ Error al enviar ${type}: ${err.message}`)
+
+      // VIDEO
+      case 'video': {
+        const [url, caption] = content.split('|')
+        return conn.sendMessage(m.chat, { video: { url }, caption: caption || '' }, { quoted: m })
+      }
+
+      // AUDIO
+      case 'audio':
+        return conn.sendMessage(m.chat, { audio: { url: content }, mimetype: 'audio/mpeg', ptt: false }, { quoted: m })
+
+      // STICKER
+      case 'sticker':
+        return conn.sendMessage(m.chat, { sticker: { url: content } }, { quoted: m })
+
+      // DOCUMENTO
+      case 'document': {
+        const path = './tmp/cmd.txt'
+        fs.writeFileSync(path, '.')
+        return conn.sendMessage(m.chat, { document: { url: path }, mimetype: 'text/plain', fileName: 'cmd.txt' }, { quoted: m })
+      }
+
+      // UBICACIÓN
+      case 'location': {
+        const [coords, name] = content.split('|')
+        const [lat, lon] = coords.split(',').map(x => parseFloat(x))
+        return conn.sendMessage(m.chat, { location: { degreesLatitude: lat, degreesLongitude: lon, name: name || 'Ubicación' } }, { quoted: m })
+      }
+
+      // BOTONES
+      case 'button': {
+        const [texto, botonesRaw] = content.split('|')
+        const botones = (botonesRaw || 'OK').split(',').map(b => ({ buttonId: `.cmd text ${b}`, buttonText: { displayText: b }, type: 1 }))
+        return conn.sendMessage(m.chat, { text: texto || '‎', buttons: botones, headerType: 1 })
+      }
+
+      // LISTA INTERACTIVA
+      case 'list': {
+        const [title, desc, footer, opts] = content.split('|')
+        const sections = [
+          {
+            title: title || 'Opciones disponibles',
+            rows: (opts || 'Opción 1,Opción 2').split(',').map(o => ({
+              title: o,
+              rowId: `.cmd text ${o}`,
+              description: 'Selecciona esta opción'
+            }))
+          }
+        ]
+        return conn.sendMessage(m.chat, {
+          text: desc || 'Selecciona una opción:',
+          footer: footer || 'Menú interactivo',
+          title: title || 'Lista de opciones',
+          buttonText: 'Abrir lista',
+          sections
+        }, { quoted: m })
+      }
+
+      // EVENTO (nota informativa)
+      case 'event': {
+        const [titulo, fecha, hora, lugar] = content.split('|')
+        const msg = `🎟️ *${titulo || 'Evento sin título'}*\n📅 Fecha: ${fecha || 'No especificada'}\n⏰ Hora: ${hora || 'No indicada'}\n📍 Lugar: ${lugar || 'Desconocido'}`
+        return conn.sendMessage(m.chat, { text: msg }, { quoted: m })
+      }
+
+      // CONTACTO
+      case 'contact': {
+        const [nombre, numero] = content.split('|')
+        const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${nombre}\nTEL;type=CELL;type=VOICE;waid=${numero}:${numero}\nEND:VCARD`
+        return conn.sendMessage(m.chat, { contacts: { displayName: nombre, contacts: [{ vcard }] } }, { quoted: m })
+      }
+
+      // NOTA
+      case 'note':
+        return conn.sendMessage(m.chat, { text: content || '📝 Nota vacía.' }, { quoted: m })
+
+      // MENSAJE EN BLANCO
+      case 'blank':
+        return conn.sendMessage(m.chat, { text: '‎' }, { quoted: m })
+
+      default:
+        return m.reply('❌ Tipo no reconocido. Usa `.cmd` para ver ejemplos.')
     }
+  } catch (e) {
+    console.log(e)
+    return m.reply('⚠️ Error al enviar el mensaje.')
   }
-
-  await m.reply(`✅ *Resultados del envío:*\n${results.join('\n')}`)
 }
-
 handler.command = /^cmd$/i
 export default handler
