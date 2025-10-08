@@ -1,15 +1,42 @@
-var handler = async (m, {conn, args, usedPrefix, command}) => {
-const isClose = { 'open': 'not_announcement', 'close': 'announcement', 'abierto': 'not_announcement', 'cerrado': 'announcement', 'abrir': 'not_announcement', 'cerrar': 'announcement', 'desbloquear': 'unlocked', 'bloquear': 'locked' }[(args[0] || '')]
-if (isClose === undefined) { return conn.reply(m.chat, `*Elija una opción para configurar el grupo*\n\nEjemplo:\n*○ !${command} abrir*\n*○ !${command} cerrar*\n*○ !${command} bloquear*\n*○ !${command} desbloquear*`, m, rcanal, )}
-await conn.groupSettingUpdate(m.chat, isClose)
-{ 
-conn.reply(m.chat, '✅ *Configurado correctamente*', m, rcanal, )
-await m.react(done)
-}}
-handler.help = ['group abrir / cerrar']
-handler.tags = ['grupo']
-handler.command = ['group', 'grupo']
-handler.admin = true
-handler.botAdmin = true
+var handler = async (m, { conn, args, usedPrefix, command }) => {
+  const opciones = {
+    'open': 'not_announcement',
+    'close': 'announcement',
+    'abierto': 'not_announcement',
+    'cerrado': 'announcement',
+    'abrir': 'not_announcement',
+    'cerrar': 'announcement',
+    'desbloquear': 'unlocked',
+    'bloquear': 'locked'
+  }[(args[0] || '').toLowerCase()];
 
-export default handler
+  // Si no se da argumento, muestra los botones
+  if (!opciones) {
+    const botones = [
+      [{ text: '🔓 Abrir grupo', id: `${usedPrefix + command} abrir` }, { text: '🔒 Cerrar grupo', id: `${usedPrefix + command} cerrar` }],
+      [{ text: '🚫 Bloquear', id: `${usedPrefix + command} bloquear` }, { text: '✅ Desbloquear', id: `${usedPrefix + command} desbloquear` }]
+    ];
+
+    await conn.sendButtonMsg(
+      m.chat,
+      `⚙️ *Configuración del grupo*\n\nSelecciona una opción para configurar el grupo:`,
+      conn.user.name,
+      botones,
+      m
+    );
+    return;
+  }
+
+  // Ejecutar cambio de configuración
+  await conn.groupSettingUpdate(m.chat, opciones);
+  await conn.reply(m.chat, '✅ *Configurado correctamente*', m);
+  await m.react('✅');
+};
+
+handler.help = ['group abrir / cerrar'];
+handler.tags = ['grupo'];
+handler.command = ['group', 'grupo'];
+handler.admin = true;
+handler.botAdmin = true;
+
+export default handler;
