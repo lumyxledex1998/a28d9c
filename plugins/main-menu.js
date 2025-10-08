@@ -114,7 +114,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
           mentionedJid: [userId],
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363329076834348@newsletter', 
+            newsletterJid: '120363417252896376@newsletter', 
             serverMessageId: 100, 
             newsletterName: '🌸 ITSUNKI NAKANO-AI 🌸' 
           }
