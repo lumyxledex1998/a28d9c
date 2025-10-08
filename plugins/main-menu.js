@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
-const version = '𝗕𝗲𝘁𝗮' 
+const version = '3.4.0 𝗕𝗲𝘁𝗮 𝗩𝗲𝗿𝘀𝗶𝗼𝗻' 
 
 let tags = {
   'serbot': '❤️‍🩹 𝗦𝗨𝗕-𝗕𝗢𝗧𝗦',
@@ -75,6 +75,7 @@ let taguser = '@' + m.sender.split('@')[0]
 ┃ ⏳️ *Uptime*: *${uptime}*
 ┃ 💎 *Premium*: *${totalPremium}*
 ┃ 🪷 *Versión*: *${version}*
+┃ 🔰 *Baileys-Sistem*: *Itsuki-BaileysMD*
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 `
 
