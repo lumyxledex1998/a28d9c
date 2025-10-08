@@ -1,20 +1,77 @@
+import fs from 'fs'
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text }) => {
-  if (!text) text = 'text /msg=' // fuerza un tipo por defecto
+  // Si no hay texto, mostrar menú completo de ejemplos
+  if (!text) {
+    return m.reply(`
+⚙️ *Comando .cmd (multi-mensaje)*
 
-  const parts = text.match(/(text|image|audio|video|sticker|gif|document|location|contact|buttons|list|poll|reaction|note|event|aviso)(?=\s|$)/gi)
-  if (!parts) return m.reply('⚠️ No se detectó ningún tipo de mensaje, se enviará texto vacío.'), await conn.sendMessage(m.chat, { text: '' })
+Usos posibles:
 
-  const globalToMatch = text.match(/\/to=([^\s]+)/)
-  const globalTo = globalToMatch
-    ? (globalToMatch[1].includes('@') ? globalToMatch[1] : globalToMatch[1] + '@s.whatsapp.net')
+📝 Texto:
+.cmd text /msg=Hola /to=573001234567
+
+🖼️ Imagen:
+.cmd image /url=https://telegra.ph/file/test.jpg /caption=Foto
+
+🎵 Audio:
+.cmd audio /url=https://telegra.ph/file/test.mp3 /ptt=true
+
+🎬 Video:
+.cmd video /url=https://telegra.ph/file/test.mp4 /caption=Video cool
+
+💠 Sticker:
+.cmd sticker /url=https://telegra.ph/file/test.webp
+
+📄 Documento:
+.cmd document /to=573001234567
+
+📍 Ubicación:
+.cmd location /lat=6.24 /lon=-75.58 /name=Medellín
+
+📇 Contacto:
+.cmd contact /name=Andrés /num=573001234567
+
+🔘 Botones:
+.cmd buttons /text=¿Te gusta Senku? /btn1=Sí /btn2=No
+
+📋 Lista:
+.cmd list /title=Opciones /btn1=Ver menú /btn2=Ayuda
+
+📊 Encuesta:
+.cmd poll /title=¿Qué prefieres? /opt1=Fútbol /opt2=Baloncesto /opt3=Ajedrez
+
+🎙️ Nota de voz:
+.cmd note /url=https://telegra.ph/file/test.mp3
+
+📅 Evento:
+.cmd event /name=Entrenamiento /time=8:00AM /place=Cancha
+
+🚨 Aviso:
+.cmd aviso /msg=El servidor se reiniciará pronto
+
+💬 Reacción:
+.cmd reaction /emoji=🔥
+
+Ejemplo combinado:
+.cmd text /msg=Hola image /url=https://telegra.ph/file/test.jpg
+`)
+  }
+
+  // --- detectar tipos ---
+  const parts = text.match(/(text|image|audio|video|sticker|document|location|contact|buttons|list|poll|reaction|note|event|aviso)(?=\s|$)/gi)
+  if (!parts) return m.reply('⚠️ No se detectó ningún tipo de mensaje válido.')
+
+  const toMatch = text.match(/\/to=([^\s]+)/)
+  const globalTo = toMatch
+    ? (toMatch[1].includes('@') ? toMatch[1] : `${toMatch[1]}@s.whatsapp.net`)
     : m.chat
 
   let results = []
 
   for (let type of parts) {
-    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|gif|document|location|contact|buttons|list|poll|reaction|note|event|aviso|$))`, 'i')
+    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|document|location|contact|buttons|list|poll|reaction|note|event|aviso|$))`, 'i')
     const section = text.match(regex)?.[1]?.trim() || ''
     const paramsArr = section
       .split(' ')
@@ -35,33 +92,35 @@ let handler = async (m, { conn, text }) => {
       switch (type.toLowerCase()) {
         case 'text':
           await conn.sendMessage(to, { text: params.msg || '' })
-          results.push('📝 Texto enviado (vacío o con contenido)')
+          results.push('📝 Texto enviado')
           break
 
         case 'image':
           await conn.sendMessage(to, { image: { url: params.url || 'https://telegra.ph/file/4c2f1a6e22fbe4e3b78dc.jpg' }, caption: params.caption || '' })
-          results.push('🖼️ Imagen enviada (predeterminada si no hay URL)')
+          results.push('🖼️ Imagen enviada')
           break
 
         case 'audio':
           await conn.sendMessage(to, { audio: { url: params.url || 'https://file-examples.com/storage/fe6a3c3f8a8eab48a35d1c2/2017/11/file_example_MP3_700KB.mp3' }, mimetype: 'audio/mp4', ptt: params.ptt === 'true' })
-          results.push('🎵 Audio enviado (predeterminado si no hay URL)')
+          results.push('🎵 Audio enviado')
           break
 
         case 'video':
-        case 'gif':
-          await conn.sendMessage(to, { video: { url: params.url || 'https://telegra.ph/file/2c7f035bfd31b216f7c75.mp4' }, caption: params.caption || '', gifPlayback: type === 'gif' })
-          results.push(type === 'gif' ? '🎞️ GIF enviado' : '🎬 Video enviado')
+          await conn.sendMessage(to, { video: { url: params.url || 'https://telegra.ph/file/2c7f035bfd31b216f7c75.mp4' }, caption: params.caption || '' })
+          results.push('🎬 Video enviado')
           break
 
         case 'sticker':
           await conn.sendMessage(to, { sticker: { url: params.url || 'https://i.ibb.co/3d2z9qT/sample-sticker.webp' } })
-          results.push('💠 Sticker enviado (por defecto si no hay URL)')
+          results.push('💠 Sticker enviado')
           break
 
         case 'document':
-          await conn.sendMessage(to, { document: { url: params.url || 'https://file-examples.com/storage/fe6a3c3f8a8eab48a35d1c2/2017/10/file-example_PDF_1MB.pdf' }, mimetype: params.mimetype || 'application/pdf', fileName: params.name || 'archivo.pdf' })
-          results.push('📄 Documento enviado (por defecto)')
+          const path = './temp_doc.txt'
+          fs.writeFileSync(path, '.')
+          await conn.sendMessage(to, { document: { url: path }, mimetype: 'text/plain', fileName: 'documento.txt' })
+          fs.unlinkSync(path)
+          results.push('📄 Documento generado y enviado (.txt con punto)')
           break
 
         case 'location':
@@ -69,7 +128,7 @@ let handler = async (m, { conn, text }) => {
             location: {
               degreesLatitude: parseFloat(params.lat) || 6.24,
               degreesLongitude: parseFloat(params.lon) || -75.58,
-              name: params.name || 'Ubicación predeterminada'
+              name: params.name || 'Ubicación genérica'
             }
           })
           results.push('📍 Ubicación enviada')
@@ -93,10 +152,10 @@ let handler = async (m, { conn, text }) => {
         case 'buttons':
           await conn.sendMessage(to, {
             text: params.text || '',
-            footer: params.footer || '',
+            footer: params.footer || 'Senku Bot ⚙️',
             buttons: [
-              { buttonId: '1', buttonText: { displayText: params.btn1 || 'Opción 1' } },
-              { buttonId: '2', buttonText: { displayText: params.btn2 || 'Opción 2' } }
+              { buttonId: 'yes', buttonText: { displayText: params.btn1 || 'Sí' }, type: 1 },
+              { buttonId: 'no', buttonText: { displayText: params.btn2 || 'No' }, type: 1 }
             ],
             headerType: 1
           })
@@ -106,8 +165,8 @@ let handler = async (m, { conn, text }) => {
         case 'list':
           await conn.sendMessage(to, {
             text: params.msg || '',
-            title: params.title || 'Menú',
-            footer: params.desc || 'Selecciona una opción',
+            title: params.title || 'Menú Senku',
+            footer: params.desc || 'Selecciona una opción:',
             buttonText: 'Abrir',
             sections: [
               {
@@ -149,12 +208,12 @@ let handler = async (m, { conn, text }) => {
 
         case 'aviso':
           await conn.sendMessage(to, { text: `🚨 *Aviso importante:*\n${params.msg || ''}` })
-          results.push('🚨 Aviso enviado (vacío o con texto)')
+          results.push('🚨 Aviso enviado')
           break
       }
     } catch (err) {
       console.error(err)
-      results.push(`⚠️ Error al enviar ${type}: ${err.message}`)
+      results.push(`⚠️ Error en ${type}: ${err.message}`)
     }
   }
 
