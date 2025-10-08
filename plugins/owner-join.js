@@ -71,8 +71,6 @@ handler.help = ['invite <link>']
 
 // Permisos modificados para que más usuarios puedan usar el comando
 handler.owner = true
-handler.mods = true
-handler.premium = false
 handler.group = false
 handler.private = true
 
