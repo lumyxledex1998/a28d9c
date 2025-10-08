@@ -44,33 +44,6 @@
 tengo 17años y
 Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
 
-
-## Instalación por Termux 🌱
-
-> **No garantizamos un funcionamiento perfecto en Termux, aunque trabajamos constantemente para asegurar una buena compatibilidad. Si experimentas lentitud o errores, por favor envía una solicitud con la evidencia correspondiente para que nuestro equipo pueda solucionarlo. Si el problema persiste, te recomendamos considerar los servicios de alojamiento de bots de nuestros patrocinadores.**
-
-<details>
-  <summary><b>Instalación Manual Por Termux 📲</b></summary>
-
-> *Comandos para instalar de forma manual*
-```bash
-termux-setup-storage
-```
-```bash
-apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
-```
-```bash
-git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
-```
-```bash
-npm install
-```
-```bash
-npm start
-```
-> *Si aparece **(Y/I/N/O/D/Z) [default=N] ?** use la letra **"y"** y luego **"ENTER"** para continuar con la instalación.*
-</details>
-
 ### **`🪷 Enlaces De ItsukiNakano-IA`**
 
 <details>
@@ -81,10 +54,3 @@ npm start
 ➪ Coloboracion Oficial [`¡Unete
 Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
-
-
-<p align="center">
-  <a href="https://github.com/xzzys26/Itsuki-Nakano">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=xzzys26&repo=Itsuki-Nakano&bg_color=000000&title_color=ff69b4&text_color=ffffff&icon_color=ff69b4&border_color=ff69b4&show_owner=true" />
-  </a>
-</p>
