@@ -13,7 +13,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-# 🌟🔎 `Itsuki Nakano IA -INFO`
+# 🔎 `Itsuki Nakano IA -INFO` 🌷
 
 **Una Bot De WhatsApp Temática con Sistemas Únicos**  
 *Construido con dedicación, responsabilidad y mucho amor por el estudio 📚✨*
@@ -25,7 +25,7 @@
 Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quintilliza más responsable y dedicada de *"Gotoubun no Hanayome" (The Quintessential Quintuplets)*. Este bot encarna los valores de Itsuki: dedicación al estudio, responsabilidad, amor por la comida (especialmente onigiris), y un corazón bondadoso detrás de su actitud seria.
 
 
-### 🌸 Inspiración del Anime
+### `🌸 Inspiración del Anime`
 
 **Gotoubun no Hanayome (五等分の花嫁)**
 - **Género:** Romance, Comedia, Escolar, Harem
@@ -39,7 +39,7 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
   - Valor principal: La educación y el esfuerzo
 
 
-## ✨ Características Principales
+## `✨ Características Principales`
 
 <details>
 <summary><b> ➮ Funciones Completas</b></summary>
