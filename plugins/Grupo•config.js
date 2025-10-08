@@ -3,38 +3,56 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-const isClose = { 
-    'open': 'not_announcement', 
-    'close': 'announcement', 
-    'abierto': 'not_announcement', 
-    'cerrado': 'announcement', 
-    'abrir': 'not_announcement', 
-    'cerrar': 'announcement', 
-    'desbloquear': 'unlocked', 
-    'bloquear': 'locked' 
-}[(args[0] || '').toLowerCase()]
+  const isClose = {
+    'open': 'not_announcement',
+    'close': 'announcement',
+    'abierto': 'not_announcement',
+    'cerrado': 'announcement',
+    'abrir': 'not_announcement',
+    'cerrar': 'announcement',
+    'desbloquear': 'unlocked',
+    'bloquear': 'locked'
+  }[(args[0] || '').toLowerCase()]
 
-if (isClose === undefined) { 
-    return conn.reply(m.chat, `*Elija una opción para configurar el grupo*\n\nEjemplo:\n*○ !${command} abrir*\n*○ !${command} cerrar*\n*○ !${command} bloquear*\n*○ !${command} desbloquear*`, m, ctxErr)
-}
+  // 🟡 Si no se pone argumento → mostrar botones
+  if (isClose === undefined) {
+    const texto = `⚙️ *Configuración del grupo*\n\nSelecciona una opción para administrar el grupo:`
 
-await conn.groupSettingUpdate(m.chat, isClose)
+    const botones = [
+      { buttonId: `${usedPrefix + command} abrir`, buttonText: { displayText: '🔓 Abrir grupo' }, type: 1 },
+      { buttonId: `${usedPrefix + command} cerrar`, buttonText: { displayText: '🔒 Cerrar grupo' }, type: 1 },
+      { buttonId: `${usedPrefix + command} bloquear`, buttonText: { displayText: '🚫 Bloquear grupo' }, type: 1 },
+      { buttonId: `${usedPrefix + command} desbloquear`, buttonText: { displayText: '✅ Desbloquear grupo' }, type: 1 }
+    ]
 
-let message = ''
-if (args[0].toLowerCase() === 'cerrar' || args[0].toLowerCase() === 'close' || args[0].toLowerCase() === 'cerrado') {
+    await conn.sendMessage(m.chat, {
+      text: texto,
+      footer: 'Elige una opción para continuar.',
+      buttons: botones,
+      headerType: 4
+    }, { quoted: m })
+
+    return
+  }
+
+  // 🟢 Ejecutar la acción elegida
+  await conn.groupSettingUpdate(m.chat, isClose)
+
+  let message = ''
+  if (args[0].toLowerCase() === 'cerrar' || args[0].toLowerCase() === 'close' || args[0].toLowerCase() === 'cerrado') {
     message = '🔒 *El grupo ha sido cerrado correctamente*'
-} else if (args[0].toLowerCase() === 'abrir' || args[0].toLowerCase() === 'open' || args[0].toLowerCase() === 'abierto') {
+  } else if (args[0].toLowerCase() === 'abrir' || args[0].toLowerCase() === 'open' || args[0].toLowerCase() === 'abierto') {
     message = '🔓 *El grupo ha sido abierto correctamente*'
-} else if (args[0].toLowerCase() === 'bloquear' || args[0].toLowerCase() === 'locked') {
+  } else if (args[0].toLowerCase() === 'bloquear' || args[0].toLowerCase() === 'locked') {
     message = '🚫 *El grupo ha sido bloqueado correctamente*'
-} else if (args[0].toLowerCase() === 'desbloquear' || args[0].toLowerCase() === 'unlocked') {
+  } else if (args[0].toLowerCase() === 'desbloquear' || args[0].toLowerCase() === 'unlocked') {
     message = '✅ *El grupo ha sido desbloqueado correctamente*'
-} else {
+  } else {
     message = '✅ *Configurado correctamente*'
-}
+  }
 
-conn.reply(m.chat, message, m, ctxOk)
-// await m.react(done) // Descomenta esta línea si tienes definida la variable 'done'
+  conn.reply(m.chat, message, m, ctxOk)
+  // await m.react(done) // Descomenta esta línea si tienes definida la variable 'done'
 }
 
 handler.help = ['group abrir / cerrar']
