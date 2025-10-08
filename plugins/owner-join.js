@@ -70,7 +70,6 @@ handler.tags = ['owner']
 handler.help = ['invite <link>']
 
 // Permisos modificados para que más usuarios puedan usar el comando
-handler.rowner = false
 handler.owner = true
 handler.mods = true
 handler.premium = false
