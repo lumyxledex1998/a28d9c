@@ -28,63 +28,53 @@ let handler = async (m, { conn, text, isOwner, usedPrefix, command }) => {
     )
   }
 
-  if (isOwner) {
-    try {
-      await conn.groupAcceptInvite(code)
-      await conn.reply(m.chat, 
-        `🍙✅ *ITSUKI - Unida al Grupo* 🏘️✨\n\n` +
-        `🎉 Me he unido exitosamente al grupo\n\n` +
-        `📚 "¡Hola a todos! Estoy lista para ayudarles"\n` +
-        `🍱 "¡Estudiemos juntos!"`, 
-        m, ctxOk
-      )
-    } catch (e) {
-      await conn.reply(m.chat, 
-        `🍙❌ *ITSUKI - Error al Unirse*\n\n` +
-        `⚠️ No pude unirme al grupo\n\n` +
-        `📝 *Posibles causas:*\n` +
-        `• El enlace expiró\n` +
-        `• El grupo está lleno\n` +
-        `• Ya estoy en el grupo\n` +
-        `• El enlace fue revocado\n\n` +
-        `❌ Error: ${e.message}`, 
-        m, ctxErr
-      )
+  try {
+    // Intentar unirse al grupo directamente
+    let result = await conn.groupAcceptInvite(code)
+    
+    await conn.reply(m.chat, 
+      `🍙✅ *ITSUKI - Unida al Grupo* 🏘️✨\n\n` +
+      `🎉 Me he unido exitosamente al grupo\n\n` +
+      `📚 "¡Hola a todos! Estoy lista para ayudarles"\n` +
+      `🍱 "¡Estudiemos juntos!"\n\n` +
+      `✅ Grupo: ${result}`,
+      m, ctxOk
+    )
+    
+  } catch (e) {
+    console.error('Error al unirse al grupo:', e)
+    
+    let errorMessage = `🍙❌ *ITSUKI - Error al Unirse*\n\n`
+    
+    if (e.message.includes('invite')) {
+      errorMessage += `⚠️ El enlace de invitación no es válido\n\n`
+    } else if (e.message.includes('full')) {
+      errorMessage += `⚠️ El grupo está lleno\n\n`
+    } else if (e.message.includes('already')) {
+      errorMessage += `⚠️ Ya estoy en este grupo\n\n`
+    } else if (e.message.includes('expired')) {
+      errorMessage += `⚠️ El enlace ha expirado\n\n`
+    } else {
+      errorMessage += `⚠️ Error desconocido\n\n`
     }
-  } else {
-    const owner = (global.owner?.[0]?.[0] || '0')
-    try {
-      let message = 
-        `🍙🏘️ *ITSUKI - Nueva Invitación a Grupo*\n\n` +
-        `👤 *Solicitante:* @${m.sender.split('@')[0]}\n` +
-        `🔗 *Enlace:* ${text}\n\n` +
-        `📚 "Alguien quiere que me una a su grupo"\n` +
-        `💡 Usa .invite <link> para aceptar`
-
-      await conn.sendMessage(owner + '@s.whatsapp.net', { 
-        text: message, 
-        mentions: [m.sender] 
-      })
-
-      await conn.reply(m.chat, 
-        `🍙📬 *ITSUKI - Invitación Enviada* ✨\n\n` +
-        `✅ Tu invitación ha sido enviada al owner\n\n` +
-        `📚 "El owner revisará tu solicitud"\n` +
-        `⏰ "Espera su respuesta"\n\n` +
-        `🍱 ¡Gracias por tu interés!`, 
-        m, ctxOk
-      )
-    } catch (e) {
-      await conn.reply(m.chat, 
-        `🍙❌ Error al enviar invitación\n\n❌ ${e.message}`, 
-        m, ctxErr
-      )
-    }
+    
+    errorMessage += `📝 *Detalles:* ${e.message}\n\n`
+    errorMessage += `🔗 *Enlace usado:* ${text}`
+    
+    await conn.reply(m.chat, errorMessage, m, ctxErr)
   }
 }
 
-handler.command = ['invite', 'join', 'unirse']
+handler.command = ['invite', 'join', 'unirse', 'entrar']
 handler.tags = ['owner']
 handler.help = ['invite <link>']
+
+// Permisos modificados para que más usuarios puedan usar el comando
+handler.rowner = false
+handler.owner = true
+handler.mods = true
+handler.premium = false
+handler.group = false
+handler.private = true
 
 export default handler
