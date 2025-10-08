@@ -13,7 +13,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-# 🍙 Itsuki Nakano IA - Bot de WhatsApp
+# 🌟🔎 `Itsuki Nakano IA -INFO`
 
 **Una Bot De WhatsApp Temática con Sistemas Únicos**  
 *Construido con dedicación, responsabilidad y mucho amor por el estudio 📚✨*
