@@ -122,11 +122,6 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
   - Respuestas contextuales
   - Personalidad de Itsuki (`.itsuki`)
   
-- [x] **Configuración de grupo**
-  - Antilink, antispam, antidelete
-  - Bienvenidas personalizadas
-  - Bot primario por grupo (`.setprimary`)
-  
 - [x] **Utilidades (NK-Utils)**
   - Buscador Google
   - Crear stickers (image/video/gif/url)
