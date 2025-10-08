@@ -6,9 +6,7 @@ const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
 const version = '𝗕𝗲𝘁𝗮' 
 
 // Array de videos aleatorios para el menú
-const menuVideos = [
-  'https://files.catbox.moe/nl3zrv.mp4',
-  'https://files.catbox.moe/j6hx6k.mp4', 
+const menuVideos = [ 
   'https://files.catbox.moe/ool7kc.mp4'
 ]
 
