@@ -116,7 +116,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
           forwardedNewsletterMessageInfo: {
             newsletterJid: '120363417252896376@newsletter', 
             serverMessageId: 100, 
-            newsletterName: '🌸 ITSUNKI NAKANO-AI 🌸' 
+            newsletterName: 'ᴵᴬᴹ 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼-𝗜𝗔 𝗨𝗽𝗱𝗮𝘁𝗲 𝗖𝗵𝗮𝗻𝗻𝗲𝗹⏤͟͟͞͞🌺' 
           }
         }
       },
