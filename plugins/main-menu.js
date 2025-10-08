@@ -1,9 +1,16 @@
-//Creador del menu: BrayanOFC
+// Creador del menu: BrayanOFC
 import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
 const version = '𝗕𝗲𝘁𝗮' 
+
+// Array de videos aleatorios para el menú
+const menuVideos = [
+  'https://files.catbox.moe/nl3zrv.mp4',
+  'https://files.catbox.moe/j6hx6k.mp4',
+  'https://files.catbox.moe/ool7kc.mp4'
+]
 
 let tags = {
   'serbot': '❤️‍🩹 𝗦𝗨𝗕-𝗕𝗢𝗧𝗦',
@@ -59,11 +66,11 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-        const officialBotNumber = '51907930545@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+    const officialBotNumber = '51907930545@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
 
-let name = conn.getName(m.sender) || 'Usuario'
-let taguser = '@' + m.sender.split('@')[0]
-    
+    let name = conn.getName(m.sender) || 'Usuario'
+    let taguser = '@' + m.sender.split('@')[0]
+
     const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🌷 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '⭐ 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
@@ -93,25 +100,28 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    let vidBuffer = await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer()
+    // Seleccionar video aleatorio
+    const randomVideo = menuVideos[Math.floor(Math.random() * menuVideos.length)]
+    
+    let vidBuffer = await (await fetch(randomVideo)).buffer()
     await conn.sendMessage(
-  m.chat,
-  {
-    video: vidBuffer,
-    gifPlayback: true,
-    caption: menuText,
-    contextInfo: {
-      mentionedJid: [userId],
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: idchannel, 
-        serverMessageId: 100, 
-        newsletterName: namechannel 
-      }
-    }
-  },
-  { quoted: m }
-)
+      m.chat,
+      {
+        video: vidBuffer,
+        gifPlayback: true,
+        caption: menuText,
+        contextInfo: {
+          mentionedJid: [userId],
+          externalAdReply: {
+            title: `🌸 ${botname}`,
+            body: `¡Hola ${name}! 👋`,
+            thumbnail: await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer(),
+            sourceUrl: 'https://whatsapp.com/channel/0029Va9RZvA4R5IrGcMqF03p'
+          }
+        }
+      },
+      { quoted: m }
+    )
 
   } catch (e) {
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
