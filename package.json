@@ -24,6 +24,7 @@
     "moment-timezone": "^0.5.46",
     "node-fetch": "^3.3.2",
     "syntax-error": "^1.4.0",
+    "@napi-rs/canvas": "^0.1.53",
     "pino": "^8.4.0",
     "wa-sticker-formatter": "^4.3.2",
     "cfonts": "^3.3.0",
