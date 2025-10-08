@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 let handler = async (m, { conn, text }) => {
   if (!text) {
     return m.reply(`
-⚙️ *Uso del comando .cmd (multi-mensaje)*
+⚙️ *Uso del comando .cmd (multi-mensaje extendido)*
 
 Ejemplos:
 .cmd text /msg=Hola /to=573001234567
@@ -15,12 +15,13 @@ Ejemplos:
 .cmd contact /name=Camilo /num=573001234567
 .cmd document /url=https://example.com/test.pdf /filename=test.pdf
 .cmd button /msg=Elige una opción /button1=Sí /button2=No
-.cmd list /title=Opciones /desc=Selecciona /button=Ver /list1=Opción 1 /list2=Opción 2
+.cmd list /title=Opciones /desc=Selecciona /button=Ver /list1=Opción 1 /list2=Opción 2 /list3=Opción 3
 .cmd poll /question=¿Te gusta Gura? /option1=Sí /option2=No
+.cmd event /msg=Recordatorio /time=10m
 `)
   }
 
-  const parts = text.match(/(text|image|audio|video|sticker|document|location|contact|button|list|poll)(?=\s|$)/gi)
+  const parts = text.match(/(text|image|audio|video|sticker|document|location|contact|button|list|poll|event)(?=\s|$)/gi)
   if (!parts) return m.reply('❌ No se detectó ningún tipo de mensaje válido.')
 
   const globalToMatch = text.match(/\/to=([^\s]+)/)
@@ -31,7 +32,7 @@ Ejemplos:
   let results = []
 
   for (let type of parts) {
-    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|document|location|contact|button|list|poll|$))`, 'i')
+    const regex = new RegExp(`${type}([^]*?)(?=(text|image|audio|video|sticker|document|location|contact|button|list|poll|event|$))`, 'i')
     const section = text.match(regex)?.[1]?.trim() || ''
     const paramsArr = section.split(' ').filter(p => p.startsWith('/')).map(p => {
       const [key, ...rest] = p.slice(1).split('=')
@@ -115,24 +116,32 @@ Ejemplos:
           results.push('🔘 Botones enviados')
           break
 
-        case 'list':
+        case 'list': {
+          const sections = [
+            {
+              title: params.title || 'Opciones disponibles',
+              rows: []
+            }
+          ]
+
+          for (let i = 1; i <= 10; i++) {
+            const listItem = params[`list${i}`]
+            if (listItem) sections[0].rows.push({ title: listItem })
+          }
+
+          if (sections[0].rows.length === 0)
+            sections[0].rows.push({ title: 'Sin opciones' })
+
           await conn.sendMessage(to, {
             text: params.desc || 'Selecciona una opción',
-            footer: '📋 Lista generada por .cmd',
-            title: params.title || 'Menú',
+            footer: '📋 Lista generada automáticamente',
+            title: params.title || 'Menú principal',
             buttonText: params.button || 'Ver opciones',
-            sections: [
-              {
-                title: 'Opciones',
-                rows: [
-                  { title: params.list1 || 'Opción 1' },
-                  { title: params.list2 || 'Opción 2' },
-                ]
-              }
-            ]
+            sections
           })
           results.push('📑 Lista enviada')
           break
+        }
 
         case 'poll':
           await conn.sendMessage(to, {
@@ -144,6 +153,32 @@ Ejemplos:
           })
           results.push('📊 Encuesta enviada')
           break
+
+        case 'event': {
+          const msg = params.msg || 'Evento sin mensaje'
+          let delay = 0
+
+          if (params.time) {
+            const match = params.time.match(/(\d+)([smhd])/)
+            if (match) {
+              const value = parseInt(match[1])
+              const unit = match[2]
+              const multipliers = { s: 1000, m: 60000, h: 3600000, d: 86400000 }
+              delay = value * (multipliers[unit] || 0)
+            }
+          }
+
+          if (delay > 0) {
+            setTimeout(async () => {
+              await conn.sendMessage(to, { text: `⏰ *Evento:* ${msg}` })
+            }, delay)
+            results.push(`🕒 Evento programado en ${params.time}`)
+          } else {
+            await conn.sendMessage(to, { text: `⏰ *Evento inmediato:* ${msg}` })
+            results.push('🕒 Evento enviado ahora')
+          }
+          break
+        }
       }
     } catch (err) {
       console.error(err)
