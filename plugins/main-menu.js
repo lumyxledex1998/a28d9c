@@ -1,4 +1,4 @@
-// Creador del menu: BrayanOFC
+//Creador del menu: BrayanOFC
 import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
@@ -8,7 +8,7 @@ const version = '𝗕𝗲𝘁𝗮'
 // Array de videos aleatorios para el menú
 const menuVideos = [
   'https://files.catbox.moe/nl3zrv.mp4',
-  'https://files.catbox.moe/j6hx6k.mp4',
+  'https://files.catbox.moe/j6hx6k.mp4', 
   'https://files.catbox.moe/ool7kc.mp4'
 ]
 
@@ -31,7 +31,7 @@ let tags = {
   'tools': '🧰 𝗛𝗘𝗥𝗔𝗠𝗜𝗘𝗡𝗧𝗔𝗦',
   'fun': '💃 𝗗𝗜𝗩𝗘𝗥𝗦𝗜𝗢𝗡',
   'anime': '🪭 𝗔𝗡𝗜𝗠𝗘',
-  'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗠',
+  'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗆',
   'social': '📸 𝗥𝗘𝗗𝗘𝗦',
   'custom': '📕 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟'
 }
@@ -100,10 +100,10 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    // Seleccionar video aleatorio
+    // Seleccionar video aleatorio manteniendo la estructura original
     const randomVideo = menuVideos[Math.floor(Math.random() * menuVideos.length)]
-    
     let vidBuffer = await (await fetch(randomVideo)).buffer()
+    
     await conn.sendMessage(
       m.chat,
       {
@@ -112,11 +112,11 @@ ${comandos.map(menu => menu.help.map(cmd =>
         caption: menuText,
         contextInfo: {
           mentionedJid: [userId],
-          externalAdReply: {
-            title: `🌸 ${botname}`,
-            body: `¡Hola ${name}! 👋`,
-            thumbnail: await (await fetch('https://files.catbox.moe/nl3zrv.mp4')).buffer(),
-            sourceUrl: 'https://whatsapp.com/channel/0029Va9RZvA4R5IrGcMqF03p'
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363329076834348@newsletter', 
+            serverMessageId: 100, 
+            newsletterName: '🌸 ITSUNKI NAKANO-AI 🌸' 
           }
         }
       },
