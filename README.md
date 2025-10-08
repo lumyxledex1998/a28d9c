@@ -13,8 +13,150 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-**Una Bot De WhatsApp Actualizada con plugin únicos**  
-*Construido con amor y mucha comida 💕*
+# 🍙 Itsuki Nakano IA - Bot de WhatsApp
+
+**Una Bot De WhatsApp Temática con Sistemas Únicos**  
+*Construido con dedicación, responsabilidad y mucho amor por el estudio 📚✨*
+
+---
+
+## 📖 Sobre Itsuki Nakano IA
+
+Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quintilliza más responsable y dedicada de *"Gotoubun no Hanayome" (The Quintessential Quintuplets)*. Este bot encarna los valores de Itsuki: dedicación al estudio, responsabilidad, amor por la comida (especialmente onigiris), y un corazón bondadoso detrás de su actitud seria.
+
+### 🌸 Inspiración del Anime
+
+**Gotoubun no Hanayome (五等分の花嫁)**
+- **Género:** Romance, Comedia, Escolar, Harem
+- **Personaje:** Itsuki Nakano (中野 五月)
+- **Características:** 
+  - La quinta y "mayor" de las quintillizas
+  - Cabello largo rojo/anaranjado con una estrella 
+  - Personalidad seria y responsable
+  - Sueño: Convertirse en maestra
+  - Debilidad: La comida (especialmente onigiris 🍙)
+  - Valor principal: La educación y el esfuerzo
+
+---
+
+## 🎯 Sistema NK (Nakano Kernel)
+
+**NK** es el núcleo de sistemas únicos desarrollados exclusivamente para Itsuki Nakano IA:
+
+### 🏦 **NK-Economy** - Sistema Económico Temático
+- **Trabajos personalizados:** Más de 87 trabajos únicos relacionados con el mundo académico de Itsuki
+- **Sistema bancario:** Gestión de dinero con depósitos y transferencias
+- **Crímenes académicos:** Sistema de riesgo con temática de estudiante
+- **Moneda:** Yenes (¥) como en Japón
+
+### 🎴 **NK-Gacha** - Sistema de Personajes Coleccionables
+- **Roll de personajes:** Sistema aleatorio para obtener personajes de anime
+- **Reclamar (Claim):** Sistema de cooldown de 5 minutos
+- **Harem personal:** Colección individual de personajes
+- **Sistema de regalos:** Intercambio de personajes entre usuarios
+- **Votación:** Sistema para aumentar el valor de personajes
+- **Rankings:** Top personajes por valor
+- **Multimedia:** Imágenes y videos de personajes
+- **Base de datos:** JSON con información detallada de cada personaje
+
+### 🤖 **NK-SubBot** - Sistema de Sub-Bots Mejorado
+- **Conexión dual:** QR Code o Código de 8 dígitos
+- **Reconexión inteligente:** Limpieza automática de conexiones muertas
+- **Sin duplicados:** Sistema que permite reconexión sin conflictos
+- **Gestión avanzada:** Control de sub-bots por grupo
+
+### 🔒 **NK-AntiPrivate** - Sistema de Protección de Privado
+- **Bloqueo automático:** Protege el privado del bot de spam
+- **Mensajes personalizados:** Advertencias con temática de Itsuki
+- **Control total:** Activar/desactivar cuando sea necesario
+- **Lista blanca:** Permite números específicos
+
+### 🧠 **NK-AI** - Inteligencia Artificial Conversacional
+- **250+ frases únicas:** Respuestas con personalidad de Itsuki
+- **11 categorías:** Saludos, comida, estudio, ánimo, etc.
+- **Detección contextual:** Responde según palabras clave
+- **Respuestas dobles:** 25% de probabilidad de respuestas extras
+- **Personalidad auténtica:** Incluye quejas, reflexiones y emociones
+
+### 📚 **NK-Utils** - Utilidades Especializadas
+- **Sistema de errores:** Registro y gestión de errores del bot
+- **Escaneo de sintaxis:** Detección automática de errores en plugins
+- **Invitaciones:** Sistema para unir el bot a grupos
+- **Bot primario:** Configurar bot principal por grupo para evitar spam
+
+---
+
+## ✨ Características Principales
+
+<details>
+<summary><b> ➮ Funciones Completas</b></summary>
+
+> Bot temático de Itsuki Nakano en desarrollo. Si presenta alguna falla, reportar al creador para una solución óptima.
+
+- [x] **Sistema de Economía Completo (NK-Economy)**
+  - Trabajo con temática de Itsuki (`.work`)
+  - Balance y banco (`.balance`, `.deposit`)
+  - Transferencias (`.pay`)
+  - Sistema de crímenes (`.crimen`)
+  
+- [x] **Sistema Gacha de Personajes (NK-Gacha)**
+  - Roll de personajes (`.roll`)
+  - Reclamar y gestionar harem (`.claim`, `.harem`)
+  - Regalar y votar personajes (`.regalar`, `.vote`)
+  - Top personajes (`.topwaifus`)
+  - Ver imágenes y videos (`.wimage`, `.wvideo`)
+  - Agregar personajes (`.addcharacter`)
+  
+- [x] **SubBot Mejorado (NK-SubBot)**
+  - Conexión por QR o código
+  - Sistema de reconexión sin conflictos
+  - Gestión de múltiples sub-bots
+  
+- [x] **Antiprivado (NK-AntiPrivate)**
+  - Bloqueo automático de privados
+  - Activar/desactivar (`.antiprivate`)
+  - Lista blanca de números
+  
+- [x] **IA Conversacional (NK-AI)**
+  - Más de 250 frases únicas
+  - Respuestas contextuales
+  - Personalidad de Itsuki (`.itsuki`)
+  
+- [x] **Configuración de grupo**
+  - Antilink, antispam, antidelete
+  - Bienvenidas personalizadas
+  - Bot primario por grupo (`.setprimary`)
+  
+- [x] **Utilidades (NK-Utils)**
+  - Buscador Google
+  - Crear stickers (image/video/gif/url)
+  - Invitar bot a grupos (`.invite`)
+  - Sistema de errores (`.errors`)
+  - Escaneo de sintaxis (`.syntax`, `.scandir`)
+  
+- [x] **Juegos**
+  - TicTacToe, matemáticas, RPG
+  
+- [x] **Descargas**
+  - Música y video de YouTube
+  
+- [x] **Personalización**
+  - Menú temático de Itsuki Nakano
+  - Mensajes con recanal (enlaces externos)
+  - Emojis temáticos 🍙📚🍱✨
+  
+- [x] **Chatbot**
+  - Interacción con voz y texto
+  - Autoresponder personalizado
+  
+- [ ] **En desarrollo**
+  - Más funciones educativas
+  - Sistema de misiones diarias
+  - Tienda de objetos
+
+</details>
+
+---
 
 </div>
 
