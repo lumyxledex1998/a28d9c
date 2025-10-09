@@ -123,7 +123,7 @@ ${getItsukiStatus(cpu.currentLoad, memUsage)}
     }
 
     // Imagen temática de Itsuki Nakano
-    const itsukiImage = 'https://images.unsplash.com/photo-1578632749014-ca77efd052eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    const itsukiImage = 'https://files.catbox.moe/h2g54u.jpg'
     
     await conn.sendFile(m.chat, itsukiImage, 'itsuki-server.jpg', message, m, ctxOk)
     await m.react('💫')
