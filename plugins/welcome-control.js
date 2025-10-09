@@ -1,5 +1,4 @@
-// welcome-control.js for Itsuki Nakano-IA 
-
+// welcome-control.js
 let handler = async (m, { conn, usedPrefix, command, isAdmin, isBotAdmin }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
@@ -11,24 +10,29 @@ let handler = async (m, { conn, usedPrefix, command, isAdmin, isBotAdmin }) => {
   const action = (m.text || '').toLowerCase().split(' ')[1]
   const jid = m.chat
 
-  if (action === 'on' || action === 'activar') {
-    // Importar y usar la función setWelcomeState
-    const { setWelcomeState } = await import('./russ.js')
-    setWelcomeState(jid, true)
-    return conn.reply(m.chat, '✅ *Welcome activado*\n\nAhora se enviarán mensajes de bienvenida y despedida en este grupo', m, ctxOk)
-  } 
-  else if (action === 'off' || action === 'desactivar') {
-    const { setWelcomeState } = await import('./russ.js')
-    setWelcomeState(jid, false)
-    return conn.reply(m.chat, '❌ *Welcome desactivado*\n\nYa no se enviarán mensajes de bienvenida y despedida en este grupo', m, ctxErr)
-  }
-  else if (action === 'status' || action === 'estado') {
-    const { isWelcomeEnabled } = await import('./russ.js')
-    const status = isWelcomeEnabled(jid) ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'
-    return conn.reply(m.chat, `📊 *Estado del Welcome*\n\nEstado actual: ${status}\n\nUsa:\n*${usedPrefix}welcome on* - Para activar\n*${usedPrefix}welcome off* - Para desactivar`, m, ctxWarn)
-  }
-  else {
-    return conn.reply(m.chat, `🏷 *Configuración del Welcome*\n\nUsa:\n*${usedPrefix}welcome on* - Activar welcome\n*${usedPrefix}welcome off* - Desactivar welcome\n*${usedPrefix}welcome status* - Ver estado actual`, m, ctxWarn)
+  try {
+    if (action === 'on' || action === 'activar') {
+      // Importar desde lib/welcome.js
+      const { setWelcomeState } = await import('../lib/welcome.js')
+      setWelcomeState(jid, true)
+      return conn.reply(m.chat, '✅ *Welcome activado*\n\nAhora se enviarán mensajes de bienvenida y despedida en este grupo', m, ctxOk)
+    } 
+    else if (action === 'off' || action === 'desactivar') {
+      const { setWelcomeState } = await import('../lib/welcome.js')
+      setWelcomeState(jid, false)
+      return conn.reply(m.chat, '❌ *Welcome desactivado*\n\nYa no se enviarán mensajes de bienvenida y despedida en este grupo', m, ctxErr)
+    }
+    else if (action === 'status' || action === 'estado') {
+      const { isWelcomeEnabled } = await import('../lib/welcome.js')
+      const status = isWelcomeEnabled(jid) ? '🟢 ACTIVADO' : '🔴 DESACTIVADO'
+      return conn.reply(m.chat, `📊 *Estado del Welcome*\n\nEstado actual: ${status}\n\nUsa:\n*${usedPrefix}welcome on* - Para activar\n*${usedPrefix}welcome off* - Para desactivar`, m, ctxWarn)
+    }
+    else {
+      return conn.reply(m.chat, `🏷 *Configuración del Welcome*\n\nUsa:\n*${usedPrefix}welcome on* - Activar welcome\n*${usedPrefix}welcome off* - Desactivar welcome\n*${usedPrefix}welcome status* - Ver estado actual`, m, ctxWarn)
+    }
+  } catch (importError) {
+    console.error('Error importing from lib/welcome.js:', importError)
+    return conn.reply(m.chat, '❌ Error: No se pudo cargar el sistema de welcome desde lib/welcome.js', m, ctxErr)
   }
 }
 
