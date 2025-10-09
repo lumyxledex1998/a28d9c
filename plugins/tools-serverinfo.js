@@ -40,9 +40,8 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
     // Crear mensaje
     const message = `
-💮 *┌─✦⋅⋅⋅⋅⋅⋅〖 ITS UKI  NAKANO 〗⋅⋅⋅⋅⋅⋅✦─┐*
-🎀 *│        ANÁLISIS DEL SERVIDOR       │*
-💮 *└─✦⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅✦🌙✦⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅✦─┘*
+
+🌟 *ITSUKI NAKANO ANÁLISIS DEL SERVIDOR*
 
 📖 *INFORMACIÓN DEL SISTEMA*
   ➺ 🏠 *Hostname:* ${hostname}
@@ -82,8 +81,11 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       await conn.sendMessage(m.chat, { delete: waitingMsg.key })
     }
 
-    // Enviar mensaje final
-    await conn.reply(m.chat, message, m, ctxOk)
+    // URL de imagen de Itsuki Nakano
+    const imageUrl = 'https://files.catbox.moe/h2g54u.jpg'
+
+    // Enviar mensaje con imagen
+    await conn.sendFile(m.chat, imageUrl, 'itsuki-server.jpg', message, m, ctxOk)
     await m.react('💫')
 
   } catch (error) {
