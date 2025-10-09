@@ -146,3 +146,14 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 
 
 ## `Sitio web`: [¡Aqui!](https://itsuki-nakano-page.wuaze.com/?i=1)
+
+
+## `INFO HOST 💻`
+
+JSCloud
+JSCloud es una plataforma de hosting gratuita y de pago, es fácil de usar para proyectos de JavaScript,PHP y Python.
+
+Lanza tus aplicaciones en la nube en segundos, sin configuraciones complicadas ni costos ocultos. Perfecto para desarrolladores, estudiantes o cualquier persona que quiera desplegar proyectos rápidamente.
+
+Comienza Desde Ahora 🌟 [!JSCloud Aqui¡](https://dash.twb.qzz.io)
+
