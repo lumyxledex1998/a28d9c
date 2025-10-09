@@ -20,18 +20,18 @@ let drm1 = ""
 let drm2 = ""
 
 let rtx =  "🌱 S U B - B O T   I T S U K I 🌱\n\n";
-rtx +=     "🪷 *Paso 1:* Abre WhatsApp en tu otro dispositivo\n";
-rtx +=     "🪷 *Paso 2:* Ve a ⋮ y selecciona *WhatsApp Web*\n";
-rtx +=     "🪷 *Paso 3:* Escanea este código QR con amor ♡\n\n";
-rtx +=     "⏰ *Expira en 45 segundos*\n";
+rtx +=     "➺ *Paso 1:* Abre WhatsApp en tu otro dispositivo\n";
+rtx +=     "➺ *Paso 2:* Ve a ⋮ y selecciona *WhatsApp Web*\n";
+rtx +=     "➺ *Paso 3:* Escanea este código QR con amor ♡\n\n";
+rtx +=     "⏰ *Expira en 15 segundos*\n";
 rtx +=     "📝 *Nota de Itsuki:* Úsame con cariño y responsabilidad~";
 
 let rtx2 =  "🌟 V I N C U L A R   C Ó D I G O 🌟\n\n";
-rtx2 +=     "⭐️ *Paso 1:* Dirígete a ⋮ y luego a *Dispositivos*\n";
-rtx2 +=     "⭐️ *Paso 2:* Selecciona la opción *Vincular dispositivo*\n";
-rtx2 +=     "⭐️ *Paso 3:* Ingresa este código especial:\n\n";
+rtx2 +=     "➺ *Paso 1:* Dirígete a ⋮ y luego a *Dispositivos*\n";
+rtx2 +=     "➺ *Paso 2:* Selecciona la opción *Vincular dispositivo*\n";
+rtx2 +=     "➺ *Paso 3:* Ingresa este código especial:\n\n";
 rtx2 +=     "💌 *Tu código:* 8 dígitos mágicos\n";
-rtx2 +=     "⏰ *Válido por 60 segundos*\n";
+rtx2 +=     "⏰ *Válido por poco segundos*\n";
 rtx2 +=     "📝 *Consejo de Itsuki:* Copia y pega rápidito~";
 
 let imagenUrl = 'https://files.catbox.moe/9cbbyf.jpg';
@@ -238,7 +238,7 @@ export async function startSubBot(options) {
                                         { image: { url: imagenUrl }, caption: rtx2, ...(typeof rcanalr === 'object' ? rcanalr : {}) },
                                         { quoted: m }
                                 );
-                                codeBot = await conn.reply(m.chat, `✨ ${secret}`, m);
+                                codeBot = await conn.reply(m.chat, ` ${secret}`, m);
                                 console.log(secret)
                         }
 
