@@ -11,7 +11,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
     const start = performance.now()
     await m.react('📊')
 
-    // Mensaje de espera
+    // Mensaje de espera - NO se borrará
     let waitingMsg = await conn.reply(m.chat, `🎀 *Itsuki Nakano-IA analizando el servidor...*`, m, ctxWarn)
 
     // Obtener información básica del sistema
@@ -40,8 +40,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
     // Crear mensaje
     const message = `
-
-🌟 *ITSUKI NAKANO ANÁLISIS DEL SERVIDOR*
+🌟 *ITSUKI  NAKANO ANÁLISIS DEL SERVIDOR*
 
 📖 *INFORMACIÓN DEL SISTEMA*
   ➺ 🏠 *Hostname:* ${hostname}
@@ -76,22 +75,17 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 💮 *¡Todo funciona para atenderte!* 🌙
     `.trim()
 
-    // Eliminar mensaje de espera
-    if (waitingMsg) {
-      await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-    }
-
     // URL de imagen de Itsuki Nakano
     const imageUrl = 'https://files.catbox.moe/h2g54u.jpg'
 
-    // Enviar mensaje con imagen
+    // Enviar mensaje con imagen y rcanal - NO se borra el mensaje de carga
     await conn.sendFile(m.chat, imageUrl, 'itsuki-server.jpg', message, m, ctxOk)
     await m.react('💫')
 
   } catch (error) {
     console.error('Error en comando serverinfo:', error)
     
-    // Mensaje de error simple
+    // Mensaje de error simple con rcanal
     await conn.reply(m.chat, `❌ *Error:* No se pudo obtener la información del servidor`, m, ctxErr)
     await m.react('❌')
   }
