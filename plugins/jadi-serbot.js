@@ -46,7 +46,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
         const settings = globalThis?.db?.data?.settings || {}
         const jid = conn?.user?.jid
         if (!jid || !settings[jid]?.jadibotmd) {
-                return conn.reply(m.chat, `🌸 Lo siento mucho~ Este comando está temporalmente desactivado por mi creadora.\n\n✨ Uso: ${usedPrefix + command}`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
+                return conn.reply(m.chat, `🌸 Lo siento mucho~ Este comando está temporalmente desactivado por mi creador.\n\n✨ Uso: ${usedPrefix + command}`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
         }
 
         // Aviso inicial
