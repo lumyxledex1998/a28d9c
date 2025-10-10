@@ -38,24 +38,21 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let userId = m.mentionedJid?.[0] || m.sender
     let user = global.db.data.users[userId] || { exp: 0, level: 1, premium: false }
-
     let totalPremium = Object.values(global.db.data.users).filter(u => u.premium).length
 
-    let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => ({
-      help: Array.isArray(plugin.help) ? plugin.help : (plugin.help ? [plugin.help] : []),
-      tags: Array.isArray(plugin.tags) ? plugin.tags : (plugin.tags ? [plugin.tags] : []),
-      limit: plugin.limit,
-      premium: plugin.premium,
+    let help = Object.values(global.plugins).filter(p => !p.disabled).map(p => ({
+      help: Array.isArray(p.help) ? p.help : (p.help ? [p.help] : []),
+      tags: Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
+      limit: p.limit,
+      premium: p.premium,
     }))
 
     let uptime = clockString(process.uptime() * 1000)
-
     const botJid = conn.user.jid
     const officialBotNumber = '50671854223@s.whatsapp.net'
     const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🎀 Bot Oficial' : '🌱 Sub-Bot'
 
-    // Generar texto de introducción
     let intro = `╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
 ┃ 👋🏻 *Hola* @${userId.split('@')[0]}
 ┃ 👑 *Creador*: *${creador}*
@@ -66,21 +63,22 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 ┃ 💻 *Web Oficial*: ${web}
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣`
 
-    // Crear botones de categorías
     let buttons = Object.keys(tags).map(tag => ({
       buttonId: `.menu ${tag}`,
       buttonText: { displayText: tags[tag] },
       type: 1
-    })).slice(0, 10) // máximo 10 botones por mensaje
+    })).slice(0, 10)
 
+    // Obtener buffer de video
     let vidBuffer = await (await fetch('https://files.catbox.moe/rcum9p.mp4')).buffer()
     
+    // Enviar video como "reproducción inmediata" usando gifPlayback
     await conn.sendMessage(m.chat, {
       video: vidBuffer,
-      gifPlayback: true,
+      gifPlayback: true,        // esto hace que se reproduzca automáticamente como GIF
       caption: intro,
       buttons: buttons,
-      headerType: 5, // 5 para video con botones
+      headerType: 5,            // video con botones
       contextInfo: { mentionedJid: [userId] }
     }, { quoted: m })
 
@@ -95,7 +93,7 @@ handler.command = ['menu2']
 export default handler
 
 function clockString(ms) {
-  let d = Math.floor(ms / 86400000) 
+  let d = Math.floor(ms / 86400000)
   let h = Math.floor(ms / 3600000) % 24
   let m = Math.floor(ms / 60000) % 60
   let s = Math.floor(ms / 1000) % 60
