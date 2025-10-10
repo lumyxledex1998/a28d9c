@@ -1,13 +1,23 @@
 import fetch from 'node-fetch'
 
+/**
+ * 🎀 CREADO POR: LeoXzzsy
+ * 🌸 ADAPTADO PARA: Itsuki-Nakano IA
+ * 📚 VERSIÓN: 3.4.0 Beta
+ * 🏷️ DESCARGADOR FACEBOOK
+ */
+
 let handler = async (m, { conn, usedPrefix, command, args }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
+  let waitingMsg // Declarar waitingMsg fuera del try para que esté disponible en el catch
+
   try {
+    // Verificar si se proporcionó URL
     if (!args[0]) {
-      return conn.reply(m.chat,
+      return conn.reply(m.chat, 
         `🎀 *Itsuki-Nakano IA - Descargador Facebook*\n\n` +
         `✦ *Uso correcto:*\n` +
         `*${usedPrefix}fb* <url_de_facebook>\n\n` +
@@ -19,6 +29,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 
     const url = args[0]
 
+    // Verificar que sea una URL de Facebook válida
     if (!url.match(/facebook\.com|fb\.watch/)) {
       return conn.reply(m.chat,
         `🎀 *Itsuki-Nakano IA*\n\n` +
@@ -29,8 +40,9 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       m, ctxErr)
     }
 
+    // Reaccionar y enviar mensaje de espera
     await m.react('📥')
-    let waitingMsg = await conn.reply(m.chat,
+    waitingMsg = await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `📥 *Procesando video de Facebook...*\n` +
       `✦ Analizando enlace...\n` +
@@ -38,42 +50,62 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       `🌸 *Por favor espera un momento...* (◕‿◕✿)`,
     m, ctxWarn)
 
-    const apiUrl = `https://mayapi.ooguy.com/facebook?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
+    // Una sola API confiable
+    const apiUrl = `https://api.erdwpe.com/api/download/fb?url=${encodeURIComponent(url)}`
+
     const response = await fetch(apiUrl)
     if (!response.ok) throw new Error('Error en la API')
 
     const data = await response.json()
-    if (!data.status || !data.result || !data.result.url) throw new Error('No se pudo obtener el video')
 
-    const videoUrl = data.result.url
-    const videoTitle = data.result.title || 'Video de Facebook'
-
-    if (waitingMsg) {
-      try { await conn.sendMessage(m.chat, { delete: waitingMsg.key }) } catch (e) {}
+    if (!data.status || !data.result) {
+      throw new Error('No se pudo obtener el video')
     }
 
+    const videoUrl = data.result.hd || data.result.sd
+    if (!videoUrl) throw new Error('URL de video no disponible')
+
+    const videoTitle = data.result.title || 'Video de Facebook'
+    const videoQuality = data.result.hd ? 'HD' : 'SD'
+
+    // Eliminar mensaje de espera
+    if (waitingMsg) {
+      try {
+        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
+      } catch (e) {}
+    }
+
+    // Enviar mensaje de éxito
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `✅ *¡Descarga completada!*\n\n` +
       `📹 *Título:* ${videoTitle}\n` +
-      `📦 *Calidad:* Automática\n` +
+      `📦 *Calidad:* ${videoQuality}\n` +
       `🔗 *Fuente:* Facebook\n\n` +
       `🌸 *¡Disfruta del video!* (´｡• ᵕ •｡\`) ♡`,
     m, ctxOk)
 
-    await conn.sendFile(m.chat, videoUrl, 'facebook_video.mp4',
+    // Enviar el video
+    await conn.sendFile(m.chat, videoUrl, 'facebook_video.mp4', 
       `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-      `╰ Creado por: LeoXzzsy (Adaptado por SoyMaycol)\n\n` +
-      `📹 ${videoTitle}`,
+      `╰ Creado por: LeoXzzsy\n\n` +
+      `📹 ${videoTitle}\n` +
+      `⭐ Calidad: ${videoQuality}`,
     m)
 
     await m.react('✅')
+
   } catch (error) {
     console.error('Error en descarga Facebook:', error)
+
+    // Eliminar mensaje de espera si existe
     if (waitingMsg) {
-      try { await conn.sendMessage(m.chat, { delete: waitingMsg.key }) } catch (e) {}
+      try {
+        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
+      } catch (e) {}
     }
 
+    // Mensaje de error estilo Itsuki
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `❌ *Error en la descarga*\n\n` +
