@@ -121,7 +121,7 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
   <img src="https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif" width="400"/>
 </p>
 
-### **`OWNER SEGUNDA MANO DEL PROYECTO 👑`**
+### **`OWNER Supremo2 DEL PROYECTO 👑`**
 <div style="display: flex; gap: 10px;">
   <a href="https://github.com/BrayanOFC-Li" style="text-decoration: none;">
     <img src="https://github.com/BrayanOFC-Li.png" width="130" height="130" alt="BrayanOFC" style="border-radius: 50%;" />
@@ -129,7 +129,7 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/Line-Neon.jpg)
 
-## 💫 Hola, soy BrayanOFC Owner de Segunda Mano de este proyecto
+## 💫 Hola, soy BrayanOFC Owner Supremo de segunda Mano de este proyecto
 tengo 17años y
 Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me gusta aprender cosas nuevas, mejorar cada día y compartir mis conocimientos con los demás. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
 
