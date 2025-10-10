@@ -47,6 +47,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
 
     let mediaUrl, mediaTitle, mediaType, apiUsada = 'May API'
 
+    
     try {
       const res = await fetch(api1, { timeout: 30000 })
       if (!res.ok) throw new Error('Error en API principal')
@@ -66,13 +67,17 @@ let handler = async (m, { conn, usedPrefix, args }) => {
         mediaType = data.data.type || 'video'
       }
     } catch {
+      
       apiUsada = 'API Adonix'
       const res2 = await fetch(api2, { timeout: 30000 })
       if (!res2.ok) throw new Error('Error en API de respaldo')
       const data2 = await res2.json()
-      mediaUrl = data2.data?.url || data2.url
-      mediaTitle = data2.data?.title || data2.title || 'Contenido de Instagram'
-      mediaType = data2.data?.type || data2.type || 'video'
+
+    
+      const adonixData = Array.isArray(data2.data) ? data2.data[0] : data2.data
+      mediaUrl = adonixData?.url
+      mediaTitle = 'Contenido de Instagram'
+      mediaType = mediaUrl?.includes('.mp4') ? 'video' : 'image'
     }
 
     if (!mediaUrl) throw new Error('No se encontró contenido válido')
