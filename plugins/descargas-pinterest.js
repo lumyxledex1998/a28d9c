@@ -78,7 +78,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     if (isVideo) {
       await conn.sendFile(m.chat, mediaUrl, 'pinterest_video.mp4',
         `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
-        `╰ Creado por: LeoXzzsy 💞\n\n` +
+        `╰ Creado por: LeoXzzsy 👑\n\n` +
         `📹 *Video de Pinterest*\n` +
         `⭐ *Título:* ${title}`,
         m
@@ -86,7 +86,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     } else {
       await conn.sendFile(m.chat, mediaUrl, 'pinterest_image.jpg',
         `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
-        `╰ Creado por: LeoXzzsy 💞\n\n` +
+        `╰ Creado por: LeoXzzsy 👑\n\n` +
         `🖼️ *Imagen de Pinterest*\n` +
         `⭐ *Título:* ${title}`,
         m
