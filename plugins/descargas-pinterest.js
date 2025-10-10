@@ -51,7 +51,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     )
 
     // 🧠 Nueva API Insana
-    const apiUrl = `https://mayapi.ooguy.com/pinterest?url=${encodeURIComponent(url)}&apikey=soymaycol%3C3`
+    const apiUrl = `https://mayapi.ooguy.com/pinterest?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
     const response = await fetch(apiUrl)
     if (!response.ok) throw new Error('Error al conectar con MayAPI')
 
