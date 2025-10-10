@@ -1,4 +1,5 @@
-Creador del menu: BrayanOFC
+//Creador del menu: BrayanOFC y adaptado para Itsuki Nakano IA 
+
 import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
