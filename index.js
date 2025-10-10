@@ -427,7 +427,7 @@ async function startBot() {
               const botPath = path.join(global.rutaJadiBot, folder);
               if (fs.existsSync(path.join(botPath, 'creds.json'))) {
                 jadibts({
-                  pathRubyJadiBot: botPath,
+                  pathjadibts: botPath,
                   conn: sock,
                   m: null, 
                   args: '',
