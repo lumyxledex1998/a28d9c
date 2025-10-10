@@ -3,10 +3,13 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let handler = async (m, { conn, args }) => {
-  if (!args[0]) return m.reply("❌ Ingresa un enlace de Facebook válido.");
+  if (!args[0]) {
+    return m.reply("❌ Ingresa un enlace de Facebook válido.");
+  }
 
   try {
     const apiUrl = `https://mayapi.ooguy.com/facebook?url=${encodeURIComponent(args[0])}&apikey=may-f53d1d49`;
@@ -22,16 +25,11 @@ let handler = async (m, { conn, args }) => {
     const videoUrl = data.result.url;
     const filePath = path.join(__dirname, "fbvideo.mp4");
 
-    const response = await axios({
-      url: videoUrl,
-      method: "GET",
-      responseType: "arraybuffer",
-    });
-
+    const response = await axios.get(videoUrl, { responseType: "arraybuffer" });
     fs.writeFileSync(filePath, response.data);
 
     await conn.sendMessage(m.chat, {
-      video: fs.readFileSync(filePath),
+      video: { url: filePath },
       caption: `🎀 *Itsuki-Nakano IA*\n\n✅ *¡Descarga completada!*\n\n📹 *Título:* ${data.result.title || "Sin título"}\n📦 *Calidad:* Automática\n🔗 *Fuente:* Facebook\n\n🌸 *¡Disfruta del video!* (´｡• ᵕ •｡`) ♡`,
     });
 
