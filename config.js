@@ -16,7 +16,8 @@ global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
    ['18493907272', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
    ['15614809253', 'AyeitsRyze', true],
-   ['5216641784469', 'BrayanOFC', true]
+   ['5216641784469', 'BrayanOFC', true],
+   ['573133374132', 'YO SOY YO', true] 
 ];
 
 global.mods = ['18493907272', '595972314588', '', '']
@@ -35,7 +36,7 @@ global.namebot = 'Itsuki-IA'
 global.sessions = 'sessions'
 global.jadi = 'jadibts'
 global.Choso = true
-global.prefix = ['.', '!', '/' , '#']
+global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
 // Números y settings globales para varios códigos
 
