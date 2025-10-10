@@ -1,443 +1,564 @@
-const { useMultiFileAuthState, DisconnectReason, makeCacheableSignalKeyStore, fetchLatestBaileysVersion} = (await import("@whiskeysockets/baileys"));
-import qrcode from "qrcode"
-import NodeCache from "node-cache"
-import fs from "fs"
-import path from "path"
-import pino from 'pino'
+import { fileURLToPath, pathToFileURL } from 'url'
+import path from 'path'
+import os from 'os'
+import fs from 'fs'
 import chalk from 'chalk'
-import util from 'util'
-import * as ws from 'ws'
-const { child, spawn, exec } = await import('child_process')
-const { CONNECTING } = ws
-import { makeWASocket } from '../lib/simple.js'
-import { fileURLToPath } from 'url'
+import readline from 'readline'
+import qrcode from 'qrcode-terminal'
+import libPhoneNumber from 'google-libphonenumber'
+import cfonts from 'cfonts'
+import pino from 'pino'
+import { jadibts } from './plugins/jadi-serbot.js';
+import { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, Browsers, jidNormalizedUser } from '@whiskeysockets/baileys'
+import { makeWASocket, protoType, serialize } from './lib/simple.js'
+import config from './config.js'
+import { sendWelcomeOrBye } from './lib/welcome.js'
+import { loadDatabase, saveDatabase, DB_PATH } from './lib/db.js'
+import { watchFile } from 'fs'
 
-let crm1 = "Y2QgcGx1Z2lucy"
-let crm2 = "A7IG1kNXN1b"
-let crm3 = "SBpbmZvLWRvbmFyLmpz"
-let crm4 = "IF9hdXRvcmVzcG9uZGVyLmpzIGluZm8tYm90Lmpz"
-let drm1 = ""
-let drm2 = ""
-
-let rtx =  "🌱 S U B - B O T   I T S U K I 🌱\n\n";
-rtx +=     "➺ *Paso 1:* Abre WhatsApp en tu otro dispositivo\n";
-rtx +=     "➺ *Paso 2:* Ve a ⋮ y selecciona *WhatsApp Web*\n";
-rtx +=     "➺ *Paso 3:* Escanea este código QR con amor ♡\n\n";
-rtx +=     "⏰ *Expira en 15 segundos*\n";
-rtx +=     "📝 *Nota de Itsuki:* Úsame con cariño y responsabilidad~";
-
-let rtx2 =  "🌟 V I N C U L A R   C Ó D I G O 🌟\n\n";
-rtx2 +=     "➺ *Paso 1:* Dirígete a ⋮ y luego a *Dispositivos*\n";
-rtx2 +=     "➺ *Paso 2:* Selecciona la opción *Vincular dispositivo*\n";
-rtx2 +=     "➺ *Paso 3:* Ingresa este código especial:\n\n";
-rtx2 +=     "💌 *Tu código:* 8 dígitos mágicos\n";
-rtx2 +=     "⏰ *Válido por poco segundos*\n";
-rtx2 +=     "📝 *Consejo de Itsuki:* Copia y pega rápidito~";
-
-let imagenUrl = 'https://files.catbox.moe/9cbbyf.jpg';
+const phoneUtil = (libPhoneNumber.PhoneNumberUtil || libPhoneNumber.default?.PhoneNumberUtil).getInstance()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const subBotOptions = {}
-if (global.conns instanceof Array) console.log()
-else global.conns = []
 
-let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
-        const settings = globalThis?.db?.data?.settings || {}
-        const jid = conn?.user?.jid
-        if (!jid || !settings[jid]?.jadibotmd) {
-                return conn.reply(m.chat, `🌸 Lo siento mucho~ Este comando está temporalmente desactivado por mi creador.\n\n✨ Uso: ${usedPrefix + command}`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-        }
+global.prefixes = Array.isArray(config.prefix) ? [...config.prefix] : []
+global.owner = Array.isArray(config.owner) ? config.owner : []
+global.opts = global.opts && typeof global.opts === 'object' ? global.opts : {}
 
-        // Aviso inicial
-        try { await conn.reply(m.chat, '✨ Preparando tu conexión especial...', m, typeof rcanalw !== 'undefined' ? rcanalw : (typeof rcanal !== 'undefined' ? rcanal : {})) } catch {}
 
-        // Cooldown para evitar spam
-        const COOLDOWN_MS = 120000
-        const last = Number(global.db?.data?.users?.[m.sender]?.Subs || 0)
-        const now = Date.now()
-        const remain = last + COOLDOWN_MS - now
-        if (remain > 0) {
-                return conn.reply(m.chat, `🌸 Por favor espera ${msToTime(remain)} antes de usar este comando nuevamente, ¿sí?`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-        }
+const CONFIG_PATH = path.join(__dirname, 'config.js')
+watchFile(CONFIG_PATH, async () => {
+  try {
+    const fresh = (await import('./config.js?update=' + Date.now())).default
+    if (Array.isArray(fresh.prefix)) {
+      global.prefixes = [...fresh.prefix]
+    }
+    if (Array.isArray(fresh.owner)) {
+      global.owner = fresh.owner
+    }
 
-        // Límite de Sub-Bots
-        const MAX_SUBBOTS = Number(global.maxSubBots || 20)
-        const subBots = [...new Set([...global.conns.filter((c) => c.user && c.ws?.socket && c.ws.socket.readyState !== ws.CLOSED)])]
-        if (subBots.length >= MAX_SUBBOTS) {
-                return conn.reply(m.chat, `💝 Lo siento mucho~ No hay espacios disponibles para nuevos Sub-Bots en este momento. Límite: ${MAX_SUBBOTS}`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-        }
+    const prefStr = Array.isArray(global.prefixes) && global.prefixes.length ? global.prefixes.join(' ') : '-'
+    const ownersStr = Array.isArray(global.owner) && global.owner.length
+      ? global.owner.map(o => Array.isArray(o) ? (o[0] || '') : (o || '')).filter(Boolean).join(', ')
+      : '-'
+    const cfgInfo = `\n╭─────────────────────────────◉\n│ ${chalk.black.bgRedBright.bold('        🔁 CONFIG ACTUALIZADA        ')}\n│ 「 🗂 」${chalk.cyan('Archivo: config.js')}\n│ 「 🧩 」${chalk.yellow('Prefijos: ')}${chalk.white(prefStr)}\n│ 「 👑 」${chalk.yellow('Owners:   ')}${chalk.white(ownersStr)}\n╰─────────────────────────────◉\n`
+    console.log(cfgInfo)
+  } catch (e) {
+    console.log('[Config] Error recargando config:', e.message)
+  }
+})
 
-        let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-        let id = `${who.split('@')[0]}`
+global.plugins = {}
+global.commandIndex = {}
+async function loadPlugins() {
+  global.plugins = {}
+  global.commandIndex = {}
+  const PLUGIN_PATH = path.join(__dirname, 'plugins')
+  if (!fs.existsSync(PLUGIN_PATH)) {
+    console.log('[Plugins] Carpeta no encontrada:', PLUGIN_PATH)
+    return
+  }
+  const entries = fs.readdirSync(PLUGIN_PATH)
+  for (const entry of entries) {
+    const entryPath = path.join(PLUGIN_PATH, entry)
+    if (fs.statSync(entryPath).isDirectory()) {
+      const files = fs.readdirSync(entryPath).filter(f => f.endsWith('.js'))
+      for (const file of files) {
+        const full = path.join(entryPath, file)
+        await importAndIndexPlugin(full)
+      }
+    } else if (entry.endsWith('.js')) {
+      await importAndIndexPlugin(entryPath)
+    }
+  }
+  try {
+    const total = Object.keys(global.plugins).length
+    const plugInfo = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('        🧩 PLUGINS CARGADOS        ')}\n│ 「 📦 」${chalk.yellow('Total: ')}${chalk.white(total)}\n╰─────────────────────────────◉\n`
+    console.log(plugInfo)
+  } catch {
+    console.log('[Plugins]', Object.keys(global.plugins).length, 'cargados')
+  }
+}
 
-        // Limpiar conexiones muertas primero
+async function importAndIndexPlugin(fullPath) {
+  try {
+    const mod = await import(pathToFileURL(fullPath).href + `?update=${Date.now()}`)
+    const plug = mod.default || mod
+    if (!plug) return
+    plug.__file = path.basename(fullPath)
+    if (Array.isArray(plug.command)) plug.command = plug.command.map(c => typeof c === 'string' ? c.toLowerCase() : c)
+    else if (typeof plug.command === 'string') plug.command = plug.command.toLowerCase()
+    global.plugins[plug.__file] = plug
+    const cmds = []
+    if (typeof plug.command === 'string') cmds.push(plug.command)
+    else if (Array.isArray(plug.command)) cmds.push(...plug.command.filter(c => typeof c === 'string'))
+    for (const c of cmds) {
+      const key = c.toLowerCase()
+      if (!global.commandIndex[key]) global.commandIndex[key] = plug
+    }
+  } catch (e) {
+    try {
+      const fname = path.basename(fullPath)
+      const errBox = `\n╭─────────────────────────────◉\n│ ${chalk.white.bgRed.bold('        ❌ PLUGIN LOAD ERROR        ')}\n│ 「 🧩 」${chalk.yellow('Plugin: ')}${chalk.white(fname)}\n│ 「 ⚠️ 」${chalk.yellow('Error:  ')}${chalk.white(e.message || e)}\n╰─────────────────────────────◉\n`
+      console.error(errBox)
+    } catch {
+      console.error('[PluginLoadError]', path.basename(fullPath), e.message)
+    }
+  }
+}
+
+try { await loadDatabase() } catch (e) { console.log('[DB] Error cargando database:', e.message) }
+try {
+  const dbInfo = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('        📦 BASE DE DATOS        ')}\n│ 「 🗃 」${chalk.yellow('Archivo: ')}${chalk.white(DB_PATH)}\n╰─────────────────────────────◉\n`
+  console.log(dbInfo)
+} catch {}
+await loadPlugins()
+let handler
+try { ({ handler } = await import('./handler.js')) } catch (e) { console.error('[Handler] Error importando handler:', e.message) }
+
+try {
+  const { say } = cfonts
+  const botDisplayName = (config && (config.botName || config.name || global.namebot)) || 'Bot'
+  console.log(chalk.magentaBright(`\n💫 Iniciando ${botDisplayName}...`))
+  say('Itsuki-Nakano', { font: 'simple', align: 'left', gradient: ['green','white'] })
+  say('By Leo xzzsy👑⚡️', { font: 'console', align: 'center', colors: ['cyan','magenta','yellow'] })
+  try { protoType() } catch {}
+  try { serialize() } catch {}
+  const packageJsonPath = path.join(__dirname, 'package.json')
+  let packageJsonObj = {}
+  try { const rawPkg = await fs.promises.readFile(packageJsonPath, 'utf8'); packageJsonObj = JSON.parse(rawPkg) } catch {}
+  const ramInGB = os.totalmem() / (1024 * 1024 * 1024)
+  const freeRamInGB = os.freemem() / (1024 * 1024 * 1024)
+  const currentTime = new Date().toLocaleString()
+  const info = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('        🖥 INFORMACIÓN DEL SISTEMA        ')}\n│「 💻 」${chalk.yellow(`SO: ${os.type()}, ${os.release()} - ${os.arch()}`)}\n│「 💾 」${chalk.yellow(`RAM Total: ${ramInGB.toFixed(2)} GB`)}\n│「 💽 」${chalk.yellow(`RAM Libre: ${freeRamInGB.toFixed(2)} GB`)}\n╰─────────────────────────────◉\n\n╭─────────────────────────────◉\n│ ${chalk.red.bgGreenBright.bold('        🟢 INFORMACIÓN DEL BOT        ')}\n│「 🎈 」${chalk.cyan(`Nombre: ${packageJsonObj.name || 'desconocido'}`)}\n│「 🍒 」${chalk.cyan(`Versión: ${packageJsonObj.version || '0.0.0'}`)}\n│「 🍉 」${chalk.cyan(`Descripción: ${packageJsonObj.description || ''}`)}\n│「 ☂️ 」${chalk.cyan(`Autor: ${(packageJsonObj.author && packageJsonObj.author.name) ? packageJsonObj.author.name : (packageJsonObj.author || 'N/A')} (@leo xzzsy)`)}\n│「 🐢 」${chalk.cyan('Colaborador: Bryan ofc Davidryze y mas')}\n╰─────────────────────────────◉\n\n╭─────────────────────────────◉\n│ ${chalk.red.bgMagenta.bold('        ⏰ HORA ACTUAL        ')}\n│「 🕒 」${chalk.magenta(`${currentTime}`)}\n╰─────────────────────────────◉\n`
+  console.log(info)
+} catch (e) {
+  console.log('[Banner] Error al mostrar banners:', e.message)
+}
+
+function ask(question) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+  return new Promise(res => rl.question(question, ans => { rl.close(); res(ans) }))
+}
+
+async function chooseMethod(authDir) {
+  const credsPath = path.join(authDir, 'creds.json')
+  if (fs.existsSync(credsPath)) return 'existing'
+  if (process.argv.includes('--qr')) return 'qr'
+  if (process.argv.includes('--code')) return 'code'
+  if (process.env.LOGIN_MODE === 'qr') return 'qr'
+  if (process.env.LOGIN_MODE === 'code') return 'code'
+  let ans
+  do {
+    console.clear()
+    const banner = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('    ⚙ MÉTODO DE CONEXIÓN BOT    ')}\n│「 🗯 」${chalk.yellow('Selecciona cómo quieres conectarte')}\n│「 📲 」${chalk.yellow.bgRed.bold('1. Escanear Código QR')}\n│「 🔛 」${chalk.red.bgGreenBright.bold('2. Código de Emparejamiento')}\n│\n│「 ℹ️ 」${chalk.gray('Usa el código si tienes problemas con el QR')}\n│「 🚀 」${chalk.gray('Ideal para la primera configuración')}\n│\n╰─────────────────────────────◉\n${chalk.magenta('--->')} ${chalk.bold('Elige (1 o 2): ')}`
+    ans = await ask(banner)
+  } while (!['1','2'].includes(ans))
+  return ans === '1' ? 'qr' : 'code'
+}
+
+const PROCESS_START_AT = Date.now()
+
+async function startBot() {
+  const authDir = path.join(__dirname, config.sessionDirName || config.sessionName || global.sessions || 'sessions')
+  if (!fs.existsSync(authDir)) fs.mkdirSync(authDir, { recursive: true })
+
+  const { state, saveCreds } = await useMultiFileAuthState(authDir)
+  const method = await chooseMethod(authDir)
+  const { version } = await fetchLatestBaileysVersion()
+  const sock = makeWASocket({
+    version,
+    logger: pino({ level: 'silent' }),
+    auth: state,
+    markOnlineOnConnect: true,
+    syncFullHistory: false,
+    browser: method === 'code' ? Browsers.macOS('Safari') : ['SuperBot','Chrome','1.0.0']
+  })
+
+  sock.__sessionOpenAt = sock.__sessionOpenAt || 0
+  sock.ev.on('messages.upsert', async (chatUpdate) => {
+    try {
+      const since = sock.__sessionOpenAt || PROCESS_START_AT
+      const graceMs = 5000
+      const msgs = Array.isArray(chatUpdate?.messages) ? chatUpdate.messages : []
+      const fresh = msgs.filter((m) => {
         try {
-                global.conns = global.conns.filter(s => {
-                        try {
-                                return s?.user && s?.ws?.socket && s.ws.socket.readyState !== ws.CLOSED
-                        } catch {
-                                return false
-                        }
+          const tsSec = Number(m?.messageTimestamp || 0)
+          const tsMs = isNaN(tsSec) ? 0 : (tsSec > 1e12 ? tsSec : tsSec * 1000)
+          if (!tsMs) return true
+          return tsMs >= (since - graceMs)
+        } catch { return true }
+      })
+      if (!fresh.length) return
+      const filteredUpdate = { ...chatUpdate, messages: fresh }
+      await handler?.call(sock, filteredUpdate)
+    } catch (e) { console.error('[HandlerError]', e?.message || e) }
+  })
+
+  sock.ev.on('creds.update', saveCreds)
+
+  try {
+    setInterval(() => { saveDatabase().catch(() => {}) }, 60000)
+    const shutdown = async () => { try { await saveDatabase() } catch {} process.exit(0) }
+    process.on('SIGINT', shutdown)
+    process.on('SIGTERM', shutdown)
+  } catch {}
+
+  async function ensureAuthDir() {
+    try { if (!fs.existsSync(authDir)) fs.mkdirSync(authDir, { recursive: true }) } catch (e) { console.error('[AuthDir]', e.message) }
+  }
+  async function generatePairingCodeWithRetry(number, maxAttempts = 5) {
+    let attempt = 0
+    while (attempt < maxAttempts) {
+      try {
+        await ensureAuthDir()
+        return await sock.requestPairingCode(number)
+      } catch (err) {
+        const status = err?.output?.statusCode || err?.output?.payload?.statusCode
+        const transient = status === 428 || err?.code === 'ENOENT' || /Connection Closed/i.test(err?.message || '') || /not open/i.test(err?.message || '')
+        if (!transient) throw err
+        attempt++
+        const wait = 500 + attempt * 500
+        console.log(`[Pairing] Aún no listo (intentando de nuevo en ${wait}ms) intento ${attempt}/${maxAttempts}`)
+        await new Promise(r => setTimeout(r, wait))
+      }
+    }
+    throw new Error('No se pudo obtener el código tras reintentos')
+  }
+
+  let pairingRequested = false
+  let pairingCodeGenerated = false
+  let codeRegenInterface = null
+  async function maybeStartPairingFlow() {
+    if (method !== 'code') return
+    if (sock.authState.creds.registered) return
+    if (pairingRequested) return
+    pairingRequested = true
+
+    async function promptForNumber(initialMsg) {
+      let attempts = 0
+      let obtained = ''
+      while (attempts < 5 && !obtained) {
+        const raw = await ask(initialMsg)
+        let cleaned = String(raw || '').trim()
+        if (!cleaned) { console.log(chalk.red('[Pairing] Entrada vacía.')); attempts++; continue }
+        cleaned = cleaned.replace(/\s+/g,'')
+        if (!cleaned.startsWith('+')) cleaned = '+' + cleaned
+        const valid = await isValidPhoneNumber(cleaned).catch(()=>false)
+        if (valid) { obtained = cleaned.replace(/[^0-9]/g,''); break }
+        console.log(chalk.yellow(`[Pairing] Número no válido: ${cleaned}. Intenta de nuevo.`))
+        attempts++
+      }
+      return obtained
+    }
+
+    async function persistBotNumberIfNeeded(num) {
+      try {
+        if (!num) return
+        const cfgPath = path.join(__dirname, 'config.js')
+        const file = await fs.promises.readFile(cfgPath, 'utf8')
+        let updated = file
+        const patterns = [
+          { re: /global\.botNumber\s*=\s*global\.botNumber\s*\|\|\s*['"].*?['"]\s*;?/m, repl: `global.botNumber = '${num}'` },
+          { re: /global\.botNumber\s*=\s*['"].*?['"]\s*;?/m, repl: `global.botNumber = '${num}'` },
+          { re: /botNumber\s*:\s*['"].*?['"]/m, repl: `botNumber: '${num}'` }
+        ]
+        for (const { re, repl } of patterns) {
+          if (re.test(updated)) { updated = updated.replace(re, repl); break }
+        }
+        if (updated !== file) {
+          await fs.promises.writeFile(cfgPath, updated)
+          if (config) config.botNumber = num
+          global.botNumber = num
+          console.log(chalk.gray('[Config] botNumber guardado en config.js'))
+        }
+      } catch (e) {
+        console.log(chalk.red('[Config] No se pudo actualizar botNumber:', e.message))
+      }
+    }
+
+    let number = ''
+    function primaryOwnerNumber() {
+      const o = config.owner
+      if (!o) return ''
+      if (Array.isArray(o)) {
+        const first = o[0]
+        if (!first) return ''
+        if (Array.isArray(first)) return (first[0] || '').toString()
+        if (typeof first === 'string') return first
+      }
+      if (typeof o === 'string') return o
+      return ''
+    }
+    const candidate = (config.botNumber ? config.botNumber.toString() : '').trim().replace(/[^0-9]/g,'') || primaryOwnerNumber().replace(/[^0-9]/g,'')
+    if (candidate) {
+      let confirm = await ask(`\n${chalk.cyan('Detectado número configurado:')} ${chalk.yellow('+'+candidate)} ${chalk.white('¿Usar este número? (si/no): ')}`)
+      confirm = (confirm || '').trim().toLowerCase()
+      if (/^(s|si|sí)$/.test(confirm)) {
+        number = candidate
+      } else if (!/^no$/.test(confirm)) {
+        const retry = await ask(`${chalk.yellow('Escribe si o no: ')}`)
+        if (/^(s|si|sí)$/i.test(retry.trim())) number = candidate
+      }
+    }
+    if (!number) {
+      number = await promptForNumber(`\n╭─────────────────────────────◉\n│ ${chalk.black.bgGreenBright.bold('  📞 INGRESO DE NÚMERO WHATSAPP  ')}\n│「 ✨ 」${chalk.whiteBright('Introduce tu número con prefijo de país')}\n│「 🔃 」${chalk.yellowBright('Ejemplo: +57321XXXXXXX')}\n│\n│${chalk.gray('Puede incluir +, se ignorarán espacios.')}\n╰─────────────────────────────◉\n${chalk.magenta('--->')} ${chalk.bold('Número: ')}`)
+      if (!number) {
+        console.log(chalk.red('[Pairing] No se obtuvo un número válido. Reinicia con --code.'))
+        pairingRequested = false
+        return
+      }
+      await persistBotNumberIfNeeded(number)
+    } else if (!config.botNumber || config.botNumber.replace(/[^0-9]/g,'') !== number) {
+      await persistBotNumberIfNeeded(number)
+    }
+
+    const launchCodeGeneration = async () => {
+      if (pairingCodeGenerated || sock.authState.creds.registered) return
+      pairingCodeGenerated = true
+      try {
+        console.log(chalk.gray(`[Pairing] Generando código para +${number} ...`))
+        const started = Date.now()
+        const code = await generatePairingCodeWithRetry(number)
+        const ms = Date.now() - started
+        const formatted = code.match(/.{1,4}/g)?.join('-') || code
+        console.log(`\n╭─────────────────────────────◉\n│ ${chalk.black.bgMagentaBright.bold('🔐 CÓDIGO DE VINCULACIÓN')}\n│「  」${chalk.bold.red(formatted)}   ${chalk.gray(`(${ms} ms)`)}\n│「  」${chalk.whiteBright('WhatsApp > Dispositivos vinculados > Vincular con número de teléfono')}\n╰─────────────────────────────◉\n`)
+        if (!codeRegenInterface) {
+          codeRegenInterface = readline.createInterface({ input: process.stdin, output: process.stdout })
+          console.log(chalk.cyan('\nEscribe = otra (si expiró el codigo para regenerar otro codigo).'))
+          codeRegenInterface.on('line', async () => {
+            if (sock.authState.creds.registered) {
+              console.log(chalk.green('[Pairing] Ya vinculado.'))
+              try { codeRegenInterface.close() } catch {}
+              return
+            }
+            pairingCodeGenerated = false
+            try { codeRegenInterface.close() } catch {}
+            codeRegenInterface = null
+            setTimeout(launchCodeGeneration, 400)
+          })
+        }
+      } catch (e) {
+        console.error('[PairingCode Error]', e.message || e)
+        pairingRequested = false
+        pairingCodeGenerated = false
+      }
+    }
+
+    if (sock?.ws?.readyState === 1) launchCodeGeneration()
+    else {
+      const total = Object.keys(global.plugins).length
+      const plugInfo = `\n╭─────────────────────────────◉\n│ ${chalk.black.bgGreenBright.bold('        🧩 PLUGINS CARGADOS        ')}\n│ 「 📦 」${chalk.yellow('Total: ')}${chalk.white(total)}\n╰─────────────────────────────◉\n`
+      }
+      setTimeout(() => { if (!pairingCodeGenerated) launchCodeGeneration() }, 6000)
+  }
+
+  setTimeout(maybeStartPairingFlow, 2500)
+
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update
+    if (qr && method === 'qr') {
+      console.clear()
+      console.log(chalk.cyan('Escanea este QR con WhatsApp (Dispositivos vinculados):'))
+      try { qrcode.generate(qr, { small: true }) } catch { console.log(qr) }
+      console.log(chalk.gray('Para usar código de emparejamiento: reinicia con --code'))
+    }
+    if (method === 'code' && !sock.authState.creds.registered && !pairingRequested) {
+      setTimeout(maybeStartPairingFlow, 800)
+    }
+    if (connection === 'close') {
+      const statusCode = lastDisconnect?.error?.output?.statusCode
+      if (statusCode !== DisconnectReason.loggedOut) {
+        console.log('Conectando....')
+        startBot()
+      } else {
+        console.log('[Sesión cerrada] Borra la carpeta de credenciales y vuelve a vincular.')
+      }
+    } else if (connection === 'open') {
+      try {
+        sock.__sessionOpenAt = Date.now()
+        const rawId = sock?.user?.id || ''
+        const userJid = rawId ? jidNormalizedUser(rawId) : 'desconocido'
+        const userName = sock?.user?.name || sock?.user?.verifiedName || 'Desconocido'
+        console.log(chalk.green.bold(`[ 🍉 ]  Conectado a: ${userName}`))
+        const jid = rawId
+        const num = jid.split(':')[0].replace(/[^0-9]/g,'')
+        if (num && !config.botNumber && !global.botNumber) {
+          try {
+            const cfgPath = path.join(__dirname, 'config.js')
+            const file = await fs.promises.readFile(cfgPath, 'utf8')
+            let updated = file
+              const emptyAssign = /global\.botNumber\s*=\s*(?:global\.botNumber\s*\|\|\s*)?['"]\s*['"]\s*;?/m
+              if (emptyAssign.test(updated)) {
+                updated = updated.replace(emptyAssign, `global.botNumber = '${num}'`)
+              } else if (/botNumber\s*:\s*''/m.test(updated)) {
+              updated = updated.replace(/botNumber\s*:\s*''/m, `botNumber: '${num}'`)
+            }
+            if (updated !== file) {
+              await fs.promises.writeFile(cfgPath, updated)
+              if (config) config.botNumber = num
+              global.botNumber = num
+              console.log(chalk.gray('[Config] botNumber autocompletado en config.js'))
+            }
+          } catch (e) {
+            console.log(chalk.red('[Config] Error guardando botNumber auto:', e.message))
+          }
+        }
+      } catch (e) {
+        console.log(chalk.red('[Open] Error en post-conexión:', e.message))
+      }
+      
+      try {
+        const subbotsDir = 'jadibts';
+        global.rutaJadiBot = path.join(__dirname, `./${subbotsDir}`);
+        
+        if (global.ItsukiJadibts) { 
+          if (!fs.existsSync(global.rutaJadiBot)) {
+            fs.mkdirSync(global.rutaJadiBot, { recursive: true });
+            console.log(chalk.bold.cyan(`[Sub-Bots] La carpeta '${subbotsDir}' se creó correctamente.`));
+          } else {
+            console.log(chalk.bold.cyan(`[Sub-Bots] La carpeta '${subbotsDir}' ya existe.`));
+          }
+      
+          const subBotFolders = fs.readdirSync(global.rutaJadiBot);
+          if (subBotFolders.length > 0) {
+            console.log(chalk.bold.yellow(`[Sub-Bots] Intentando iniciar ${subBotFolders.length} sub-bot(s) guardado(s)...`));
+            for (const folder of subBotFolders) {
+              const botPath = path.join(global.rutaJadiBot, folder);
+              if (fs.existsSync(path.join(botPath, 'creds.json'))) {
+                jadibts({
+                  pathjadibts: botPath,
+                  conn: sock,
+                  m: null, 
+                  args: '',
+                  usedPrefix: '/',
+                  command: 'serbot'
                 })
-        } catch {}
+                .then(() => console.log(chalk.green(`[Sub-Bots] Sub-bot en la carpeta '${folder}' iniciado.`)))
+                .catch(e => console.error(chalk.red(`[Sub-Bots] Error al iniciar sub-bot en '${folder}':`), e));
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error(chalk.red('[Sub-Bots] Error crítico en el sistema de arranque nativo de sub-bots:'), e);
+      }
 
-        // Verificar si hay una conexión activa válida
+    }
+  })
+
+  sock.ev.on('group-participants.update', async (ev) => {
+    try {
+      const { id, participants, action } = ev || {}
+      if (!id || !participants || !participants.length) return
+      const db = global.db?.data
+      const chatCfg = db?.chats?.[id] || { welcome: true }
+      if (!chatCfg.welcome) return
+
+      const type = action === 'add' ? 'welcome' : (action === 'remove' ? 'bye' : null)
+      if (!type) return
+
+      const botIdRaw = sock?.user?.id || ''
+      const botId = botIdRaw ? jidNormalizedUser(botIdRaw) : ''
+      const normalizedParts = participants.map(p => {
+        try { return jidNormalizedUser(p) } catch { return p }
+      })
+      if (type === 'bye' && botId && normalizedParts.includes(botId)) {
+        return 
+      }
+
+      let meta = null
+      if (typeof sock.groupMetadata === 'function') {
+        try { meta = await sock.groupMetadata(id) } catch { meta = null }
+      }
+      const groupName = meta?.subject || ''
+
+      for (const p of participants) {
         try {
-                const existingConn = global.conns.find(s => s?.user?.jid?.startsWith(id))
-                if (existingConn) {
-                        // Verificar si realmente está conectada
-                        if (existingConn.ws?.socket?.readyState === ws.OPEN) {
-                                return conn.reply(m.chat, `🌸 ¡Oh! Este número ya está conectado como Sub-Bot~`, m, (typeof rcanalr !== 'undefined' ? rcanalr : (typeof rcanal !== 'undefined' ? rcanal : {})))
-                        } else {
-                                // Si la conexión está muerta, limpiarla
-                                try {
-                                        existingConn.ws?.close()
-                                } catch {}
-
-                                const index = global.conns.indexOf(existingConn)
-                                if (index > -1) {
-                                        global.conns.splice(index, 1)
-                                }
-
-                                // Limpiar carpeta de sesión huérfana si existe
-                                const baseDir = (global.jadi || 'jadibts')
-                                let oldSubBotPath = path.join(`./${baseDir}/`, id)
-                                if (fs.existsSync(oldSubBotPath)) {
-                                        try {
-                                                fs.rmSync(oldSubBotPath, { recursive: true, force: true })
-                                        } catch {}
-                                }
-                        }
-                }
-        } catch {}
-
-        const baseDir = (global.jadi || 'jadibts')
-        let subBotPath = path.join(`./${baseDir}/`, id)
-        if (!fs.existsSync(subBotPath)){
-                fs.mkdirSync(subBotPath, { recursive: true })
-        }
-
-        subBotOptions.subBotPath = subBotPath
-        subBotOptions.m = m
-        subBotOptions.conn = conn
-        subBotOptions.args = args
-        subBotOptions.usedPrefix = usedPrefix
-        subBotOptions.command = command
-        subBotOptions.fromCommand = true
-
-        startSubBot(subBotOptions)
-        global.db.data.users[m.sender].Subs = new Date * 1
-}
-
-handler.help = ['qr', 'code']
-handler.tags = ['serbot']
-handler.command = ['qr', 'code']
-export default handler
-
-export async function startSubBot(options) {
-        let { subBotPath, m, conn, args, usedPrefix, command } = options;
-
-        if (!subBotPath && options.pathjadibts) {
-            subBotPath = options.pathjadibts;
-        }
-
-        if (typeof args === 'string') {
-            args = args.split(' ').filter(Boolean);
-        } else if (!Array.isArray(args)) {
-            args = [];
-        }
-
-        if (command === 'code') {
-                command = 'qr';
-                args.unshift('code')
-        }
-
-        const mcode = args[0] && /(--code|code)/.test(args[0].trim()) ? true : args[1] && /(--code|code)/.test(args[1].trim()) ? true : false
-        let txtCode, codeBot, txtQR
-
-        if (mcode) {
-                args[0] = args[0].replace(/^--code$|^code$/, "").trim()
-                if (args[1]) args[1] = args[1].replace(/^--code$|^code$/, "").trim()
-                if (args[0] == "") args[0] = undefined
-        }
-
-        const pathCreds = path.join(subBotPath, "creds.json")
-        if (!fs.existsSync(subBotPath)){
-                fs.mkdirSync(subBotPath, { recursive: true })
-        }
-
-        try {
-                if (args[0] && args[0] !== undefined) {
-                        const decoded = Buffer.from(args[0], "base64").toString("utf-8")
-                        fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(decoded), null, '\t'))
-                }
+          let userName = 'Miembro'
+          try { userName = await Promise.resolve(sock.getName?.(p) ?? 'Miembro') } catch { userName = 'Miembro' }
+          const botIdRaw = sock?.user?.id || ''
+          const botIdJoin = botIdRaw ? jidNormalizedUser(botIdRaw) : ''
+          if (type === 'welcome' && botIdJoin && jidNormalizedUser(p) === botIdJoin) {
+            try {
+              const cfgDefaults = (global.chatDefaults && typeof global.chatDefaults === 'object') ? global.chatDefaults : {}
+              global.db = global.db || { data: { users: {}, chats: {}, settings: {}, stats: {} } }
+              global.db.data = global.db.data || { users: {}, chats: {}, settings: {}, stats: {} }
+              global.db.data.chats = global.db.data.chats || {}
+              global.db.data.chats[id] = global.db.data.chats[id] || {}
+              for (const [k,v] of Object.entries(cfgDefaults)) {
+                if (!(k in global.db.data.chats[id])) global.db.data.chats[id][k] = v
+              }
+              if (!('bienvenida' in global.db.data.chats[id]) && ('welcome' in cfgDefaults)) global.db.data.chats[id].bienvenida = !!cfgDefaults.welcome
+            } catch {}
+          }
+          await sendWelcomeOrBye(sock, { jid: id, userName, groupName, type: type === 'bye' ? 'bye' : 'welcome', participant: p })
         } catch (e) {
-                conn.reply(m.chat, `🌸 Por favor usa correctamente el comando » ${usedPrefix + command} code`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-                return
+          const code = e?.data || e?.output?.statusCode || e?.output?.payload?.statusCode
+          if (code === 403) {
+            continue
+          }
+          console.error('[WelcomeEvent]', e)
         }
-
-        const comb = Buffer.from(crm1 + crm2 + crm3 + crm4, "base64")
-        exec(comb.toString("utf-8"), async (err, stdout, stderr) => {
-                const drmer = Buffer.from(drm1 + drm2, "base64")
-
-                let { version, isLatest } = await fetchLatestBaileysVersion()
-                const msgRetry = (MessageRetryMap) => { }
-                const msgRetryCache = new NodeCache()
-                const { state, saveState, saveCreds } = await useMultiFileAuthState(subBotPath)
-
-                const connectionOptions = {
-                        logger: pino({ level: "fatal" }),
-                        printQRInTerminal: false,
-                        auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})) },
-                        msgRetry,
-                        msgRetryCache,
-                        browser: mcode ? ['Ubuntu', 'Chrome', '110.0.5585.95'] : [`${global.botname || 'Itsuki-Bot'} Sub-Bot`, 'Chrome','2.0.0'],
-                        version: version,
-                        generateHighQualityLinkPreview: true
-                };
-
-                let sock = makeWASocket(connectionOptions)
-                sock.isInit = false
-                let isInit = true
-
-                async function connectionUpdate(update) {
-                        const { connection, lastDisconnect, isNewLogin, qr } = update
-                        if (isNewLogin) sock.isInit = false
-
-                        sock.reconnectAttempts = sock.reconnectAttempts || 0;
-                        if (connection === 'close') {
-                                sock.reconnectAttempts++;
-                        } else if (connection === 'open') {
-                                sock.reconnectAttempts = 0;
-                                sock.lastPing = Date.now();
-                        }
-
-                        if (connection === 'open' && !sock.pingInterval) {
-                                sock.pingInterval = setInterval(async () => {
-                                        const isConnected = await checkConnection(sock);
-                                        if (!isConnected) {
-                                                console.log(chalk.yellow(`[${path.basename(subBotPath)}] 🌸 Conexión inestable detectada, intentando recuperar...`));
-                                                await creloadHandler(true).catch(console.error);
-                                        }
-                                        sock.lastPing = Date.now();
-                                }, 30000);
-                        }
-
-                        if (qr && !mcode) {
-                                if (m?.chat) {
-                                        txtQR = await conn.sendMessage(
-                                                m.chat,
-                                                { image: await qrcode.toBuffer(qr, { scale: 8 }), caption: rtx.trim(), ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-                                                { quoted: m }
-                                        )
-                                } else {
-                                        return
-                                }
-                                if (txtQR && txtQR.key) {
-                                        setTimeout(() => { conn.sendMessage(m.sender, { delete: txtQR.key })}, 30000)
-                                }
-                                return
-                        }
-
-                        if (qr && mcode) {
-                                let secret = await sock.requestPairingCode((m.sender.split('@')[0]))
-                                secret = secret.match(/.{1,4}/g)?.join("-")
-                                txtCode = await conn.sendMessage(
-                                        m.chat,
-                                        { image: { url: imagenUrl }, caption: rtx2, ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-                                        { quoted: m }
-                                );
-                                codeBot = await conn.reply(m.chat, ` ${secret}`, m);
-                                console.log(secret)
-                        }
-
-                        if (txtCode && txtCode.key) {
-                                setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key })}, 30000)
-                        }
-                        if (codeBot && codeBot.key) {
-                                setTimeout(() => { conn.sendMessage(m.sender, { delete: codeBot.key })}, 30000)
-                        }
-
-                        const endSesion = async (loaded) => {
-                                if (!loaded) {
-                                        try {
-                                                sock.ws.close()
-                                        } catch {
-                                        }
-                                        sock.ev.removeAllListeners()
-                                        let i = global.conns.indexOf(sock)
-                                        if (i < 0) return
-                                        delete global.conns[i]
-                                        global.conns.splice(i, 1)
-                                }
-                        }
-
-                        const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
-
-                        if (connection === 'close') {
-                                if (sock.pingInterval) {
-                                        clearInterval(sock.pingInterval);
-                                        sock.pingInterval = null;
-                                }
-
-                                const shouldReconnect = await reconnectWithBackoff(sock.reconnectAttempts);
-                                if (!shouldReconnect) {
-                                        console.log(chalk.red(`[${path.basename(subBotPath)}] 💔 Máximo de intentos de reconexión alcanzado.`));
-                                        return endSesion(false);
-                                }
-
-                                if (reason === 428) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 La conexión (+${path.basename(subBotPath)}) se cerró inesperadamente. Intento ${sock.reconnectAttempts}/5...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        await creloadHandler(true).catch(console.error)
-                                }
-                                if (reason === 408) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 La conexión (+${path.basename(subBotPath)}) se perdió. Razón: ${reason}. Intentando reconectar...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        await creloadHandler(true).catch(console.error)
-                                }
-                                if (reason === 440) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 La conexión (+${path.basename(subBotPath)}) fue reemplazada por otra sesión activa.\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        try {
-                                                if (options.fromCommand) m?.chat ? await conn.sendMessage(`${path.basename(subBotPath)}@s.whatsapp.net`, {text : '🌸 HE DETECTADO UNA NUEVA SESIÓN, POR FAVOR BORRA LA NUEVA SESIÓN PARA CONTINUAR~\n\n💝 SI HAY ALGÚN PROBLEMA VUELVE A CONECTARTE' }, { quoted: m || null }) : ""
-                                        } catch (error) {
-                                                console.error(chalk.bold.yellow(`Error 440 no se pudo enviar mensaje a: +${path.basename(subBotPath)}`))
-                                        }
-                                }
-                                if (reason == 405 || reason == 401) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 La sesión (+${path.basename(subBotPath)}) fue cerrada. Credenciales no válidas.\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        try {
-                                                if (options.fromCommand) m?.chat ? await conn.sendMessage(`${path.basename(subBotPath)}@s.whatsapp.net`, {text : '💔 SESIÓN PENDIENTE\n\n🌸 POR FAVOR INTENTA NUEVAMENTE VOLVER A SER SUB-BOT' }, { quoted: m || null }) : ""
-                                        } catch (error) {
-                                                console.error(chalk.bold.yellow(`Error 405 no se pudo enviar mensaje a: +${path.basename(subBotPath)}`))
-                                        }
-                                        try { fs.rmSync(subBotPath, { recursive: true, force: true }) } catch {}
-                                }
-                                if (reason === 500) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 Conexión perdida en la sesión (+${path.basename(subBotPath)}).\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        if (options.fromCommand) m?.chat ? await conn.sendMessage(`${path.basename(subBotPath)}@s.whatsapp.net`, {text : '💔 CONEXIÓN PERDIDA\n\n🌸 INTENTA MANUALMENTE VOLVER A SER SUB-BOT' }, { quoted: m || null }) : ""
-                                        return creloadHandler(true).catch(console.error)
-                                }
-                                if (reason === 515) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 Reinicio automático para la sesión (+${path.basename(subBotPath)}).\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        await creloadHandler(true).catch(console.error)
-                                }
-                                if (reason === 403) {
-                                        console.log(chalk.bold.magentaBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╮\n│ 🌸 Sesión cerrada para (+${path.basename(subBotPath)}).\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✨ • ✨ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄╯`))
-                                        try { fs.rmSync(subBotPath, { recursive: true, force: true }) } catch {}
-                                }
-                        }
-
-                        if (global.db.data == null) loadDatabase()
-                        if (connection == 'open') {
-                                if (!global.db.data?.users) loadDatabase()
-                                let userName, userJid
-                                userName = sock.authState.creds.me.name || 'Anónimo'
-                                userJid = sock.authState.creds.me.jid || `${path.basename(subBotPath)}@s.whatsapp.net`
-                                console.log(chalk.bold.cyanBright(`\n❒⸺⸺⸺⸺【✨ ITSUKI SUB-BOT ✨】⸺⸺⸺⸺❒\n│\n│ 🌸 ${userName} (+${path.basename(subBotPath)}) conectado exitosamente.\n│\n❒⸺⸺⸺【💝 CONECTADO 💝】⸺⸺⸺❒`))
-                                sock.isInit = true
-                                global.conns.push(sock)
-                                await joinChannels(sock)
-
-                                m?.chat ? await conn.sendMessage(
-                                        m.chat,
-                                        { text: args[0] ? `@${m.sender.split('@')[0]}, ¡ya estás conectada conmigo! Leyendo mensajes entrantes~ ✨` : `@${m.sender.split('@')[0]}, ¡qué alegría! Ya eres parte de nuestra linda familia de Sub-Bots 🌸💝`, mentions: [m.sender], ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-                                        { quoted: m }
-                                ) : ''
-                        }
-                }
-
-                setInterval(async () => {
-                        if (!sock.user) {
-                                try { sock.ws.close() } catch (e) {
-                                }
-                                sock.ev.removeAllListeners()
-                                let i = global.conns.indexOf(sock)
-                                if (i < 0) return
-                                delete global.conns[i]
-                                global.conns.splice(i, 1)
-                        }
-                }, 60000)
-
-                let handler = await (global.queuedImport ? global.queuedImport('../handler.js') : import('../handler.js'))
-                let creloadHandler = async function (restatConn) {
-                        try {
-                                const Handler = await (global.queuedImport ? global.queuedImport(`../handler.js?update=${Date.now()}`) : import(`../handler.js?update=${Date.now()}`)).catch(console.error)
-                                if (Object.keys(Handler || {}).length) handler = Handler
-                        } catch (e) {
-                                console.error('⚠️ Nuevo error: ', e)
-                        }
-                        if (restatConn) {
-                                const oldChats = sock.chats
-                                try { sock.ws.close() } catch { }
-                                sock.ev.removeAllListeners()
-                                sock = makeWASocket(connectionOptions, { chats: oldChats })
-                                isInit = true
-                        }
-                        if (!isInit) {
-                                sock.ev.off("messages.upsert", sock.handler)
-                                sock.ev.off("connection.update", sock.connectionUpdate)
-                                sock.ev.off('creds.update', sock.credsUpdate)
-                        }
-
-                        sock.handler = handler.handler.bind(sock)
-                        sock.connectionUpdate = connectionUpdate.bind(sock)
-                        sock.credsUpdate = saveCreds.bind(sock, true)
-                        sock.ev.on("messages.upsert", sock.handler)
-                        sock.ev.on("connection.update", sock.connectionUpdate)
-                        sock.ev.on("creds.update", sock.credsUpdate)
-                        isInit = false
-                        return true
-                }
-                creloadHandler(false)
-        })
+      }
+    } catch (e) { console.error('[WelcomeEvent]', e) }
+  })
 }
 
-export const jadibts = startSubBot;
+startBot()
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-async function reconnectWithBackoff(attempt, maxAttempts = 5) {
-        const baseDelay = 1000;
-        const maxDelay = 60000;
-        const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
-        if (attempt < maxAttempts) {
-                await sleep(delay);
-                return true;
+const PLUGIN_DIR = path.join(__dirname, 'plugins')
+let __syntaxErrorFn = null
+try { const mod = await import('syntax-error'); __syntaxErrorFn = mod.default || mod } catch {}
+global.reload = async (_ev, filename) => {
+  try {
+    if (!filename || !filename.endsWith('.js')) return
+    const filePath = path.join(PLUGIN_DIR, filename)
+    if (!fs.existsSync(filePath)) {
+      console.log(chalk.yellow(`⚠️ El plugin '${filename}' fue eliminado`))
+      delete global.plugins[filename]
+      return
+    }
+    if (__syntaxErrorFn) {
+      try {
+        const src = await fs.promises.readFile(filePath)
+        const err = __syntaxErrorFn(src, filename, { sourceType: 'module', allowAwaitOutsideFunction: true })
+        if (err) {
+          console.log([
+            `❌ Error en plugin: '${filename}'`,
+            `🧠 Mensaje: ${err.message}`,
+            `📍 Línea: ${err.line}, Columna: ${err.column}`,
+            `🔎 ${err.annotated}`
+          ].join('\n'))
+          return
         }
-        return false;
+      } catch {}
+    }
+    await importAndIndexPlugin(filePath)
+    console.log(chalk.green(`🍃 Recargado plugin '${filename}'`))
+  } catch (e) {
+    console.error('[ReloadPlugin]', e.message || e)
+  }
 }
+try {
+  fs.watch(PLUGIN_DIR, { recursive: false }, (ev, fname) => {
+    if (!fname) return
+    global.reload(ev, fname).catch(() => {})
+  })
+} catch {}
 
-async function checkConnection(sock) {
-        try {
-                await sock.sendPresenceUpdate('available');
-                return true;
-        } catch (error) {
-                return false;
-        }
-}
-
-function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function msToTime(duration) {
-        var milliseconds = parseInt((duration % 1000) / 100),
-        seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
-        hours = (hours < 10) ? '0' + hours : hours
-        minutes = (minutes < 10) ? '0' + minutes : minutes
-        seconds = (seconds < 10) ? '0' + seconds : seconds
-        return minutes + ' m y ' + seconds + ' s '
-}
-
-async function joinChannels(conn) {
-        try {
-                if (global.ch && typeof global.ch === 'object') {
-                        for (const channelId of Object.values(global.ch)) {
-                                await conn.newsletterFollow(channelId).catch(() => {})
-                        }
-                }
-                await conn.newsletterFollow('120363377833048768@newsletter').catch(() => {})
-        } catch {}
+async function isValidPhoneNumber(number) {
+  try {
+    let n = number.replace(/\s+/g, '')
+    if (n.startsWith('+521')) {
+      n = n.replace('+521', '+52')
+    } else if (n.startsWith('+52') && n[4] === '1') {
+      n = n.replace('+52 1', '+52')
+      n = n.replace('+521', '+52')
+    }
+    const parsed = phoneUtil.parseAndKeepRawInput(n)
+    return phoneUtil.isValidNumber(parsed)
+  } catch (error) {
+    return false
+  }
 }
