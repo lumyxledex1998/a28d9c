@@ -1,16 +1,14 @@
 import fetch from 'node-fetch'
 
 /**
- * 🎀 CREADO POR: LeoXzzsy
- * 🌸 ADAPTADO PARA: Itsuki-Nakano IA
- * 📚 VERSIÓN: 3.4.0 Beta
- * 🏷️ DESCARGADOR INSTAGRAM
+ * 🎀 CREADO POR: LeoXzzsy 
+ * 📚 VERSIÓN: 3.5.1 Beta
+ * 🏷️ DESCARGADOR DE INSTAGRAM
  */
 
-let handler = async (m, { conn, usedPrefix, command, args }) => {
+let handler = async (m, { conn, usedPrefix, args }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
 
   try {
     if (!args[0]) {
@@ -36,8 +34,6 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     }
 
     await m.react('📥')
-    
-    // Mensaje de espera
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `📥 *Procesando contenido de Instagram...*\n` +
@@ -46,69 +42,60 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       `🌸 *Por favor espera un momento...* (◕‿◕✿)`,
     m, ctxWarn)
 
-    // API para Instagram
-    const apiUrl = `https://mayapi.ooguy.com/instagram?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
-    console.log('🔗 Solicitando a API:', apiUrl)
+    const api1 = `https://mayapi.ooguy.com/instagram?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
+    const api2 = `https://apiadonix.kozow.com/download/instagram?apikey=${global.apikey}&url=${encodeURIComponent(url)}`
 
-    const response = await fetch(apiUrl, {
-      timeout: 30000
-    })
+    let mediaUrl, mediaTitle, mediaType, apiUsada = 'May API'
 
-    if (!response.ok) {
-      throw new Error(`Error en la API: ${response.status} - ${response.statusText}`)
+    try {
+      const res = await fetch(api1, { timeout: 30000 })
+      if (!res.ok) throw new Error('Error en API principal')
+      const data = await res.json()
+
+      if (data.result?.url) {
+        mediaUrl = data.result.url
+        mediaTitle = data.result.title || 'Contenido de Instagram'
+        mediaType = data.result.type || 'video'
+      } else if (data.url) {
+        mediaUrl = data.url
+        mediaTitle = data.title || 'Contenido de Instagram'
+        mediaType = data.type || 'video'
+      } else if (data.data?.url) {
+        mediaUrl = data.data.url
+        mediaTitle = data.data.title || 'Contenido de Instagram'
+        mediaType = data.data.type || 'video'
+      }
+    } catch {
+      apiUsada = 'API Adonix'
+      const res2 = await fetch(api2, { timeout: 30000 })
+      if (!res2.ok) throw new Error('Error en API de respaldo')
+      const data2 = await res2.json()
+      mediaUrl = data2.data?.url || data2.url
+      mediaTitle = data2.data?.title || data2.title || 'Contenido de Instagram'
+      mediaType = data2.data?.type || data2.type || 'video'
     }
 
-    const data = await response.json()
-    console.log('📦 Respuesta de API:', data)
+    if (!mediaUrl) throw new Error('No se encontró contenido válido')
 
-    // Verificar diferentes estructuras de respuesta
-    if (!data.status) {
-      throw new Error('La API no respondió correctamente')
-    }
-
-    let mediaUrl, mediaTitle, mediaType
-
-    // Buscar en diferentes estructuras posibles para Instagram
-    if (data.result && data.result.url) {
-      mediaUrl = data.result.url
-      mediaTitle = data.result.title || 'Contenido de Instagram'
-      mediaType = data.result.type || 'video'
-    } else if (data.url) {
-      mediaUrl = data.url
-      mediaTitle = data.title || 'Contenido de Instagram'
-      mediaType = data.type || 'video'
-    } else if (data.data && data.data.url) {
-      mediaUrl = data.data.url
-      mediaTitle = data.data.title || 'Contenido de Instagram'
-      mediaType = data.data.type || 'video'
-    } else {
-      throw new Error('No se encontró contenido en la respuesta')
-    }
-
-    console.log('🎬 URL del contenido encontrada:', mediaUrl)
-    console.log('📝 Título:', mediaTitle)
-    console.log('📊 Tipo:', mediaType)
-
-    // Determinar si es video o imagen
-    const isVideo = mediaType === 'video' || mediaUrl.includes('.mp4') || mediaUrl.includes('video')
+    const isVideo = mediaType === 'video' || mediaUrl.includes('.mp4')
 
     if (isVideo) {
-      // Enviar video
       await conn.sendMessage(m.chat, {
         video: { url: mediaUrl },
-        caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-                `╰ Creado por: LeoXzzsy\n\n` +
-                `📹 ${mediaTitle}\n` +
-                `⭐ Descargado desde Instagram`
+        caption: `🎀 *Itsuki-Nakano IA v3.5.1 Beta*\n` +
+                 `╰ Creado por: LeoXzzsy (Erenz)\n\n` +
+                 `📹 ${mediaTitle}\n` +
+                 `⭐ Descargado desde Instagram\n` +
+                 `🔧 *Servidor:* ${apiUsada}`
       }, { quoted: m })
     } else {
-      // Enviar imagen
       await conn.sendMessage(m.chat, {
         image: { url: mediaUrl },
-        caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-                `╰ Creado por: LeoXzzsy\n\n` +
-                `🖼️ ${mediaTitle}\n` +
-                `⭐ Descargado desde Instagram`
+        caption: `🎀 *Itsuki-Nakano IA v3.5.1 Beta*\n` +
+                 `╰ Creado por: LeoXzzsy (Erenz)\n\n` +
+                 `🖼️ ${mediaTitle}\n` +
+                 `⭐ Descargado desde Instagram\n` +
+                 `🔧 *Servidor:* ${apiUsada}`
       }, { quoted: m })
     }
 
@@ -116,21 +103,16 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 
   } catch (error) {
     console.error('❌ Error en descarga Instagram:', error)
-
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `❌ *Error en la descarga*\n\n` +
       `✦ *Detalles:* ${error.message}\n\n` +
       `✦ *Posibles soluciones:*\n` +
-      `• Verifica que el enlace sea correcto\n` +
-      `• El contenido podría ser privado\n` +
-      `• Intenta con otro enlace\n` +
-      `• La publicación podría tener restricciones\n\n` +
+      `• Enlace incorrecto o privado\n` +
+      `• Contenido restringido o eliminado\n\n` +
       `🌸 *Itsuki lo intentará de nuevo...* (´；ω；\`)\n\n` +
-      `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-      `╰ Creado por: LeoXzzsy`,
+      `🎀 *Itsuki-Nakano IA v3.5.1 Beta*`,
     m, ctxErr)
-
     await m.react('❌')
   }
 }
