@@ -94,12 +94,12 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
                                 try {
                                         existingConn.ws?.close()
                                 } catch {}
-                                
+
                                 const index = global.conns.indexOf(existingConn)
                                 if (index > -1) {
                                         global.conns.splice(index, 1)
                                 }
-                                
+
                                 // Limpiar carpeta de sesión huérfana si existe
                                 const baseDir = (global.jadi || 'jadibts')
                                 let oldSubBotPath = path.join(`./${baseDir}/`, id)
@@ -381,6 +381,8 @@ export async function startSubBot(options) {
                 creloadHandler(false)
         })
 }
+
+export const jadibts = startSubBot;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
