@@ -1,6 +1,4 @@
 import fetch from 'node-fetch'
-import fs from 'fs'
-import path from 'path'
 
 let handler = async (m, { conn, usedPrefix, command, args }) => {
   const ctxErr = (global.rcanalx || {})
@@ -32,16 +30,10 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 
     const videoUrl = data.result.url
     const videoTitle = data.result.title || 'Video de Facebook'
-    const tempFilePath = path.join(process.cwd(), `${Date.now()}.mp4`)
-    const videoResponse = await fetch(videoUrl)
-    if (!videoResponse.ok) throw new Error('Error al descargar el video')
 
-    const fileStream = fs.createWriteStream(tempFilePath)
-    await new Promise((resolve, reject) => {
-      videoResponse.body.pipe(fileStream)
-      videoResponse.body.on('error', reject)
-      fileStream.on('finish', resolve)
-    })
+    const videoRes = await fetch(videoUrl)
+    if (!videoRes.ok) throw new Error('Error al descargar el video')
+    const videoBuffer = Buffer.from(await videoRes.arrayBuffer())
 
     if (waitingMsg) try { await conn.sendMessage(m.chat, { delete: waitingMsg.key }) } catch {}
 
@@ -50,14 +42,13 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       m, ctxOk)
 
     await conn.sendMessage(m.chat, {
-      video: { url: tempFilePath },
+      video: videoBuffer,
       mimetype: 'video/mp4',
       fileName: `${videoTitle}.mp4`,
       caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n╰ Creado por: LeoXzzsy (Adaptado por SoyMaycol)\n\n📹 ${videoTitle}`
     }, { quoted: m })
 
     await m.react('✅')
-    fs.unlinkSync(tempFilePath)
 
   } catch (error) {
     console.error('Error en descarga Facebook:', error)
