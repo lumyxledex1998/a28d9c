@@ -110,7 +110,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       `• Espera un momento y vuelve a intentar\n\n` +
       `🌸 *Itsuki lo intentará de nuevo...* (´；ω；\`)\n\n` +
       `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-      `╰ Creado por: LeoXzzsy`,
+      `╰ Creado por: LeoXzzsy 👑`,
     m, ctxErr)
 
     await m.react('❌')
