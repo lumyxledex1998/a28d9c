@@ -12,7 +12,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  let waitingMsg // Declarar waitingMsg fuera del try para que esté disponible en el catch
+  let waitingMsg
 
   try {
     // Verificar si se proporcionó URL
@@ -82,16 +82,18 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       `📹 *Título:* ${videoTitle}\n` +
       `📦 *Calidad:* ${videoQuality}\n` +
       `🔗 *Fuente:* Facebook\n\n` +
-      `🌸 *¡Disfruta del video!* (´｡• ᵕ •｡\`) ♡`,
+      `🌸 *Itsuki está enviando el video...* (´｡• ᵕ •｡\`) ♡`,
     m, ctxOk)
 
-    // Enviar el video
-    await conn.sendFile(m.chat, videoUrl, 'facebook_video.mp4', 
-      `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-      `╰ Creado por: LeoXzzsy\n\n` +
-      `📹 ${videoTitle}\n` +
-      `⭐ Calidad: ${videoQuality}`,
-    m)
+    // Enviar el video como VIDEO (no como archivo)
+    await conn.sendMessage(m.chat, {
+      video: { url: videoUrl },
+      caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
+              `╰ Creado por: LeoXzzsy\n\n` +
+              `📹 ${videoTitle}\n` +
+              `⭐ Calidad: ${videoQuality}`,
+      mentions: [m.sender]
+    }, { quoted: m })
 
     await m.react('✅')
 
