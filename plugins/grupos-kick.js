@@ -76,7 +76,7 @@ handler.help = ['kick @usuario | responder | numero']
 handler.tags = ['group']
 handler.command = ['kick', 'ban', 'expulsar']
 handler.group = true
-handler.admin = true
+handler.user = true
 handler.botAdmin = true
 
 export default handler
