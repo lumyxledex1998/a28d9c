@@ -136,7 +136,17 @@ handler.command = ['qr', 'code']
 export default handler
 
 export async function startSubBot(options) {
-        let { subBotPath, m, conn, args, usedPrefix, command } = options
+        let { subBotPath, m, conn, args, usedPrefix, command } = options;
+
+        if (!subBotPath && options.pathjadibts) {
+            subBotPath = options.pathjadibts;
+        }
+
+        if (typeof args === 'string') {
+            args = args.split(' ').filter(Boolean);
+        } else if (!Array.isArray(args)) {
+            args = [];
+        }
 
         if (command === 'code') {
                 command = 'qr';
