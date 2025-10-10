@@ -93,7 +93,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 }
 
 handler.help = ['play2 <nombre>']
-handler.tags = ['descargas']
+handler.tags = ['downloader']
 handler.command = ['play2']
 
 export default handler
