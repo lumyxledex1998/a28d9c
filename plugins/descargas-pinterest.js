@@ -39,9 +39,8 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
       m, ctxErr)
     }
 
-    // Reacción inicial
-    await m.react('📌')
-    const waitingMsg = await conn.reply(m.chat,
+    // Mensaje de espera - NO se borrará
+    await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `📌 *Procesando enlace de Pinterest...*\n` +
       `✦ Analizando contenido...\n` +
@@ -58,16 +57,13 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     const data = await response.json()
     if (!data.status || !data.result?.url) throw new Error('No se pudo obtener el contenido del pin')
 
-    // Eliminar mensaje de espera
-    try { await conn.sendMessage(m.chat, { delete: waitingMsg.key }) } catch { }
-
     const { id, title, url: mediaUrl } = data.result
     const { username, requests_made_today, limit } = data.user || {}
 
     // Detectar si es imagen o video (solo imagen por ahora)
     const isVideo = mediaUrl.endsWith('.mp4') || mediaUrl.includes('video')
 
-    // Enviar resultado
+    // Enviar resultado - NO se borra el mensaje anterior
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `✅ *¡Pin encontrado con éxito!*\n\n` +
