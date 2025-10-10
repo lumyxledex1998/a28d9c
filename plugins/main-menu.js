@@ -1,4 +1,4 @@
-// Creador del menu: BrayanOFC
+Creador del menu: BrayanOFC
 import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
@@ -59,8 +59,13 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let uptime = clockString(process.uptime() * 1000)
 
+    // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-    const officialBotNumber = '50671854223@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+        const officialBotNumber = '50671854223@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+
+let name = conn.getName(m.sender) || 'Usuario'
+let taguser = '@' + m.sender.split('@')[0]
+    
     const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🎀 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
@@ -93,28 +98,24 @@ ${comandos.map(menu => menu.help.map(cmd =>
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
     let vidBuffer = await (await fetch('https://files.catbox.moe/rcum9p.mp4')).buffer()
-
-    // --- BOTONES ---
-    const buttons = [
-      { buttonId: '.menu', buttonText: { displayText: 'Ver Menú' }, type: 1 },
-      { buttonId: '.code', buttonText: { displayText: 'Seguir como Subbot' }, type: 1 }
-    ]
-
     await conn.sendMessage(
-      m.chat,
-      {
-        video: vidBuffer,
-        gifPlayback: true,
-        caption: menuText,
-        footer: '🌸 Itsuki NAKANO-AI',
-        buttons: buttons,
-        headerType: 5,
-        contextInfo: {
-          mentionedJid: [userId]
-        }
-      },
-      { quoted: m }
-    )
+  m.chat,
+  {
+    video: vidBuffer,
+    gifPlayback: true,
+    caption: menuText,
+    contextInfo: {
+      mentionedJid: [userId],
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: idchannel, 
+        serverMessageId: 100, 
+        newsletterName: namechannel 
+      }
+    }
+  },
+  { quoted: m }
+)
 
   } catch (e) {
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
