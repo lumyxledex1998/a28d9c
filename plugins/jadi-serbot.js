@@ -101,7 +101,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
                                 }
                                 
                                 // Limpiar carpeta de sesión huérfana si existe
-                                const baseDir = (global.jadi || 'jadibts')
+                                const baseDir = (global.jadi || 'jadibots')
                                 let oldSubBotPath = path.join(`./${baseDir}/`, id)
                                 if (fs.existsSync(oldSubBotPath)) {
                                         try {
