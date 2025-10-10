@@ -260,7 +260,7 @@ let handler2 = async (m, { conn, usedPrefix, command, args }) => {
 }
 
 handler.help = ['pinterest <url>', 'pin <url>']
-handler.tags = ['descargas']
+handler.tags = ['downloader']
 handler.command = ['pinterest', 'pin', 'pindl', 'pinteres']
 handler.register = true
 
