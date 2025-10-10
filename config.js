@@ -35,6 +35,7 @@ global.nameqr = 'Itsukiqr'
 global.namebot = 'Itsuki-IA'
 global.sessions = 'sessions'
 global.jadi = 'jadibts'
+global.ItsukiJadibts = true
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
