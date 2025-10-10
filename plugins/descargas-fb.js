@@ -12,8 +12,6 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  let waitingMsg
-
   try {
     if (!args[0]) {
       return conn.reply(m.chat,
@@ -38,7 +36,9 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     }
 
     await m.react('📥')
-    waitingMsg = await conn.reply(m.chat,
+    
+    // Mensaje de espera
+    await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `📥 *Procesando video de Facebook...*\n` +
       `✦ Analizando enlace...\n` +
@@ -49,15 +49,15 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     // API de mayapi
     const apiUrl = `https://mayapi.ooguy.com/facebook?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
     console.log('🔗 Solicitando a API:', apiUrl)
-    
+
     const response = await fetch(apiUrl, {
       timeout: 30000
     })
-    
+
     if (!response.ok) {
       throw new Error(`Error en la API: ${response.status} - ${response.statusText}`)
     }
-    
+
     const data = await response.json()
     console.log('📦 Respuesta de API:', data)
 
@@ -67,7 +67,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     }
 
     let videoUrl, videoTitle
-    
+
     // Buscar en diferentes estructuras posibles
     if (data.result && data.result.url) {
       videoUrl = data.result.url
@@ -85,24 +85,6 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     console.log('🎬 URL del video encontrada:', videoUrl)
     console.log('📝 Título:', videoTitle)
 
-    // Eliminar mensaje de espera
-    if (waitingMsg) {
-      try { 
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key }) 
-      } catch (e) {
-        console.log('⚠️ No se pudo eliminar mensaje de espera:', e)
-      }
-    }
-
-    // Enviar mensaje de que se está enviando el video
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `✅ *¡Enlace obtenido!*\n\n` +
-      `📹 *Título:* ${videoTitle}\n` +
-      `🔗 *Fuente:* Facebook\n\n` +
-      `🌸 *Itsuki está enviando el video...* (´｡• ᵕ •｡\`) ♡`,
-    m, ctxOk)
-
     // Enviar el video directamente desde la URL
     await conn.sendMessage(m.chat, {
       video: { url: videoUrl },
@@ -116,14 +98,6 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 
   } catch (error) {
     console.error('❌ Error en descarga Facebook:', error)
-    
-    if (waitingMsg) {
-      try { 
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key }) 
-      } catch (e) {
-        console.log('⚠️ No se pudo eliminar mensaje de espera en error:', e)
-      }
-    }
 
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
