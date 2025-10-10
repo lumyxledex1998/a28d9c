@@ -88,7 +88,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
       await conn.sendMessage(m.chat, {
         video: { url: mediaUrl },
         caption: `🎀 *Itsuki-Nakano IA v3.5.1 Beta*\n` +
-                 `╰ Creado por: LeoXzzsy (Erenz)\n\n` +
+                 `╰ Creado por: LeoXzzsy 👑 (Erenz)\n\n` +
                  `📹 ${mediaTitle}\n` +
                  `⭐ Descargado desde Instagram\n` +
                  `🔧 *Servidor:* ${apiUsada}`
@@ -97,7 +97,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
       await conn.sendMessage(m.chat, {
         image: { url: mediaUrl },
         caption: `🎀 *Itsuki-Nakano IA v3.5.1 Beta*\n` +
-                 `╰ Creado por: LeoXzzsy (Erenz)\n\n` +
+                 `╰ Creado por: LeoXzzsy 👑(Erenz)\n\n` +
                  `🖼️ ${mediaTitle}\n` +
                  `⭐ Descargado desde Instagram\n` +
                  `🔧 *Servidor:* ${apiUsada}`
