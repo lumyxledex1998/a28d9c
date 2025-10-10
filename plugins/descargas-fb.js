@@ -89,7 +89,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     await conn.sendMessage(m.chat, {
       video: { url: videoUrl },
       caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-              `╰ Creado por: LeoXzzsy\n\n` +
+              `╰ Creado por: LeoXzzsy 👑\n\n` +
               `📹 ${videoTitle}\n` +
               `⭐ Descargado desde Facebook`
     }, { quoted: m })
