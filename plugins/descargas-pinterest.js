@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 /**
  * 🎀 CREADO POR: LeoXzzsy
  * 🌸 ADAPTADO PARA: Itsuki-Nakano IA
- * 📚 VERSIÓN: 3.4.0 Beta
+ * 📚 VERSIÓN: 3.4.0 (Beta)
  * 🏷️ DESCARGADOR PINTEREST
  */
 
@@ -13,253 +13,108 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
   const ctxOk = (global.rcanalr || {})
 
   try {
-    // Verificar si se proporcionó URL
+    // Verificar URL
     if (!args[0]) {
-      return conn.reply(m.chat, 
+      return conn.reply(m.chat,
         `🎀 *Itsuki-Nakano IA - Descargador Pinterest*\n\n` +
         `✦ *Uso correcto:*\n` +
-        `*${usedPrefix}pinterest* <url_de_pinterest>\n\n` +
+        `*${usedPrefix + command}* <url_de_pinterest>\n\n` +
         `✦ *Ejemplo:*\n` +
-        `*${usedPrefix}pinterest* https://pin.it/xxxxx\n\n` +
-        `🌸 *Itsuki te ayudará a descargar imágenes/videos...* (◕‿◕✿)`,
+        `*${usedPrefix + command}* https://pin.it/xxxxx\n\n` +
+        `🌸 *Itsuki te ayudará a descargar tus pins UwU* (◕‿◕✿)`,
       m, ctxWarn)
     }
 
     const url = args[0]
-    
-    // Verificar que sea una URL de Pinterest válida
+
+    // Verificar enlace válido
     if (!url.match(/pinterest|pin\.it/)) {
       return conn.reply(m.chat,
         `🎀 *Itsuki-Nakano IA*\n\n` +
         `❌ *URL no válida*\n\n` +
-        `✦ Por favor envía un enlace de Pinterest válido\n` +
-        `✦ Ejemplos:\n` +
+        `✦ Envía un enlace de Pinterest válido\n` +
         `• https://pin.it/xxxxx\n` +
         `• https://pinterest.com/pin/xxxxx\n\n` +
-        `🌸 *Itsuki está confundida...* (´･ω･\`)`,
+        `🌸 *Itsuki se ha confundido...* (´･ω･\`)`,
       m, ctxErr)
     }
 
-    // Reaccionar y enviar mensaje de espera
+    // Reacción inicial
     await m.react('📌')
-    let waitingMsg = await conn.reply(m.chat,
+    const waitingMsg = await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
-      `📌 *Procesando contenido de Pinterest...*\n` +
-      `✦ Analizando enlace...\n` +
+      `📌 *Procesando enlace de Pinterest...*\n` +
+      `✦ Analizando contenido...\n` +
       `✦ Extrayendo medios...\n\n` +
-      `🌸 *Itsuki está buscando tus pins...* 📥`,
+      `🌸 *Itsuki está buscando tu pin...* 📥`,
       m, ctxWarn
     )
 
-    // API para Pinterest
-    const apiUrl = `https://api.erdwpe.com/api/download/pinterest?url=${encodeURIComponent(url)}`
-    
+    // 🧠 Nueva API Insana
+    const apiUrl = `https://mayapi.ooguy.com/pinterest?url=${encodeURIComponent(url)}&apikey=soymaycol%3C3`
     const response = await fetch(apiUrl)
-    if (!response.ok) throw new Error('Error en la API de Pinterest')
+    if (!response.ok) throw new Error('Error al conectar con MayAPI')
 
     const data = await response.json()
-    
-    if (!data.status || !data.result) {
-      throw new Error('No se pudo obtener el contenido')
-    }
-
-    const mediaUrls = data.result
-    let mediaCount = 0
-
-    // Contar medios disponibles
-    if (mediaUrls.image) mediaCount++
-    if (mediaUrls.image_hd) mediaCount++
-    if (mediaUrls.video) mediaCount++
-
-    if (mediaCount === 0) {
-      throw new Error('No se encontraron medios descargables')
-    }
+    if (!data.status || !data.result?.url) throw new Error('No se pudo obtener el contenido del pin')
 
     // Eliminar mensaje de espera
-    if (waitingMsg) {
-      try {
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-      } catch (e) {}
-    }
+    try { await conn.sendMessage(m.chat, { delete: waitingMsg.key }) } catch { }
 
-    // Enviar mensaje de éxito
+    const { id, title, url: mediaUrl } = data.result
+    const { username, requests_made_today, limit } = data.user || {}
+
+    // Detectar si es imagen o video (solo imagen por ahora)
+    const isVideo = mediaUrl.endsWith('.mp4') || mediaUrl.includes('video')
+
+    // Enviar resultado
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
-      `✅ *¡Contenido encontrado!*\n\n` +
-      `📌 *Medios disponibles:* ${mediaCount}\n` +
-      `🔗 *Fuente:* Pinterest\n\n` +
-      `🌸 *Itsuki está enviando tus medios...* (´｡• ᵕ •｡\`)`,
+      `✅ *¡Pin encontrado con éxito!*\n\n` +
+      `🆔 *ID:* ${id}\n` +
+      `🖋️ *Título:* ${title}\n` +
+      `🔗 *Fuente:* Pinterest\n` +
+      (username ? `👤 *Usuario API:* ${username}\n📊 *Usos hoy:* ${requests_made_today}/${limit}\n\n` : '\n') +
+      `🌸 *Descargando tu pin...* (´｡• ᵕ •｡\`)`,
       m, ctxOk
     )
 
-    // Enviar medios disponibles
-    if (mediaUrls.video) {
-      await conn.sendFile(m.chat, mediaUrls.video, 'pinterest_video.mp4', 
-        `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-        `╰ Creado por: LeoXzzsy\n\n` +
-        `📹 *Video de Pinterest*\n` +
-        `⭐ Calidad: HD`,
-        m
-      )
-    }
-
-    if (mediaUrls.image_hd) {
-      await conn.sendFile(m.chat, mediaUrls.image_hd, 'pinterest_hd.jpg', 
-        `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-        `╰ Creado por: LeoXzzsy\n\n` +
-        `🖼️ *Imagen HD de Pinterest*`,
-        m
-      )
-    } else if (mediaUrls.image) {
-      await conn.sendFile(m.chat, mediaUrls.image, 'pinterest.jpg', 
-        `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-        `╰ Creado por: LeoXzzsy\n\n` +
-        `🖼️ *Imagen de Pinterest*`,
-        m
-      )
-    }
-
-    await m.react('✅')
-
-  } catch (error) {
-    console.error('Error en descarga Pinterest:', error)
-    
-    // Eliminar mensaje de espera si existe
-    if (waitingMsg) {
-      try {
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-      } catch (e) {}
-    }
-
-    // Mensaje de error estilo Itsuki
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `❌ *Error en la descarga*\n\n` +
-      `✦ *Detalles:* ${error.message}\n\n` +
-      `✦ *Posibles soluciones:*\n` +
-      `• Verifica que el enlace sea correcto\n` +
-      `• El pin podría ser privado\n` +
-      `• Intenta con otro enlace de Pinterest\n\n` +
-      `🌸 *Itsuki lo intentará de nuevo...* (´；ω；\`)\n\n` +
-      `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-      `╰ Creado por: LeoXzzsy`,
-      m, ctxErr
-    )
-    
-    await m.react('❌')
-  }
-}
-
-// Versión alternativa para imágenes específicas
-let handler2 = async (m, { conn, usedPrefix, command, args }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
-
-  try {
-    if (!args[0]) {
-      return conn.reply(m.chat,
-        `🎀 *Itsuki-Nakano IA - Pinterest DL*\n\n` +
-        `✦ *Formas de usar:*\n` +
-        `*${usedPrefix}pinterest* <url>\n` +
-        `*${usedPrefix}pin* <url>\n` +
-        `*${usedPrefix}pindl* <url>\n\n` +
-        `✦ *Ejemplos válidos:*\n` +
-        `• https://pin.it/xxxxx\n` +
-        `• https://pinterest.com/pin/xxxxx\n` +
-        `• https://www.pinterest.com/pin/xxxxx\n\n` +
-        `🌸 *Itsuki puede descargar imágenes y videos...* 📌`,
-        m, ctxWarn
-      )
-    }
-
-    const url = args[0]
-    await m.react('🔍')
-
-    let waitingMsg = await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `🔍 *Buscando en Pinterest...*\n` +
-      `✦ Verificando enlace...\n` +
-      `✦ Extrayendo contenido...\n\n` +
-      `📚 *Itsuki está revisando los pins...* 📥`,
-      m, ctxWarn
-    )
-
-    // API alternativa
-    const apiUrl = `https://api.tokyo-line.tech/api/download/pinterest?url=${encodeURIComponent(url)}`
-    
-    const response = await fetch(apiUrl)
-    if (!response.ok) throw new Error('Error en la API')
-
-    const data = await response.json()
-    
-    if (!data.media || !data.media.url) {
-      throw new Error('No se pudo obtener el contenido')
-    }
-
-    const mediaUrl = data.media.url
-    const mediaType = data.media.type || 'image'
-    const mediaTitle = data.title || 'Contenido de Pinterest'
-
-    // Eliminar mensaje de espera
-    if (waitingMsg) {
-      try {
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-      } catch (e) {}
-    }
-
-    // Enviar según el tipo de medio
-    if (mediaType === 'video') {
+    if (isVideo) {
       await conn.sendFile(m.chat, mediaUrl, 'pinterest_video.mp4',
-        `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-        `╰ Creado por: LeoXzzsy\n\n` +
-        `📹 ${mediaTitle}\n` +
-        `🔗 Fuente: Pinterest`,
+        `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
+        `╰ Creado por: LeoXzzsy 💞\n\n` +
+        `📹 *Video de Pinterest*\n` +
+        `⭐ *Título:* ${title}`,
         m
       )
     } else {
       await conn.sendFile(m.chat, mediaUrl, 'pinterest_image.jpg',
-        `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
-        `╰ Creado por: LeoXzzsy\n\n` +
-        `🖼️ ${mediaTitle}\n` +
-        `🔗 Fuente: Pinterest`,
+        `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
+        `╰ Creado por: LeoXzzsy 💞\n\n` +
+        `🖼️ *Imagen de Pinterest*\n` +
+        `⭐ *Título:* ${title}`,
         m
       )
     }
 
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `✅ *¡Descarga completada!*\n\n` +
-      `📌 *Tipo:* ${mediaType === 'video' ? 'Video' : 'Imagen'}\n` +
-      `📝 *Título:* ${mediaTitle}\n\n` +
-      `🌸 *¡Disfruta del contenido!* (◕‿◕✿)`,
-      m, ctxOk
-    )
-
     await m.react('✅')
 
   } catch (error) {
-    console.error('Error en Pinterest DL:', error)
-    
-    if (waitingMsg) {
-      try {
-        await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-      } catch (e) {}
-    }
+    console.error('Error en Pinterest (MayAPI):', error)
 
+    await m.react('❌')
     await conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
-      `❌ *Error al descargar de Pinterest*\n\n` +
-      `✦ ${error.message}\n\n` +
-      `🌸 *Itsuki sugiere intentar con otro enlace...* (´･ω･\`)`,
+      `❌ *Error al descargar desde MayAPI*\n\n` +
+      `✦ *Detalles:* ${error.message}\n\n` +
+      `🌸 *Intenta con otro enlace o más tarde...* (´；ω；\`)\n\n` +
+      `🎀 *Itsuki-Nakano IA v3.5.0*`,
       m, ctxErr
     )
-    
-    await m.react('❌')
   }
 }
 
-handler.help = ['pinterest <url>', 'pin <url>']
+handler.help = ['pinterest <url>', 'pin <url>', 'pindl <url>']
 handler.tags = ['downloader']
 handler.command = ['pinterest', 'pin', 'pindl', 'pinteres']
 handler.register = true
