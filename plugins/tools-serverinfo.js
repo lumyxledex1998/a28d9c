@@ -122,6 +122,6 @@ function formatUptime(seconds) {
 handler.help = ['serverinfo']
 handler.tags = ['info', 'itsuki'] 
 handler.command = ['serverinfo', 'server', 'info']
-handler.register = true
+handler.rowner = true
 
 export default handler
