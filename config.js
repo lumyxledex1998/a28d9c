@@ -32,7 +32,7 @@ global.vs = '2.2.0'
 global.vsJB = '5.0'
 global.nameqr = 'Itsukiqr'
 global.namebot = 'Itsuki-IA'
-global.sessions = 'sessions'
+global.sessions = 'Itsuki-sessions'
 global.jadi = 'jadibts'
 global.ItsukiJadibts = true
 global.Choso = true
@@ -40,9 +40,9 @@ global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
 // Números y settings globales para varios códigos
 
-global.botNumber = '50671854223'
+global.botNumber = '18493907272'
 global.packname = 'La Mejor Bot De WhatsApp'
-global.botname = '𝙄𝙩𝙨𝙪𝙠𝙞-𝙄𝘼 🌸'
+global.botname = '𝐈𝐭𝐬𝐮𝐤𝐢 𝐍𝐚𝐤𝐚𝐧𝐨-𝐈𝐀 𝐖𝐚𝐛𝐨𝐭 👑✨'
 global.wm = '© 𝐋𝐞𝐨  𝐗𝐬𝐳𝐲'
 global.wm3 = '⫹⫺  multi-device'
 global.author = 'made by @Leo Xzsy'
