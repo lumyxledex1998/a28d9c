@@ -8,7 +8,7 @@ let AraChu2 = {
   getRandom: () => 'https://files.catbox.moe/9cbbyf.jpg'
 }
 
-let owner = ['18493907272']
+let owner = ['16503058299']
 let conn = {
   getName: (jid) => 'Bot Owner'
 }
@@ -80,7 +80,7 @@ try {
   global.docss = pickRandom(global.docs)
   global.ephemeral = "86400"
   global.kontak2 = [
-    [owner[0], await conn.getName(owner[0] + '18493907272@s.whatsapp.net'), 'Desarrollador del bot', 'xzzysultra@gmail.com', true],
+    [owner[0], await conn.getName(owner[0] + '16503058299@s.whatsapp.net'), 'Desarrollador del bot', 'xzzysultra@gmail.com', true],
     [owner[1], await conn.getName(owner[1] + '@s.whatsapp.net'), 'Desarrollador del bot', 'xzzysultra@gmail.com', true],
   ]
   global.pppkecil = AraChu2.getRandom()
