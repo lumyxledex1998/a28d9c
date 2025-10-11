@@ -14,14 +14,14 @@ global.__dirname = (url) => dirname(fileURLToPath(url));
 
 global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
-   ['18493907272', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
+   ['16503058299', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
    ['15614809253', 'AyeitsRyze', true],
    ['573133374132', 'YO SOY YO', true] 
 ];
 
-global.mods = ['18493907272', '595972314588', '', '']
-global.suittag = ['18493907272', '595972314588', '']
-global.prems = ['18493907272', '595972314588', '', '']
+global.mods = ['16503058299', '595972314588', '', '']
+global.suittag = ['16503058299', '595972314588', '']
+global.prems = ['16503058299', '595972314588', '', '']
 
 // Información del bot 
 
@@ -68,7 +68,7 @@ global.comunidad1 = 'https://chat.whatsapp.com/DeJvBuS7QgB3Ybp1BZulWL'
 global.channel = 'https://whatsapp.com/channel/0029Vb4cQJu2f3EB7BS7o11M'
 global.channel2 = 'https://whatsapp.com/channel/0029ValMlRS6buMFL9d0iQ0S'
 global.md = 'https://github.com/xzzys26/Gaara-Ultra-MD'
-global.correo = 'correo@gmail.com'
+global.correo = 'xzzysultra@gmail.com'
 
 // Apis para las descargas y más
 
