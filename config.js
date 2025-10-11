@@ -67,7 +67,7 @@ global.gp1 = 'https://chat.whatsapp.com/EteP5pnrAZC14y9wReGF1V'
 global.comunidad1 = 'https://chat.whatsapp.com/DeJvBuS7QgB3Ybp1BZulWL'
 global.channel = 'https://whatsapp.com/channel/0029Vb4cQJu2f3EB7BS7o11M'
 global.channel2 = 'https://whatsapp.com/channel/0029ValMlRS6buMFL9d0iQ0S'
-global.md = 'https://github.com/xzzys26/Gaara-Ultra-MD'
+global.md = 'https://github.com/xzzys26/Itsuki-Nakano'
 global.correo = 'xzzysultra@gmail.com'
 
 // Apis para las descargas y más
