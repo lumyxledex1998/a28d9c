@@ -20,7 +20,7 @@ let handler = async (m, { conn }) => {
 📸 𝑰𝑵𝑺𝑻𝑨𝑮𝑹𝑨𝑴: instagram.com/xzzys26
 💎 𝑻𝑰𝑲𝑻𝑶𝑲: tiktok.com/@xzzys16  
 📢 𝑪𝑨𝑵𝑨𝑳: https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z
-👑 𝑪𝑹𝑬𝑨𝑫𝑶𝑹: wa.me/18493907272
+👑 𝑪𝑹𝑬𝑨𝑫𝑶𝑹: wa.me/16503058299
     `.trim()
     await conn.sendMessage(m.chat, { text: message }, { quoted: m })
   }
@@ -44,7 +44,7 @@ handler.before = async (m) => {
       await m.reply('📢 *Canal Oficial:* https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z')
       break
     case '👑 𝐂𝐑𝐄𝐀𝐃𝐎𝐑':
-      await m.reply('👑 *Contacto Directo:* https://wa.me/18493907272')
+      await m.reply('👑 *Contacto Directo:* https://wa.me/16503058299')
       break
   }
 }
