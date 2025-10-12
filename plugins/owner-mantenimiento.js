@@ -1,222 +1,87 @@
-const fs = require('fs');
-const path = require('path');
+let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
+  const ctxErr = global.rcanalx || {}
+  const ctxWarn = global.rcanalw || {}
+  const ctxOk = global.rcanalr || {}
 
-// Archivo para guardar el estado de los comandos
-const statusFile = path.join(__dirname, '../data/commandStatus.json');
+  if (!isOwner) {
+    return conn.reply(m.chat, 
+      `🍙❌ *ITSUKI - Acceso Denegado* 🔒\n\n` +
+      `⚠️ Este comando es exclusivo para el propietario\n\n` +
+      `📚 "Lo siento, solo LeoXzz puede usar este comando" 🎀`,
+      m, ctxErr
+    )
+  }
 
-// Asegurar que existe la carpeta data
-if (!fs.existsSync(path.dirname(statusFile))) {
-    fs.mkdirSync(path.dirname(statusFile), { recursive: true });
-}
+  const commandName = text?.toLowerCase()
+  if (!commandName) {
+    return conn.reply(m.chat, 
+      `🍙🛠️ *ITSUKI - Modo Mantenimiento* ⚙️\n\n` +
+      `❌ Debes especificar un comando\n\n` +
+      `📝 *Uso:*\n${usedPrefix}${command} <nombre del comando>\n\n` +
+      `💡 *Ejemplo:*\n${usedPrefix}${command} anime\n\n` +
+      `📖 "Indica qué comando necesitas poner en mantenimiento" 🎨`,
+      m, ctxWarn
+    )
+  }
 
-// Cargar o crear el archivo de estado
-function loadStatus() {
-    try {
-        if (fs.existsSync(statusFile)) {
-            return JSON.parse(fs.readFileSync(statusFile, 'utf8'));
-        }
-    } catch (e) {
-        console.error('Error cargando commandStatus:', e);
-    }
-    return {};
-}
+  // Obtener lista de comandos disponibles
+  const commands = Object.values(global.plugins).filter(v => v.help).map(v => v.help[0].split(' ')[0].toLowerCase())
+  
+  if (!commands.includes(commandName)) {
+    return conn.reply(m.chat, 
+      `🍙❌ *ITSUKI - Comando No Encontrado* 🔍\n\n` +
+      `⚠️ El comando "${commandName}" no existe\n\n` +
+      `📚 "Verifica el nombre del comando y vuelve a intentarlo" 📝`,
+      m, ctxErr
+    )
+  }
 
-// Guardar el estado
-function saveStatus(status) {
-    try {
-        fs.writeFileSync(statusFile, JSON.stringify(status, null, 2));
-    } catch (e) {
-        console.error('Error guardando commandStatus:', e);
-    }
-}
-
-let commandStatus = loadStatus();
-
-// Verificar si el comando está bloqueado
-function checkCommandStatus(commandName, m, conn) {
-    const status = commandStatus[commandName];
+  try {
+    // Leer y actualizar la base de datos de mantenimiento
+    const maintenanceList = readMaintenanceDb() || []
     
-    if (status === 'mantenimiento') {
-        conn.reply(m.chat, `╭━━━〔 🔧 MANTENIMIENTO 🔧 〕━━━⬣
-│
-│ *Comando:* ${commandName}
-│ *Estado:* En Mantenimiento
-│
-│ 🔧 Este comando está siendo mejorado
-│ 💫 Volverá pronto más optimizado
-│ ⏰ Disculpa las molestias
-│
-│ _Por favor, intenta más tarde~_
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m);
-        return false;
+    if (maintenanceList.includes(commandName)) {
+      return conn.reply(m.chat, 
+        `🍙⚠️ *ITSUKI - Comando en Mantenimiento* 🚧\n\n` +
+        `ℹ️ El comando "${commandName}" ya está en mantenimiento\n\n` +
+        `📚 "Este comando ya fue agregado previamente" 🛠️`,
+        m, ctxWarn
+      )
     }
-    
-    if (status === 'beta') {
-        conn.reply(m.chat, `╭━━━〔 🧪 FASE BETA 🧪 〕━━━⬣
-│
-│ *Comando:* ${commandName}
-│ *Estado:* En Pruebas
-│
-│ ⚠️ Este comando está en fase beta
-│ 🔬 Puede presentar errores
-│ 💡 Tu feedback es importante
-│
-│ _Ejecutando comando..._
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
-*Itsuki Nakano IA* 🌸`, m);
-    }
+    maintenanceList.push(commandName)
+    writeMaintenanceDb(maintenanceList)
+
+    await conn.reply(m.chat, 
+      `🍙✅ *ITSUKI - Mantenimiento Activado* ⚙️✨\n\n` +
+      `🎉 Comando "${commandName}" puesto en mantenimiento\n\n` +
+      `📚 "El comando ha sido desactivado temporalmente"\n` +
+      `🛠️ "Los usuarios no podrán usarlo hasta nuevo aviso"\n\n` +
+      `✅ *Estado:* 🚧 En mantenimiento`,
+      m, ctxOk
+    )
+
+  } catch (e) {
+    console.error('Error en comando mantenimiento:', e)
     
-    return true;
+    await conn.reply(m.chat, 
+      `🍙❌ *ITSUKI - Error del Sistema* 💥\n\n` +
+      `⚠️ Ocurrió un error al procesar la solicitud\n\n` +
+      `📝 *Detalles:* ${e.message}\n\n` +
+      `🔧 "Por favor, intenta nuevamente más tarde" 📚`,
+      m, ctxErr
+    )
+  }
 }
 
-// Exportar para usar en otros comandos
-global.commandStatus = commandStatus;
-global.checkCommandStatus = checkCommandStatus;
+handler.command = ['mantenimiento', 'maintenance', 'mant']
+handler.tags = ['owner']
+handler.help = ['mantenimiento <comando>']
 
-// ========== COMANDO MANT ==========
-let handler = async (m, { conn, text, isOwner, usedPrefix }) => {
-    const ctxErr = global.rcanalx || {}
-    const ctxWarn = global.rcanalw || {}
-    const ctxOk = global.rcanalr || {}
-    
-    if (!isOwner) {
-        return conn.reply(m.chat, `╭━━━〔 ⚠️ ACCESO DENEGADO ⚠️ 〕━━━⬣
-│
-│ ❌ Este comando es solo para el owner
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
+handler.owner = true
+handler.group = false
 
-*Itsuki Nakano IA* 🌸`, m, ctxErr);
-    }
-
-    const args = text.trim().split(/ +/);
-    const targetCommand = args[0]?.toLowerCase();
-
-    if (!targetCommand) {
-        return conn.reply(m.chat, `╭━━━〔 🔧 SISTEMA DE MANTENIMIENTO 🔧 〕━━━⬣
-│
-│ *Uso:*
-│
-│ ▸ ${usedPrefix}mant <comando>
-│   _Pone un comando en mantenimiento_
-│
-│ ▸ ${usedPrefix}demant <comando>
-│   _Quita un comando de mantenimiento_
-│
-│ ▸ ${usedPrefix}mant lista
-│   _Muestra todos los comandos bloqueados_
-│
-│ ▸ ${usedPrefix}mant estado <comando>
-│   _Consulta el estado de un comando_
-│
-│ ━━━━━━━━━━━━━━━━━━━━
-│
-│ *Ejemplos:*
-│ ${usedPrefix}mant menu
-│ ${usedPrefix}demant menu
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxWarn);
-    }
-
-    // Ver lista
-    if (targetCommand === 'lista' || targetCommand === 'list' || targetCommand === 'l') {
-        let lista = `╭━━━〔 📋 LISTA DE ESTADOS 📋 〕━━━⬣\n│\n`;
-
-        if (Object.keys(commandStatus).length === 0) {
-            lista += `│ ✅ Todos los comandos están activos\n│\n`;
-        } else {
-            for (const [cmd, stat] of Object.entries(commandStatus)) {
-                const icon = stat === 'mantenimiento' ? '🔧' : '🧪';
-                const texto = stat === 'mantenimiento' ? 'Mantenimiento' : 'Beta';
-                lista += `│ ${icon} *${cmd}* - ${texto}\n`;
-            }
-            lista += `│\n`;
-        }
-
-        lista += `╰━━━━━━━━━━━━━━━━━━━━━━⬣\n\n*Itsuki Nakano IA* 🌸`;
-
-        return conn.reply(m.chat, lista, m, ctxOk);
-    }
-
-    // Ver estado
-    if (targetCommand === 'estado' || targetCommand === 'est' || targetCommand === 'e') {
-        const cmd = args[1]?.toLowerCase();
-        
-        if (!cmd) {
-            return conn.reply(m.chat, `╭━━━〔 ℹ️ USO ℹ️ 〕━━━⬣
-│
-│ *Uso:* ${usedPrefix}mant estado <comando>
-│
-│ *Ejemplo:*
-│ ${usedPrefix}mant estado menu
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxWarn);
-        }
-
-        const status = commandStatus[cmd] || 'activo';
-        let statusIcon = '✅';
-        let statusText = 'ACTIVO';
-        let description = '✅ Comando funcionando\n│ 💫 Disponible para todos';
-
-        if (status === 'mantenimiento') {
-            statusIcon = '🔧';
-            statusText = 'EN MANTENIMIENTO';
-            description = '🔧 Comando en mantenimiento\n│ ⏰ No disponible temporalmente';
-        } else if (status === 'beta') {
-            statusIcon = '🧪';
-            statusText = 'EN BETA';
-            description = '🧪 Comando en fase beta\n│ ⚠️ Puede tener errores';
-        }
-
-        return conn.reply(m.chat, `╭━━━〔 ${statusIcon} ESTADO ${statusIcon} 〕━━━⬣
-│
-│ *Comando:* ${cmd}
-│ *Estado:* ${statusText}
-│
-│ ━━━━━━━━━━━━━━━━━━━━
-│
-│ ${description}
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxOk);
-    }
-
-    // Poner en mantenimiento
-    commandStatus[targetCommand] = 'mantenimiento';
-    saveStatus(commandStatus);
-
-    return conn.reply(m.chat, `╭━━━〔 ✅ ACTUALIZADO ✅ 〕━━━⬣
-│
-│ *Comando:* ${targetCommand}
-│ *Nuevo Estado:* 🔧 MANTENIMIENTO
-│
-│ ━━━━━━━━━━━━━━━━━━━━
-│
-│ ✅ El comando ha sido desactivado
-│ 🔒 Los usuarios no podrán usarlo
-│ ⏰ Hasta que sea reactivado
-│
-│ *Para reactivar:*
-│ ${usedPrefix}demant ${targetCommand}
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxOk);
-}
-
-handler.help = ['mant'];
-handler.tags = ['owner'];
-handler.command = ['mant', 'mantenimiento'];
-handler.owner = true;
+// Importar funciones de la base de datos (asegúrate de tener estas funciones)
+const { readMaintenanceDb, writeMaintenanceDb } = '../lib/database.js'
 
 export default handler
