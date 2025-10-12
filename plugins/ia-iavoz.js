@@ -14,7 +14,7 @@ let handler = async (m, { conn, text }) => {
     await conn.sendMessage(m.chat, {
       audio: Buffer.from(audioBuffer),
       mimetype: 'audio/mpeg',
-      ptt: true
+      ptt: false
     }, { quoted: m })
 
   } catch (e) {
