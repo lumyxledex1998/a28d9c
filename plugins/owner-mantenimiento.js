@@ -12,58 +12,90 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
     )
   }
 
-  const commandName = text?.toLowerCase()
-  if (!commandName) {
+  const action = args[0]?.toLowerCase()
+  const commandName = args[1]?.toLowerCase()
+
+  if (!action || !commandName) {
     return conn.reply(m.chat, 
-      `🍙🛠️ *ITSUKI - Modo Mantenimiento* ⚙️\n\n` +
-      `❌ Debes especificar un comando\n\n` +
-      `📝 *Uso:*\n${usedPrefix}${command} <nombre del comando>\n\n` +
-      `💡 *Ejemplo:*\n${usedPrefix}${command} anime\n\n` +
-      `📖 "Indica qué comando necesitas poner en mantenimiento" 🎨`,
+      `🍙🛠️ *ITSUKI - Sistema de Mantenimiento* ⚙️\n\n` +
+      `📝 *Modos disponibles:*\n` +
+      `• ${usedPrefix}${command} on <comando>\n` +
+      `• ${usedPrefix}${command} off <comando>\n\n` +
+      `💡 *Ejemplos:*\n` +
+      `• ${usedPrefix}${command} on anime\n` +
+      `• ${usedPrefix}${command} off juego\n\n` +
+      `📚 "Activa o desactiva comandos del sistema" 🎨`,
       m, ctxWarn
     )
   }
 
-  // Obtener lista de comandos disponibles
-  const commands = Object.values(global.plugins).filter(v => v.help).map(v => v.help[0].split(' ')[0].toLowerCase())
+  // Inicializar array si no existe
+  if (!global.maintenanceCommands) global.maintenanceCommands = []
+
+  const commands = Object.values(global.plugins)
+    .filter(v => v.help && v.help.length > 0)
+    .map(v => v.help[0].split(' ')[0].toLowerCase())
   
   if (!commands.includes(commandName)) {
     return conn.reply(m.chat, 
       `🍙❌ *ITSUKI - Comando No Encontrado* 🔍\n\n` +
       `⚠️ El comando "${commandName}" no existe\n\n` +
-      `📚 "Verifica el nombre del comando y vuelve a intentarlo" 📝`,
+      `📚 "Verifica el nombre del comando" 📝`,
       m, ctxErr
     )
   }
 
   try {
-    // Leer y actualizar la base de datos de mantenimiento
-    const maintenanceList = readMaintenanceDb() || []
-    
-    if (maintenanceList.includes(commandName)) {
+    if (action === 'on') {
+      if (global.maintenanceCommands.includes(commandName)) {
+        return conn.reply(m.chat, 
+          `🍙⚠️ *ITSUKI - Ya en Mantenimiento* 🚧\n\n` +
+          `ℹ️ El comando "${commandName}" ya está en mantenimiento\n\n` +
+          `📚 "No es necesario activarlo nuevamente" 🛠️`,
+          m, ctxWarn
+        )
+      }
+      global.maintenanceCommands.push(commandName)
+      
+      await conn.reply(m.chat, 
+        `🍙✅ *ITSUKI - Mantenimiento Activado* ⚙️✨\n\n` +
+        `🎉 Comando "${commandName}" puesto en mantenimiento\n\n` +
+        `📚 "El comando ha sido desactivado temporalmente"\n` +
+        `🛠️ "Los usuarios no podrán usarlo hasta nuevo aviso"\n\n` +
+        `✅ *Estado:* 🚧 En mantenimiento`,
+        m, ctxOk
+      )
+      
+    } else if (action === 'off') {
+      if (!global.maintenanceCommands.includes(commandName)) {
+        return conn.reply(m.chat, 
+          `🍙⚠️ *ITSUKI - No en Mantenimiento* ✅\n\n` +
+          `ℹ️ El comando "${commandName}" no está en mantenimiento\n\n` +
+          `📚 "Este comando ya está activo" 🛠️`,
+          m, ctxWarn
+        )
+      }
+      global.maintenanceCommands = global.maintenanceCommands.filter(cmd => cmd !== commandName)
+      
+      await conn.reply(m.chat, 
+        `🍙✅ *ITSUKI - Mantenimiento Desactivado* ⚙️✨\n\n` +
+        `🎉 Comando "${commandName}" activado nuevamente\n\n` +
+        `📚 "El comando ha sido reactivado exitosamente"\n` +
+        `🛠️ "Los usuarios ya pueden usarlo normalmente"\n\n` +
+        `✅ *Estado:* 🟢 Activo y funcionando`,
+        m, ctxOk
+      )
+    } else {
       return conn.reply(m.chat, 
-        `🍙⚠️ *ITSUKI - Comando en Mantenimiento* 🚧\n\n` +
-        `ℹ️ El comando "${commandName}" ya está en mantenimiento\n\n` +
-        `📚 "Este comando ya fue agregado previamente" 🛠️`,
-        m, ctxWarn
+        `🍙❌ *ITSUKI - Acción Inválida* ❓\n\n` +
+        `⚠️ Usa "on" o "off"\n\n` +
+        `📚 "Solo puedo activar o desactivar mantenimiento" 📝`,
+        m, ctxErr
       )
     }
 
-    maintenanceList.push(commandName)
-    writeMaintenanceDb(maintenanceList)
-
-    await conn.reply(m.chat, 
-      `🍙✅ *ITSUKI - Mantenimiento Activado* ⚙️✨\n\n` +
-      `🎉 Comando "${commandName}" puesto en mantenimiento\n\n` +
-      `📚 "El comando ha sido desactivado temporalmente"\n` +
-      `🛠️ "Los usuarios no podrán usarlo hasta nuevo aviso"\n\n` +
-      `✅ *Estado:* 🚧 En mantenimiento`,
-      m, ctxOk
-    )
-
   } catch (e) {
     console.error('Error en comando mantenimiento:', e)
-    
     await conn.reply(m.chat, 
       `🍙❌ *ITSUKI - Error del Sistema* 💥\n\n` +
       `⚠️ Ocurrió un error al procesar la solicitud\n\n` +
@@ -76,12 +108,9 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
 
 handler.command = ['mantenimiento', 'maintenance', 'mant']
 handler.tags = ['owner']
-handler.help = ['mantenimiento <comando>']
+handler.help = ['mantenimiento on/off <comando>']
 
 handler.owner = true
 handler.group = false
-
-// Importar funciones de la base de datos (asegúrate de tener estas funciones)
-const { readMaintenanceDb, writeMaintenanceDb } = '../lib/database.js'
 
 export default handler
