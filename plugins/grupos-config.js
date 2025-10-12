@@ -57,7 +57,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
 handler.help = ['group abrir / cerrar']
 handler.tags = ['grupo']
-handler.command = ['group', 'grupo']
+handler.command = ['group', 'grupo', 'cerrar', 'abrir']
 handler.admin = true
 handler.botAdmin = true
 
