@@ -1,4 +1,4 @@
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, usedPrefix, command, isOwner }) => {
     const ctxErr = (global.rcanalx || {})
     const ctxWarn = (global.rcanalw || {})
     const ctxOk = (global.rcanalr || {})
@@ -8,10 +8,51 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
     const plans = {
         'dia': { duration: 1, cost: 50000, emoji: '🌅' },
-        'semana': { duration: 7, cost: 250000, emoji: '📅' }, // Ahorro del 28%
-        'mes': { duration: 30, cost: 750000, emoji: '🗓️' }, // Ahorro del 50%
+        'semana': { duration: 7, cost: 250000, emoji: '📅' },
+        'mes': { duration: 30, cost: 750000, emoji: '🗓️' },
+        'año': { duration: 365, cost: 5000000, emoji: '🎉' },
+        'infinito': { duration: 9999, cost: 999999999, emoji: '♾️' }
     };
 
+    // MODO OWNER - Activación gratuita
+    if (isOwner && text) {
+        const selectedPlan = plans[text] || plans['mes']; // Por defecto mes si no existe
+        
+        user.premium = true;
+        const newPremiumTime = Date.now() + (selectedPlan.duration * 24 * 60 * 60 * 1000);
+        user.premiumTime = newPremiumTime;
+
+        const remainingTime = newPremiumTime - Date.now();
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        await conn.reply(m.chat, 
+`╭━━━〔 🎀 𝐌𝐎𝐃𝐎 𝐂𝐑𝐄𝐀𝐃𝐎𝐑 🎀 〕━━━⬣
+│ 👑 *¡Premium Activado Gratis!*
+│ 
+│ 💎 *Plan:* ${text.charAt(0).toUpperCase() + text.slice(1)}
+│ ⏰ *Duración:* ${selectedPlan.duration} día(s)
+│ 💰 *Costo:* ¥0 (Gratis)
+│ 
+│ ⏳ *Tiempo restante:*
+│ ${days} días y ${hours} horas
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+🌟 *Beneficios Activados:*
+• Comandos exclusivos ✅
+• Prioridad máxima ✅
+• Sin límites ✅
+• Acceso total ✅
+
+🌸 *¡Poder de creador activado!* 👑
+🎀 *Disfruta de tus privilegios* 💫`, 
+        m, ctxOk);
+
+        await m.react('👑');
+        return;
+    }
+
+    // MODO NORMAL PARA USUARIOS
     if (!text || !plans[text]) {
         let response = 
 `╭━━━〔 🎀 𝐏𝐋𝐀𝐍𝐄𝐒 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
@@ -32,6 +73,9 @@ ${Object.entries(plans).map(([plan, data]) =>
 │ 
 │ *Ejemplo:*
 │ ${usedPrefix + command} semana
+
+👑 *Modo Creador:*
+│ ${usedPrefix + command} <plan> (Gratis)
 
 🌸 *Itsuki te ofrece beneficios exclusivos...* (◕‿◕✿)`;
 
@@ -86,7 +130,6 @@ ${Object.entries(plans).map(([plan, data]) =>
 🎀 *Disfruta de tus nuevos beneficios* 💫`, 
     m, ctxOk);
 
-    // Reacción de éxito
     await m.react('💎');
 };
 
@@ -94,5 +137,6 @@ handler.help = ['comprarpremium [plan]'];
 handler.tags = ['premium'];
 handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip'];
 handler.register = true;
+handler.owner = true; // Permitir que el owner use el modo gratuito
 
 export default handler;
