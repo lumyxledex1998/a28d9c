@@ -11,15 +11,23 @@ if (!fs.existsSync(path.dirname(statusFile))) {
 
 // Cargar o crear el archivo de estado
 function loadStatus() {
-    if (fs.existsSync(statusFile)) {
-        return JSON.parse(fs.readFileSync(statusFile, 'utf8'));
+    try {
+        if (fs.existsSync(statusFile)) {
+            return JSON.parse(fs.readFileSync(statusFile, 'utf8'));
+        }
+    } catch (e) {
+        console.error('Error cargando commandStatus:', e);
     }
     return {};
 }
 
 // Guardar el estado
 function saveStatus(status) {
-    fs.writeFileSync(statusFile, JSON.stringify(status, null, 2));
+    try {
+        fs.writeFileSync(statusFile, JSON.stringify(status, null, 2));
+    } catch (e) {
+        console.error('Error guardando commandStatus:', e);
+    }
 }
 
 let commandStatus = loadStatus();
@@ -29,8 +37,7 @@ function checkCommandStatus(commandName, m, conn) {
     const status = commandStatus[commandName];
     
     if (status === 'mantenimiento') {
-        conn.sendMessage(m.chat, {
-            text: `╭━━━〔 🔧 MANTENIMIENTO 🔧 〕━━━⬣
+        conn.reply(m.chat, `╭━━━〔 🔧 MANTENIMIENTO 🔧 〕━━━⬣
 │
 │ *Comando:* ${commandName}
 │ *Estado:* En Mantenimiento
@@ -43,14 +50,12 @@ function checkCommandStatus(commandName, m, conn) {
 │
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
-*Itsuki Nakano IA* 🌸`
-        });
-        return false; // Bloquear ejecución
+*Itsuki Nakano IA* 🌸`, m);
+        return false;
     }
     
     if (status === 'beta') {
-        conn.sendMessage(m.chat, {
-            text: `╭━━━〔 🧪 FASE BETA 🧪 〕━━━⬣
+        conn.reply(m.chat, `╭━━━〔 🧪 FASE BETA 🧪 〕━━━⬣
 │
 │ *Comando:* ${commandName}
 │ *Estado:* En Pruebas
@@ -63,12 +68,10 @@ function checkCommandStatus(commandName, m, conn) {
 │
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
-*Itsuki Nakano IA* 🌸`
-        });
-        // Permitir ejecución pero con advertencia
+*Itsuki Nakano IA* 🌸`, m);
     }
     
-    return true; // Permitir ejecución
+    return true;
 }
 
 // Exportar para usar en otros comandos
@@ -76,10 +79,10 @@ global.commandStatus = commandStatus;
 global.checkCommandStatus = checkCommandStatus;
 
 // ========== COMANDO MANT ==========
-let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
-    const ctxErr = (global.rcanalx || {})
-    const ctxWarn = (global.rcanalw || {})
-    const ctxOk = (global.rcanalr || {})
+let handler = async (m, { conn, text, isOwner, usedPrefix }) => {
+    const ctxErr = global.rcanalx || {}
+    const ctxWarn = global.rcanalw || {}
+    const ctxOk = global.rcanalr || {}
     
     if (!isOwner) {
         return conn.reply(m.chat, `╭━━━〔 ⚠️ ACCESO DENEGADO ⚠️ 〕━━━⬣
@@ -91,9 +94,9 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
 *Itsuki Nakano IA* 🌸`, m, ctxErr);
     }
 
+    const args = text.trim().split(/ +/);
     const targetCommand = args[0]?.toLowerCase();
 
-    // Uso: .mant <comando> (pone en mantenimiento directamente)
     if (!targetCommand) {
         return conn.reply(m.chat, `╭━━━〔 🔧 SISTEMA DE MANTENIMIENTO 🔧 〕━━━⬣
 │
@@ -122,8 +125,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
 *Itsuki Nakano IA* 🌸`, m, ctxWarn);
     }
 
-    // Comandos especiales
-    if (targetCommand === 'lista' || targetCommand === 'list') {
+    // Ver lista
+    if (targetCommand === 'lista' || targetCommand === 'list' || targetCommand === 'l') {
         let lista = `╭━━━〔 📋 LISTA DE ESTADOS 📋 〕━━━⬣\n│\n`;
 
         if (Object.keys(commandStatus).length === 0) {
@@ -142,7 +145,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
         return conn.reply(m.chat, lista, m, ctxOk);
     }
 
-    if (targetCommand === 'estado' || targetCommand === 'est') {
+    // Ver estado
+    if (targetCommand === 'estado' || targetCommand === 'est' || targetCommand === 'e') {
         const cmd = args[1]?.toLowerCase();
         
         if (!cmd) {
@@ -191,7 +195,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
     commandStatus[targetCommand] = 'mantenimiento';
     saveStatus(commandStatus);
 
-    await conn.reply(m.chat, `╭━━━〔 ✅ ACTUALIZADO ✅ 〕━━━⬣
+    return conn.reply(m.chat, `╭━━━〔 ✅ ACTUALIZADO ✅ 〕━━━⬣
 │
 │ *Comando:* ${targetCommand}
 │ *Nuevo Estado:* 🔧 MANTENIMIENTO
@@ -212,64 +216,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner }) => {
 
 handler.help = ['mant'];
 handler.tags = ['owner'];
-handler.command = /^(mant|mantenimiento)$/i;
+handler.command = ['mant', 'mantenimiento'];
 handler.owner = true;
 
 module.exports = handler;
-
-// ========== COMANDO DEMANT ==========
-module.exports.demant = {
-    async handler(m, { conn, usedPrefix, args, isOwner }) {
-        const ctxErr = (global.rcanalx || {})
-        const ctxOk = (global.rcanalr || {})
-        const ctxWarn = (global.rcanalw || {})
-        
-        if (!isOwner) {
-            return conn.reply(m.chat, `╭━━━〔 ⚠️ ACCESO DENEGADO ⚠️ 〕━━━⬣
-│
-│ ❌ Este comando es solo para el owner
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxErr);
-        }
-
-        const targetCommand = args[0]?.toLowerCase();
-
-        if (!targetCommand) {
-            return conn.reply(m.chat, `╭━━━〔 ℹ️ USO ℹ️ 〕━━━⬣
-│
-│ *Uso:* ${usedPrefix}demant <comando>
-│
-│ *Ejemplo:*
-│ ${usedPrefix}demant menu
-│ ${usedPrefix}demant play
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxWarn);
-        }
-
-        delete commandStatus[targetCommand];
-        saveStatus(commandStatus);
-
-        await conn.reply(m.chat, `╭━━━〔 ✅ REACTIVADO ✅ 〕━━━⬣
-│
-│ *Comando:* ${targetCommand}
-│ *Nuevo Estado:* ✅ ACTIVO
-│
-│ ━━━━━━━━━━━━━━━━━━━━
-│
-│ ✅ El comando ha sido reactivado
-│ 🔓 Funciona sin restricciones
-│ 💫 Los usuarios pueden usarlo
-│
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-*Itsuki Nakano IA* 🌸`, m, ctxOk);
-    },
-    help: ['demant'],
-    tags: ['owner'],
-    command: /^(demant)$/i,
-    owner: true
-};
