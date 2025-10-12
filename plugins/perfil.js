@@ -19,7 +19,10 @@ let handler = async (m, { conn }) => {
   const regName = (userObj?.registered && userObj?.name) ? userObj.name : ''
   const name = regName || wName || (target === m.sender ? (m.pushName) : '') || `@${number}`
   const age = userObj.age ?? null
-  const coin = userObj.coin ?? userObj.bank ?? 0
+  
+  // OBTENER MONEDAS DE TODOS LOS CAMPOS POSIBLES
+  const coin = userObj.coin ?? userObj.bank ?? userObj.yenes ?? userObj.money ?? userObj.moneda ?? 0
+  
   let sn = userObj.sn
   if (!sn) {
     sn = 'SN-' + Math.random().toString(36).slice(2, 6).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)
@@ -38,7 +41,8 @@ let handler = async (m, { conn }) => {
     `• Registrado: ${userObj.registered ? 'Sí' : 'No'}`,
     `• Nivel: ${userObj.level ?? 0}`,
     `• XP: ${userObj.exp ?? 0}`,
-    `• Banco: ${userObj.bank ?? userObj.coin ?? 0}`
+    `• Yenes: ${coin.toLocaleString()} ¥`,
+    `• Banco: ${userObj.bank ?? coin}`
   ].join('\n')
 
   const tmp = path.join(process.cwd(), 'temp')
