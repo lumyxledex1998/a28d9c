@@ -41,6 +41,9 @@ if (!global.db) global.db = { data: { users: {}, chats: {}, settings: {}, stats:
 if (!global.db.data) global.db.data = { users: {}, chats: {}, settings: {}, stats: {} }
 if (typeof global.loadDatabase !== 'function') global.loadDatabase = async () => {}
 
+// INICIALIZAR SISTEMA DE MANTENIMIENTO
+if (!global.maintenanceCommands) global.maintenanceCommands = []
+
 function pickOwners() {
   const arr = Array.isArray(global.owner) ? global.owner : []
   const flat = []
@@ -258,7 +261,7 @@ export async function handler(chatUpdate) {
             }
         }
     }
-    
+
     if (opts['nyimak']) return
     if (!m.fromMe && opts['self']) return
     if (opts['swonly'] && m.chat !== 'status@broadcast') return
@@ -368,8 +371,8 @@ export async function handler(chatUpdate) {
     let participantUser = m.isGroup ? participantsNormalized.find(p => p.widNum === senderNum || p.wid === senderRaw) : null
     let botParticipant = m.isGroup ? participantsNormalized.find(p => botNums.includes(p.widNum)) : null
     let isAdmin = !!participantUser?.admin
-    let isBotAdmin = !!botParticipant?.admin
     let isRAdmin = participantUser?.admin === 'superadmin' || false
+    let isBotAdmin = !!botParticipant?.admin
     m.isAdmin = isAdmin
     m.isSuperAdmin = isRAdmin
     m.isBotAdmin = isBotAdmin
@@ -439,6 +442,33 @@ export async function handler(chatUpdate) {
             [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]] :
             [[[], new RegExp]]
       ).find(p => p[1])
+      
+      // ===== SISTEMA DE MANTENIMIENTO ITSUNI - INICIO =====
+      if (match && match[0]) {
+          usedPrefix = match[0][0]
+          let noPrefix = m.text.replace(usedPrefix, '')
+          let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
+          command = (command || '').toLowerCase()
+          
+          // Verificar si el comando está en mantenimiento
+          if (global.maintenanceCommands && global.maintenanceCommands.includes(command)) {
+              // Permitir siempre los comandos de mantenimiento
+              const allowedCommands = ['mantenimiento', 'mant', 'maintenance', 'mantenimientos', 'limpiarmantenimiento']
+              if (!allowedCommands.includes(command)) {
+                  return this.reply(m.chat, 
+                      `🍙🚧 *ITSUKI - Comando en Mantenimiento* ⚠️\n\n` +
+                      `❌ El comando *${command}* está temporalmente desactivado\n\n` +
+                      `📚 "Este comando está en mantenimiento o mejoras"\n` +
+                      `🛠️ "Por favor, intenta más tarde"\n\n` +
+                      `🔒 *Estado:* Desactivado hasta nuevo aviso\n\n` +
+                      `🎀 "Gracias por tu comprensión"`,
+                      m
+                  )
+              }
+          }
+      }
+      // ===== SISTEMA DE MANTENIMIENTO ITSUNI - FIN =====
+
       const rolesCtx = await roleFor(m.sender)
       if (typeof plugin.before === 'function') {
         if (await plugin.before.call(this, m, { match, conn: this, participants, groupMetadata, user: participantUser || {}, bot: botParticipant || {}, isROwner: rolesCtx.isROwner, isOwner: rolesCtx.isOwner, isRAdmin, isAdmin, isBotAdmin, isPrems: rolesCtx.isPrems, chatUpdate, __dirname: ___dirname, __filename })) continue
