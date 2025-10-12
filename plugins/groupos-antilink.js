@@ -46,7 +46,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
     // Sistema de estado persistente
     if (!global.antilinkStatus) global.antilinkStatus = {}
-    if (!global.antilinkStatus[m.chat]) global.antilinkStatus[m.chat] = true
+    if (!global.antilinkStatus[m.chat]) global.antilinkStatus[m.chat] = false // Por defecto DESACTIVADO
 
     switch (action) {
       case 'activar':
@@ -69,11 +69,11 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
       case 'disable':
         global.antilinkStatus[m.chat] = false
         await conn.reply(m.chat, 
-          `❌ *Antilink Desactivado*\n\n` +
+          `✅ *Antilink Desactivado*\n\n` +
           `*He desactivado el sistema antilink. Los enlaces ahora están permitidos.*\n\n` +
           `🔗 *Estado:* 🔴 DESACTIVADO\n` +
           `🚫 *Modo:* Permisivo\n` +
-          `✨ *Por favor, mantengan el orden en el grupo*`,
+          `✨ *Los enlaces ahora están permitidos en el grupo*`,
           m, ctxWarn
         )
         break
@@ -100,66 +100,76 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
   }
 
   // ===== DETECCIÓN AUTOMÁTICA DE ENLACES =====
-  if (!m.isGroup) return
-  if (!global.antilinkStatus) global.antilinkStatus = {}
-  if (global.antilinkStatus[m.chat] === false) return
-
-  const messageText = m.text || m.caption || ''
-  let hasLink = false
-  let detectedLink = ''
-
-  for (const pattern of linkPatterns) {
-    const matches = messageText.match(pattern)
-    if (matches && matches.length > 0) {
-      hasLink = true
-      detectedLink = matches[0]
-      break
-    }
-  }
-
-  if (!hasLink) return
-
-  // Excepciones - Los administradores pueden enviar enlaces libremente
-  const sender = m.sender
-  if (isAdmin) {
-    // Los admins pueden enviar enlaces, el bot no hace nada
-    return
-  }
-  if (sender === conn.user.jid) return
-
-  try {
-    const userName = await conn.getName(sender) || 'Usuario'
-
-    // 1. Eliminar el mensaje con enlace (acción silenciosa)
-    if (isBotAdmin && m.key) {
-      await conn.sendMessage(m.chat, { 
-        delete: { 
-          remoteJid: m.chat, 
-          fromMe: false, 
-          id: m.key.id, 
-          participant: sender 
-        } 
-      }).catch(() => {})
+  // SOLO ejecutar si es una detección automática y el antilink está ACTIVADO
+  if (command === 'antilink_detection') {
+    if (!m.isGroup) return
+    
+    // VERIFICACIÓN CRÍTICA: Solo actuar si el antilink está ACTIVADO
+    if (!global.antilinkStatus || global.antilinkStatus[m.chat] !== true) {
+      return // NO hacer nada si está desactivado
     }
 
-    // Log en consola (solo para administradores del bot)
-    console.log(`🔗 ENLACE DETECTADO Y ELIMINADO:
+    const messageText = m.text || m.caption || ''
+    let hasLink = false
+    let detectedLink = ''
+
+    for (const pattern of linkPatterns) {
+      const matches = messageText.match(pattern)
+      if (matches && matches.length > 0) {
+        hasLink = true
+        detectedLink = matches[0]
+        break
+      }
+    }
+
+    if (!hasLink) return
+
+    // Excepciones - Los administradores pueden enviar enlaces libremente
+    const sender = m.sender
+    if (isAdmin) {
+      return // Los admins pueden enviar enlaces
+    }
+    if (sender === conn.user.jid) return
+
+    try {
+      const userName = await conn.getName(sender) || 'Usuario'
+
+      // 1. Eliminar el mensaje con enlace (acción silenciosa)
+      if (isBotAdmin && m.key) {
+        await conn.sendMessage(m.chat, { 
+          delete: { 
+            remoteJid: m.chat, 
+            fromMe: false, 
+            id: m.key.id, 
+            participant: sender 
+          } 
+        }).catch(() => {})
+      }
+
+      // Log en consola
+      console.log(`🔗 ENLACE DETECTADO Y ELIMINADO:
 👤 Usuario: ${sender} (${userName})
 🔗 Enlace: ${detectedLink}
 💬 Grupo: ${m.chat}
 🕒 Hora: ${new Date().toLocaleString()}
 👥 Tipo: Usuario normal
-    `)
+      `)
 
-  } catch (error) {
-    console.error('❌ Error en antilink:', error)
-    // No enviar mensaje de error al grupo para evitar spam
+    } catch (error) {
+      console.error('❌ Error en antilink:', error)
+    }
   }
 }
 
-// Detectar todos los mensajes
+// Detectar todos los mensajes - PERO SOLO SI EL ANTILINK ESTÁ ACTIVADO
 handler.before = async (m, { conn, isAdmin, isBotAdmin, participants }) => {
   if (m.isBaileys || !m.isGroup) return
+  
+  // VERIFICACIÓN IMPORTANTE: Solo procesar si el antilink está ACTIVADO para este grupo
+  if (!global.antilinkStatus || global.antilinkStatus[m.chat] !== true) {
+    return // NO procesar si está desactivado
+  }
+  
   await handler(m, { conn, args: [], usedPrefix: '!', command: 'antilink_detection', isAdmin, isBotAdmin, participants })
 }
 
