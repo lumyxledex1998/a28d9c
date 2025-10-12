@@ -1,4 +1,4 @@
-let handler = async (m, { conn, text, usedPrefix, command, isAdmin }) => {
+let handler = async (m, { conn, text, usedPrefix, command, isAdmin, isBotAdmin }) => {
   const ctxErr = (global.rcanalx || {})
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
@@ -11,7 +11,17 @@ let handler = async (m, { conn, text, usedPrefix, command, isAdmin }) => {
     m, ctxErr)
   }
 
-  if (!isAdmin) {
+  // Verificar si el usuario es administrador
+  let isUserAdmin = false
+  try {
+    const groupMetadata = await conn.groupMetadata(m.chat)
+    const participant = groupMetadata.participants.find(p => p.id === m.sender)
+    isUserAdmin = participant && (participant.admin === 'admin' || participant.admin === 'superadmin')
+  } catch (error) {
+    console.error('Error verificando administrador:', error)
+  }
+
+  if (!isUserAdmin) {
     return conn.reply(m.chat,
       `🎀 *Itsuki-Nakano IA*\n\n` +
       `❌ *Solo administradores*\n\n` +
@@ -33,6 +43,8 @@ let handler = async (m, { conn, text, usedPrefix, command, isAdmin }) => {
 
   let botJid = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
 
+  // Inicializar la base de datos si no existe
+  if (!global.db.data.chats) global.db.data.chats = {}
   if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
 
   if (global.db.data.chats[m.chat].primaryBot === botJid) {
@@ -62,13 +74,14 @@ let handler = async (m, { conn, text, usedPrefix, command, isAdmin }) => {
     text: response, 
     mentions: [botJid] 
   }, { quoted: m, ...ctxOk })
+  
+  // Reacción de éxito
+  await m.react('✅')
 }
 
 handler.help = ['setprimary <número>']
 handler.tags = ['group', 'admin']
 handler.command = ['setprimary', 'setbot', 'botprincipal']
-handler.admin = true
 handler.group = true
-handler.botAdmin = true
 
 export default handler
