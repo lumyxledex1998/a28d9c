@@ -336,6 +336,21 @@ export async function handler(chatUpdate) {
       const real = (typeof this.decodeJid === 'function' ? this.decodeJid(jid) : decodeJidCompat(jid))
       const num = prettyNum(real)
       const n = await nameOnlyIfExists(real)
+
+//sistema botprimario
+if (m.isGroup) {
+    const chat = global.db.data.chats[m.chat];
+    if (chat?.primaryBot) {
+        const universalWords = ['resetbot', 'resetprimario', 'botreset'];
+        const firstWord = m.text ? m.text.trim().split(' ')[0].toLowerCase().replace(/^[./#]/, '') : '';
+
+        if (!universalWords.includes(firstWord)) {
+            if (this?.user?.jid !== chat.primaryBot) {
+                return;
+            }
+        }
+    }
+}
       
       // Si tenemos un nombre y no es solo números, usamos el nombre
       if (n && n.trim() !== '' && !/^\+?[0-9\s\-]+$/.test(n)) {
