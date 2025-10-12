@@ -1,4 +1,4 @@
-const handler = async (m, { conn, text, usedPrefix, command, isOwner }) => {
+const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid }) => {
     const ctxErr = (global.rcanalx || {})
     const ctxWarn = (global.rcanalw || {})
     const ctxOk = (global.rcanalr || {})
@@ -14,9 +14,93 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner }) => {
         'infinito': { duration: 9999, cost: 999999999, emoji: '♾️' }
     };
 
-    // MODO OWNER - Activación gratuita
-    if (isOwner && text) {
-        const selectedPlan = plans[text] || plans['mes']; // Por defecto mes si no existe
+    // OPCIÓN REGALAR (Solo para owner)
+    if ((command === 'regalarpremium' || text?.includes('@')) && isOwner) {
+        const mentioned = m.mentionedJid?.[0] || mentionedJid?.[0];
+        
+        if (!mentioned) {
+            return conn.reply(m.chat,
+`╭━━━〔 🎀 𝐑𝐄𝐆𝐀𝐋𝐀𝐑 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
+│ ❌ *Debes mencionar a un usuario*
+│ 
+│ 📝 *Uso:*
+│ ${usedPrefix}regalarpremium @usuario <plan>
+│ 
+│ 💡 *Ejemplos:*
+│ ${usedPrefix}regalarpremium @usuario mes
+│ ${usedPrefix}premium @usuario año
+│ 
+│ 👑 *Planes disponibles:*
+│ ${Object.keys(plans).map(plan => `• ${plan}`).join('\n│ ')}
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`,
+            m, ctxWarn);
+        }
+
+        const planText = text.replace(/@\d+/g, '').trim() || 'mes';
+        const selectedPlan = plans[planText] || plans['mes'];
+        
+        if (!global.db.data.users[mentioned]) global.db.data.users[mentioned] = {};
+        const targetUser = global.db.data.users[mentioned];
+        
+        targetUser.premium = true;
+        const newPremiumTime = Date.now() + (selectedPlan.duration * 24 * 60 * 60 * 1000);
+        targetUser.premiumTime = newPremiumTime;
+
+        const targetName = await conn.getName(mentioned).catch(() => 'Usuario');
+        const remainingTime = newPremiumTime - Date.now();
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+
+        await conn.reply(m.chat,
+`╭━━━〔 🎀 𝐑𝐄𝐆𝐀𝐋𝐎 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
+│ 🎁 *¡Premium Regalado!*
+│ 
+│ 👤 *Para:* ${targetName}
+│ 💎 *Plan:* ${planText.charAt(0).toUpperCase() + planText.slice(1)}
+│ ⏰ *Duración:* ${selectedPlan.duration} día(s)
+│ 💰 *Costo:* ¥0 (Regalo)
+│ 
+│ ⏳ *Tiempo restante:*
+│ ${days} días
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+🌟 *Beneficios Activados:*
+• Comandos exclusivos ✅
+• Prioridad en respuestas ✅
+• Sin límites de uso ✅
+
+🌸 *¡Un regalo especial de Itsuki!* 🎀
+🎉 *Que lo disfrute* 💫`,
+        m, ctxOk);
+
+        // Notificar al usuario que recibió el regalo
+        try {
+            await conn.reply(mentioned,
+`🎁 *¡HAS RECIBIDO UN REGALO!* 🎀
+
+🌸 *Itsuki-Nakano IA te ha regalado:*
+💎 *Premium ${planText.charAt(0).toUpperCase() + planText.slice(1)}*
+⏰ *Duración:* ${selectedPlan.duration} días
+💰 *Totalmente gratis*
+
+🌟 *Ahora tienes acceso a:*
+• Comandos exclusivos
+• Prioridad en respuestas  
+• Funciones especiales
+• Sin límites de uso
+
+🎀 *¡Disfruta de tus nuevos beneficios!* 💫`,
+            null);
+        } catch (e) {
+            console.log('No se pudo notificar al usuario:', e);
+        }
+
+        await m.react('🎁');
+        return;
+    }
+
+    // MODO OWNER - Activación gratuita para sí mismo
+    if (isOwner && text && !text.includes('@')) {
+        const selectedPlan = plans[text] || plans['mes'];
         
         user.premium = true;
         const newPremiumTime = Date.now() + (selectedPlan.duration * 24 * 60 * 60 * 1000);
@@ -76,6 +160,7 @@ ${Object.entries(plans).map(([plan, data]) =>
 
 👑 *Modo Creador:*
 │ ${usedPrefix + command} <plan> (Gratis)
+│ ${usedPrefix + command} @usuario <plan> (Regalar)
 
 🌸 *Itsuki te ofrece beneficios exclusivos...* (◕‿◕✿)`;
 
@@ -133,10 +218,10 @@ ${Object.entries(plans).map(([plan, data]) =>
     await m.react('💎');
 };
 
-handler.help = ['comprarpremium [plan]'];
+handler.help = ['comprarpremium [plan]', 'regalarpremium @usuario [plan]'];
 handler.tags = ['premium'];
-handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip'];
+handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip', 'regalarpremium'];
 handler.register = true;
-handler.owner = true; // Permitir que el owner use el modo gratuito
+handler.owner = true;
 
 export default handler;
