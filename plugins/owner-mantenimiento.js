@@ -13,38 +13,43 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
   }
 
   const action = args[0]?.toLowerCase()
-  const fileName = args[1]?.toLowerCase()
+  let fileName = args[1]?.toLowerCase()
 
   if (!action || !fileName) {
     return conn.reply(m.chat, 
       `🍙🛠️ *ITSUKI - Sistema de Mantenimiento* ⚙️\n\n` +
       `📝 *Modos disponibles:*\n` +
-      `• ${usedPrefix}${command} on <archivo>\n` +
-      `• ${usedPrefix}${command} off <archivo>\n\n` +
+      `• ${usedPrefix}${command} on <archivo.js>\n` +
+      `• ${usedPrefix}${command} off <archivo.js>\n\n` +
       `💡 *Ejemplos:*\n` +
-      `• ${usedPrefix}${command} on main-menu\n` +
-      `• ${usedPrefix}${command} off anime\n\n` +
+      `• ${usedPrefix}${command} on main-menu.js\n` +
+      `• ${usedPrefix}${command} off anime.js\n\n` +
       `📚 "Activa o desactiva archivos completos del sistema" 🎨`,
       m, ctxWarn
     )
+  }
+
+  // Asegurar que tenga .js
+  if (!fileName.endsWith('.js')) {
+    fileName += '.js'
   }
 
   // Inicializar array si no existe
   if (!global.maintenanceFiles) global.maintenanceFiles = []
 
   try {
-    // Buscar el archivo en los plugins
+    // Buscar el archivo exacto en los plugins
     let foundFile = null
     let availableFiles = []
     
     for (let plugin of Object.values(global.plugins)) {
       if (plugin.filename) {
         const fullPath = plugin.filename
-        const simpleName = fullPath.split('/').pop().replace('.js', '').toLowerCase()
-        availableFiles.push(simpleName)
+        const justFileName = fullPath.split('/').pop().toLowerCase()
+        availableFiles.push(justFileName)
         
-        if (simpleName === fileName.toLowerCase() || fullPath.toLowerCase().includes(fileName.toLowerCase())) {
-          foundFile = simpleName
+        if (justFileName === fileName.toLowerCase()) {
+          foundFile = justFileName
           break
         }
       }
@@ -53,18 +58,29 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
     if (!foundFile) {
       let errorMsg = `🍙❌ *ITSUKI - Archivo No Encontrado* 🔍\n\n`
       errorMsg += `⚠️ El archivo "${fileName}" no existe\n\n`
-      errorMsg += `📋 *Archivos disponibles:*\n`
+      errorMsg += `📋 *Algunos archivos disponibles:*\n`
       
-      // Mostrar primeros 10 archivos disponibles
-      availableFiles.slice(0, 10).forEach((file, index) => {
-        errorMsg += `${index + 1}. ${file}\n`
-      })
+      // Mostrar archivos disponibles que coincidan parcialmente
+      const matchingFiles = availableFiles.filter(file => 
+        file.includes(fileName.replace('.js', ''))
+      ).slice(0, 10)
+      
+      if (matchingFiles.length > 0) {
+        matchingFiles.forEach((file, index) => {
+          errorMsg += `${index + 1}. ${file}\n`
+        })
+      } else {
+        // Mostrar primeros 10 archivos disponibles
+        availableFiles.slice(0, 10).forEach((file, index) => {
+          errorMsg += `${index + 1}. ${file}\n`
+        })
+      }
       
       if (availableFiles.length > 10) {
         errorMsg += `... y ${availableFiles.length - 10} más\n`
       }
       
-      errorMsg += `\n📚 "Usa solo el nombre sin .js" 📝`
+      errorMsg += `\n📚 "Usa el nombre exacto del archivo .js" 📝`
       
       return conn.reply(m.chat, errorMsg, m, ctxErr)
     }
@@ -132,7 +148,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
 
 handler.command = ['mantenimiento', 'maintenance', 'mant']
 handler.tags = ['owner']
-handler.help = ['mantenimiento on/off <archivo>']
+handler.help = ['mantenimiento on/off <archivo.js>']
 handler.owner = true
 handler.group = false
 handler.rowner = true
