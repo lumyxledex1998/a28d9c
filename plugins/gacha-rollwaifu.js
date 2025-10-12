@@ -14,28 +14,12 @@ async function loadCharacters() {
     }
 }
 
-async function saveCharacters(characters) {
-    try {
-        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('🧧 No se pudo guardar el archivo characters.json.')
-    }
-}
-
 async function loadHarem() {
     try {
         const data = await fs.readFile(haremFilePath, 'utf-8')
         return JSON.parse(data)
     } catch (error) {
         return []
-    }
-}
-
-async function saveHarem(harem) {
-    try {
-        await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('🧧 No se pudo guardar el archivo harem.json.')
     }
 }
 
@@ -56,12 +40,13 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
         const minutes = Math.floor(remainingTime / 60)
         const seconds = remainingTime % 60
-        await conn.reply(m.chat, `《🌟》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
-        
-        // Reacción de error por cooldown
+        await conn.reply(m.chat, 
+            `╭━━━〔 🎀 𝐂𝐎𝐎𝐋𝐃𝐎𝐖𝐍 🎀 〕━━━⬣\n│ ⏰ *Tiempo de espera:*\n│ ${minutes} minutos y ${seconds} segundos\n╰━━━━━━━━━━━━━━━━━━━━━━⬣\n\n🌸 *Itsuki te pide paciencia...* (´･ω･\`)`, 
+        m)
+
         await conn.sendMessage(m.chat, {
             react: {
-                text: '❎️',
+                text: '❎',
                 key: m.key
             }
         })
@@ -70,54 +55,58 @@ let handler = async (m, { conn }) => {
 
     try {
         const characters = await loadCharacters()
+        const harem = await loadHarem()
+        
         const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
         const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
 
-        const harem = await loadHarem()
-        const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
-        const statusMessage = randomCharacter.user 
-            ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
-            : 'Libre'
+        // Verificar si el personaje ya está reclamado
+        const userHarem = harem.find(entry => entry.characterId === randomCharacter.id)
+        const statusMessage = userHarem 
+            ? `🔒 Reclamado por @${userHarem.userId.split('@')[0]}` 
+            : '🟢 Disponible para reclamar'
 
-                const message = 
+        const message = 
 `╭━━━〔 🌸 𝐏𝐄𝐑𝐒𝐎𝐍𝐀𝐉𝐄 𝐀𝐋𝐄𝐀𝐓𝐎𝐑𝐈𝐎 🌸 〕━━━⬣
-│ 🎴 Nombre ➪ ${randomCharacter.name}
-│ ⚧️ Género ➪ ${randomCharacter.gender}
-│ 💎 Valor ➪ ${randomCharacter.value}
-│ 🎯 Estado ➪ ${statusMessage}
-│ 📚 Fuente ➪ ${randomCharacter.source}
-│ 🪪 ID ➪ ${randomCharacter.id}
+│ 🎴 *Nombre* ➪ ${randomCharacter.name}
+│ ⚧️ *Género* ➪ ${randomCharacter.gender}
+│ 💎 *Valor* ➪ ${randomCharacter.value}
+│ 🎯 *Estado* ➪ ${statusMessage}
+│ 📚 *Fuente* ➪ ${randomCharacter.source}
+│ 🪪 *ID* ➪ ${randomCharacter.id}
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
-🍜 *¡Personaje encontrado con éxito!* 🎀
-📖 *¡Que tengas mucha suerte con él!* (´｡• ᵕ •｡\`)`
+${!userHarem ? `🍜 *¡Personaje disponible!*\n📖 *Usa .reclamar ${randomCharacter.id} para añadirlo a tu harem* 🎀` : `📚 *Este personaje ya tiene dueño*\n🌸 *Sigue intentando para encontrar uno disponible*`}`
 
-        const mentions = userEntry ? [userEntry.userId] : []
+        const mentions = userHarem ? [userHarem.userId] : []
 
         // Enviar el mensaje con el personaje
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
-
-        // Reacción de éxito al mensaje del usuario
-        await conn.sendMessage(m.chat, {
-            react: {
-                text: '✅️',
-                key: m.key
+        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { 
+            mentions,
+            contextInfo: {
+                mentionedJid: mentions
             }
         })
 
-        if (!randomCharacter.user) {
-            await saveCharacters(characters)
-        }
+        // Reacción de éxito
+        await conn.sendMessage(m.chat, {
+            react: {
+                text: '✅',
+                key: m.key
+            }
+        })
 
         // Cooldown reducido de 15 minutos a 3 minutos (180 segundos)
         cooldowns[userId] = now + 3 * 60 * 1000
 
     } catch (error) {
-        await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
-        // Reacción de error por excepción
+        await conn.reply(m.chat, 
+            `╭━━━〔 🎀 𝐄𝐑𝐑𝐎𝐑 🎀 〕━━━⬣\n│ ❌ *Error:* ${error.message}\n╰━━━━━━━━━━━━━━━━━━━━━━⬣\n\n🌸 *Itsuki lo intentará de nuevo...* (´；ω；\`)`, 
+        m)
+        
         await conn.sendMessage(m.chat, {
             react: {
-                text: '❎️',
+                text: '❎',
                 key: m.key
             }
         })
