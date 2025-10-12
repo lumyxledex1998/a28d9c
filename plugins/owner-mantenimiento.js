@@ -119,11 +119,11 @@ let listHandler = async (m, { conn, usedPrefix, command, isOwner }) => {
   let maintenanceText = `🍙🛠️ *ITSUKI - Comandos en Mantenimiento* 🚧\n\n`
   maintenanceText += `📊 *Total de comandos:* ${global.maintenanceCommands.length}\n\n`
   maintenanceText += `📋 *Lista:*\n`
-  
+
   global.maintenanceCommands.forEach((cmd, index) => {
     maintenanceText += `${index + 1}. ${cmd} 🚧\n`
   })
-  
+
   maintenanceText += `\n📝 *Para quitar mantenimiento:*\n`
   maintenanceText += `${usedPrefix}mantenimiento off <comando>\n\n`
   maintenanceText += `📚 "Estos comandos están desactivados para todos" 🔒`
