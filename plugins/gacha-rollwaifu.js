@@ -79,12 +79,18 @@ let handler = async (m, { conn }) => {
             ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
             : 'Libre'
 
-        const message = `📄 Nombre ➪ *${randomCharacter.name}*
-🌸 Género ➪ *${randomCharacter.gender}*
-💰 Valor ➪ *${randomCharacter.value}*
-📌 Estado ➪ ${statusMessage}
-🧬 Fuente ➪ *${randomCharacter.source}*
-🆔️ ID: *${randomCharacter.id}*`
+                const message = 
+`╭━━━〔 🌸 𝐏𝐄𝐑𝐒𝐎𝐍𝐀𝐉𝐄 𝐀𝐋𝐄𝐀𝐓𝐎𝐑𝐈𝐎 🌸 〕━━━⬣
+│ 🎴 *Nombre* ➪ ${randomCharacter.name}
+│ ⚧️ *Género* ➪ ${randomCharacter.gender}
+│ 💎 *Valor* ➪ ${randomCharacter.value}
+│ 🎯 *Estado* ➪ ${statusMessage}
+│ 📚 *Fuente* ➪ ${randomCharacter.source}
+│ 🪪 *ID* ➪ ${randomCharacter.id}
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+🍜 *¡Personaje encontrado con éxito!* 🎀
+📖 *¡Que tengas mucha suerte con él!* (´｡• ᵕ •｡\`)`
 
         const mentions = userEntry ? [userEntry.userId] : []
 
