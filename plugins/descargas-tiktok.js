@@ -78,10 +78,10 @@ function createCaption(title, author, duration, created_at = '') {
 }
 
 function createSearchCaption(data) {
-  return `❀ Título › ${data.title || 'No disponible'}\n\n` +
-         `☕︎ Autor › ${data.author?.nickname || 'Desconocido'} ${data.author?.unique_id ? `@${data.author.unique_id}` : ''}\n` +
-         `✧︎ Duración › ${data.duration || 'No disponible'}\n` +
-         `𝅘𝅥𝅮 Música › ${data.music?.title || `[${data.author?.nickname || 'No disponible'}] original sound - ${data.author?.unique_id || 'unknown'}`}`
+  return `🪷 Título › ${data.title || 'No disponible'}\n\n` +
+         `👑 Autor › ${data.author?.nickname || 'Desconocido'} ${data.author?.unique_id ? `@${data.author.unique_id}` : ''}\n` +
+         `⏳️ Duración › ${data.duration || 'No disponible'}\n` +
+         `🎶 Música › ${data.music?.title || `[${data.author?.nickname || 'No disponible'}] original sound - ${data.author?.unique_id || 'unknown'}`}`
 }
 
 handler.help = ['tiktok', 'tt']
