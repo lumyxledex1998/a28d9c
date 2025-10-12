@@ -39,6 +39,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 🚫 *Acciones automáticas:*
 ⚠️ Eliminación silenciosa del mensaje con enlace
 👑 *Los administradores pueden enviar enlaces libremente*
+🤖 *Los bots pueden enviar enlaces libremente*
 
 ✨ *"Manteniendo el grupo libre de enlaces no autorizados"*
       `.trim(), m, ctxWarn)
@@ -59,6 +60,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
           `🔗 *Estado:* 🟢 ACTIVADO\n` +
           `🚫 *Modo:* Eliminación silenciosa\n` +
           `👑 *Admins:* Pueden enviar enlaces\n` +
+          `🤖 *Bots:* Pueden enviar enlaces\n` +
           `✨ *El grupo ahora está protegido contra enlaces*`,
           m, ctxOk
         )
@@ -87,6 +89,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
           `🔗 *Sistema:* ${status}\n` +
           `🚫 *Modo:* ${global.antilinkStatus[m.chat] ? 'ELIMINACIÓN SILENCIOSA' : 'PERMISIVO'}\n` +
           `👑 *Admins:* ${global.antilinkStatus[m.chat] ? 'PUEDEN ENVIAR ENLACES' : 'TODOS PUEDEN ENVIAR ENLACES'}\n` +
+          `🤖 *Bots:* PUEDEN ENVIAR ENLACES\n` +
           `💬 *Grupo:* ${await conn.getName(m.chat) || 'Sin nombre'}\n\n` +
           `✨ *Protección ${global.antilinkStatus[m.chat] ? 'activa' : 'desactivada'}*`,
           m, ctxOk
@@ -124,11 +127,19 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, 
 
     if (!hasLink) return
 
-    // Excepciones - Los administradores pueden enviar enlaces libremente
     const sender = m.sender
-    if (isAdmin) {
-      return // Los admins pueden enviar enlaces
+    
+    // EXCEPCIONES - Quienes PUEDEN enviar enlaces:
+    // 1. Administradores del grupo
+    if (isAdmin) return
+    
+    // 2. Bots (cualquier número que termine en @s.whatsapp.net y sea un bot)
+    if (sender.endsWith('@s.whatsapp.net')) {
+      // Verificar si es un bot (puedes agregar más lógica aquí si es necesario)
+      return // Los bots pueden enviar enlaces
     }
+    
+    // 3. Este bot mismo
     if (sender === conn.user.jid) return
 
     try {
