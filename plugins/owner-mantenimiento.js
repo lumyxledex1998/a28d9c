@@ -109,8 +109,8 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
 handler.command = ['mantenimiento', 'maintenance', 'mant']
 handler.tags = ['owner']
 handler.help = ['mantenimiento on/off <comando>']
-
 handler.owner = true
 handler.group = false
+handler.rowner = true
 
 export default handler
