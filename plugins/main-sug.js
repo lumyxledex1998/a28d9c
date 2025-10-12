@@ -74,7 +74,7 @@ ${usedPrefix + command} obtenerid
 
     if (!groupExists) {
       // Si el bot no está en el grupo, enviar al creador
-      const ownerId = "51972945994@s.whatsapp.net" // <- Tu número
+      const ownerId = "18292605400@s.whatsapp.net" // <- Tu número
       
       await conn.reply(ownerId, 
         `💡 *SUGERENCIA (FALLBACK)*\n\n` +
