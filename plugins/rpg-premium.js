@@ -14,10 +14,44 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
         'infinito': { duration: 9999, cost: 999999999, emoji: '♾️' }
     };
 
-    // OPCIÓN REGALAR (Solo para owner)
-    if ((command === 'regalarpremium' || text?.includes('@')) && isOwner) {
-        const mentioned = m.mentionedJid?.[0] || mentionedJid?.[0];
+    // VERIFICAR SI ES OWNER PARA COMANDOS ESPECIALES
+    if (!isOwner) {
+        // Si no es owner y usa regalarpremium, denegar acceso
+        if (command === 'regalarpremium') {
+            return conn.reply(m.chat,
+`╭━━━〔 🎀 𝐀𝐂𝐂𝐄𝐒𝐎 𝐃𝐄𝐍𝐄𝐆𝐀𝐃𝐎 🎀 〕━━━⬣
+│ ❌ *Comando exclusivo*
+│ 
+│ 👑 Este comando solo puede ser usado
+│ por el creador del bot
+│ 
+│ 💡 *Comandos disponibles para ti:*
+│ ${usedPrefix}premium <plan>
+│ ${usedPrefix}vip <plan>
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`,
+            m, ctxErr);
+        }
         
+        // Si no es owner y trata de regalar con premium @usuario
+        if (command === 'premium' && text?.includes('@')) {
+            return conn.reply(m.chat,
+`╭━━━〔 🎀 𝐀𝐂𝐂𝐄𝐒𝐎 𝐃𝐄𝐍𝐄𝐆𝐀𝐃𝐎 🎀 〕━━━⬣
+│ ❌ *Función exclusiva*
+│ 
+│ 👑 Solo el creador puede regalar premium
+│ a otros usuarios
+│ 
+│ 💡 *Puedes comprar premium para ti:*
+│ ${usedPrefix}premium <plan>
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`,
+            m, ctxErr);
+        }
+    }
+
+    // OPCIÓN REGALAR (Solo para owner)
+    if ((command === 'regalarpremium' || (command === 'premium' && text?.includes('@'))) && isOwner) {
+        const mentioned = m.mentionedJid?.[0] || mentionedJid?.[0];
+
         if (!mentioned) {
             return conn.reply(m.chat,
 `╭━━━〔 🎀 𝐑𝐄𝐆𝐀𝐋𝐀𝐑 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
@@ -25,6 +59,7 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
 │ 
 │ 📝 *Uso:*
 │ ${usedPrefix}regalarpremium @usuario <plan>
+│ ${usedPrefix}premium @usuario <plan>
 │ 
 │ 💡 *Ejemplos:*
 │ ${usedPrefix}regalarpremium @usuario mes
@@ -38,15 +73,22 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
 
         const planText = text.replace(/@\d+/g, '').trim() || 'mes';
         const selectedPlan = plans[planText] || plans['mes'];
-        
+
         if (!global.db.data.users[mentioned]) global.db.data.users[mentioned] = {};
         const targetUser = global.db.data.users[mentioned];
-        
+
         targetUser.premium = true;
         const newPremiumTime = Date.now() + (selectedPlan.duration * 24 * 60 * 60 * 1000);
         targetUser.premiumTime = newPremiumTime;
 
-        const targetName = await conn.getName(mentioned).catch(() => 'Usuario');
+        // Obtener nombre del usuario
+        let targetName = 'Usuario';
+        try {
+            targetName = await conn.getName(mentioned) || 'Usuario';
+        } catch (e) {
+            console.log('Error al obtener nombre:', e);
+        }
+
         const remainingTime = newPremiumTime - Date.now();
         const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
 
@@ -74,8 +116,8 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
 
         // Notificar al usuario que recibió el regalo
         try {
-            await conn.reply(mentioned,
-`🎁 *¡HAS RECIBIDO UN REGALO!* 🎀
+            await conn.sendMessage(mentioned, { 
+                text: `🎁 *¡HAS RECIBIDO UN REGALO!* 🎀
 
 🌸 *Itsuki-Nakano IA te ha regalado:*
 💎 *Premium ${planText.charAt(0).toUpperCase() + planText.slice(1)}*
@@ -88,8 +130,8 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
 • Funciones especiales
 • Sin límites de uso
 
-🎀 *¡Disfruta de tus nuevos beneficios!* 💫`,
-            null);
+🎀 *¡Disfruta de tus nuevos beneficios!* 💫`
+            });
         } catch (e) {
             console.log('No se pudo notificar al usuario:', e);
         }
@@ -101,7 +143,7 @@ const handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJ
     // MODO OWNER - Activación gratuita para sí mismo
     if (isOwner && text && !text.includes('@')) {
         const selectedPlan = plans[text] || plans['mes'];
-        
+
         user.premium = true;
         const newPremiumTime = Date.now() + (selectedPlan.duration * 24 * 60 * 60 * 1000);
         user.premiumTime = newPremiumTime;
@@ -159,8 +201,9 @@ ${Object.entries(plans).map(([plan, data]) =>
 │ ${usedPrefix + command} semana
 
 👑 *Modo Creador:*
-│ ${usedPrefix + command} <plan> (Gratis)
-│ ${usedPrefix + command} @usuario <plan> (Regalar)
+│ ${usedPrefix}premium <plan> (Gratis)
+│ ${usedPrefix}premium @usuario <plan> (Regalar)
+│ ${usedPrefix}regalarpremium @usuario <plan>
 
 🌸 *Itsuki te ofrece beneficios exclusivos...* (◕‿◕✿)`;
 
@@ -222,6 +265,5 @@ handler.help = ['comprarpremium [plan]', 'regalarpremium @usuario [plan]'];
 handler.tags = ['premium'];
 handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip', 'regalarpremium'];
 handler.register = true;
-handler.owner = true;
 
 export default handler;
