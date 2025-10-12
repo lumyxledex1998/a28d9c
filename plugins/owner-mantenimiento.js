@@ -1,4 +1,5 @@
-// owner-mantenimiento.js - SISTEMA COMPLETO DE MANTENIMIENTO
+// owner-mantenimiento.js - Para Itsuki Nakano IA Adaptado 
+
 let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
   const ctxErr = global.rcanalx || {}
   const ctxWarn = global.rcanalw || {}
