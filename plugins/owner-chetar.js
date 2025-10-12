@@ -1,39 +1,42 @@
-// cheat-yenes.js - YENES INFINITOS (MEJORADO)
+// cheat-yenes.js - YENES INFINITOS (COMPATIBLE CON TU PERFIL)
 let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) => {
   const ctxErr = global.rcanalx || {}
   const ctxWarn = global.rcanalw || {}
   const ctxOk = global.rcanalr || {}
   
-  // Inicializar sistema de yenes en la base de datos global
+  // Inicializar sistema en la base de datos global (COMPATIBLE CON TU PERFIL)
   if (!global.db.data.users) global.db.data.users = {}
-  if (!global.db.data.users[sender]) global.db.data.users[sender] = {}
   
-  // Función para obtener yenes (compatible con sistema existente)
-  const getYenes = (userId) => {
+  // Función para obtener monedas (COMPATIBLE CON TU CÓDIGO DE PERFIL)
+  const getMonedas = (userId) => {
     if (!global.db.data.users[userId]) global.db.data.users[userId] = {}
-    return global.db.data.users[userId].yenes || 
-           global.db.data.users[userId].money || 
-           global.db.data.users[userId].moneda || 0
+    return global.db.data.users[userId].coin || 
+           global.db.data.users[userId].bank || 
+           global.db.data.users[userId].yenes || 0
   }
   
-  // Función para establecer yenes
-  const setYenes = (userId, amount) => {
+  // Función para establecer monedas (COMPATIBLE CON TU CÓDIGO DE PERFIL)
+  const setMonedas = (userId, amount) => {
     if (!global.db.data.users[userId]) global.db.data.users[userId] = {}
+    // Establecer en TODOS los campos de monedas para compatibilidad
+    global.db.data.users[userId].coin = amount
+    global.db.data.users[userId].bank = amount
     global.db.data.users[userId].yenes = amount
-    global.db.data.users[userId].money = amount // Compatibilidad
-    global.db.data.users[userId].moneda = amount // Compatibilidad
+    global.db.data.users[userId].money = amount
+    global.db.data.users[userId].moneda = amount
     return amount
   }
 
   // Yenes infinitos para mí
   if (command === 'infinito') {
-    setYenes(sender, 999999999)
+    setMonedas(sender, 999999999)
     return conn.reply(m.chat, 
       `🍙∞ *YENES INFINITOS ACTIVADOS* 💴✨\n\n` +
-      `💰 *Yenes asignados:* 999,999,999 ¥\n` +
+      `💰 *Monedas asignadas:* 999,999,999\n` +
       `👤 *Para:* ${m.name || 'Tú'}\n\n` +
-      `💡 Usa ${usedPrefix}perfil para verificar\n\n` +
-      `👑 *¡Ahora eres rico!*`,
+      `💡 *Campos actualizados:*\n` +
+      `• coin ✅\n• bank ✅\n• yenes ✅\n• money ✅\n• moneda ✅\n\n` +
+      `🎯 Ahora usa ${usedPrefix}perfil para verificar`,
       m, ctxOk
     )
   }
@@ -44,11 +47,12 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
     let amount = parseInt(args[1]) || 999999
     
     if (!target) {
-      setYenes(sender, amount)
+      setMonedas(sender, amount)
       return conn.reply(m.chat, 
         `🍙💰 *AUTOCHEAT ACTIVADO* 💴\n\n` +
         `👤 *Para:* ${m.name || 'Tú'}\n` +
-        `💰 *Yenes:* ${amount.toLocaleString()} ¥`,
+        `💰 *Monedas:* ${amount.toLocaleString()}\n\n` +
+        `💡 Usa ${usedPrefix}perfil para verificar`,
         m, ctxOk
       )
     }
@@ -59,19 +63,19 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
       target = target + '@s.whatsapp.net'
     }
 
-    setYenes(target, amount)
+    setMonedas(target, amount)
     const targetName = await conn.getName(target).catch(() => 'Usuario')
     
     return conn.reply(m.chat, 
       `🍙⚡ *CHETEADO EXITOSO* 💴\n\n` +
       `👤 *Usuario:* ${targetName}\n` +
-      `💰 *Yenes asignados:* ${amount.toLocaleString()} ¥\n` +
-      `🎯 *Estado:* ¡Usuario cheteado!`,
+      `💰 *Monedas asignadas:* ${amount.toLocaleString()}\n\n` +
+      `🎯 El usuario puede verlo con ${usedPrefix}perfil`,
       m, ctxOk
     )
   }
 
-  // Ver yenes de cualquier usuario (solo owner)
+  // Ver monedas de cualquier usuario (solo owner)
   if (command === 'beryenes' && isOwner) {
     let target = args[0] || sender
     
@@ -81,15 +85,21 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
       target = target + '@s.whatsapp.net'
     }
 
-    const yenes = getYenes(target)
+    const monedas = getMonedas(target)
     const targetName = await conn.getName(target).catch(() => 'Usuario')
+    const userData = global.db.data.users[target] || {}
     
     return conn.reply(m.chat, 
-      `🍙🔍 *INFORMACIÓN DE YENES* 💴\n\n` +
+      `🍙🔍 *INFORMACIÓN DE MONEDAS* 💴\n\n` +
       `👤 *Usuario:* ${targetName}\n` +
       `📱 *ID:* ${target.split('@')[0]}\n` +
-      `💰 *Yenes:* ${yenes.toLocaleString()} ¥\n` +
-      `💳 *En sistema:* ${global.db.data.users[target] ? 'SÍ' : 'NO'}`,
+      `💰 *Monedas totales:* ${monedas.toLocaleString()}\n\n` +
+      `📊 *Detalles:*\n` +
+      `• coin: ${userData.coin || 0}\n` +
+      `• bank: ${userData.bank || 0}\n` +
+      `• yenes: ${userData.yenes || 0}\n` +
+      `• money: ${userData.money || 0}\n` +
+      `• moneda: ${userData.moneda || 0}`,
       m, ctxOk
     )
   }
@@ -97,7 +107,8 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
   if ((command === 'chetar' || command === 'beryenes') && !isOwner) {
     return conn.reply(m.chat, 
       `🍙❌ *ACCESO DENEGADO* 🔒\n\n` +
-      `⚠️ Solo LeoXzz puede usar este comando`,
+      `⚠️ Solo LeoXzz puede usar este comando\n\n` +
+      `💡 Usa ${usedPrefix}infinito para obtener monedas`,
       m, ctxErr
     )
   }
