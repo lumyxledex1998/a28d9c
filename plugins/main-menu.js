@@ -79,7 +79,7 @@ let taguser = '@' + m.sender.split('@')[0]
 ┃ 💎 *Premium*: *${totalPremium}*
 ┃ 🪷 *Versión*: *${version}*
 ┃ 💻 *Web Oficial*: *${web}*
-┃ 🔰 *Baileys-Sistem*: *npm Baileys-X*
+┃ 🔰 *Baileys-Sistem*: *xzy-Baileys*
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 `
 
