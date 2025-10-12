@@ -1,10 +1,13 @@
-let handler = async (m, { conn, text }) => {
+let handler = async (m, { conn, text, usedPrefix }) => {
   if (!m.isGroup) throw 'Este comando solo puede usarse en grupos.'
 
   if (!text) throw 'Debes escribir el número del bot que deseas establecer como principal.'
 
   let botJid = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
 
+  // Inicializar la base de datos si no existe
+  if (!global.db.data) global.db.data = {}
+  if (!global.db.data.chats) global.db.data.chats = {}
   if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
 
   if (global.db.data.chats[m.chat].primaryBot === botJid) {
@@ -28,7 +31,7 @@ let handler = async (m, { conn, text }) => {
 handler.help = ['setprimary <número>']
 handler.tags = ['owner', 'group']
 handler.command = ['setprimary']
-handler.admin = true
+// handler.admin = true  // REMOVIDO - Esto causa que el comando no responda
 handler.group = true
 
 export default handler
