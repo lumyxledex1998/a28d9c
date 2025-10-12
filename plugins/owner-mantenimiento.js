@@ -13,75 +13,78 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
   }
 
   const action = args[0]?.toLowerCase()
-  const commandName = args[1]?.toLowerCase()
+  const fileName = args[1]?.toLowerCase()
 
-  if (!action || !commandName) {
+  if (!action || !fileName) {
     return conn.reply(m.chat, 
       `🍙🛠️ *ITSUKI - Sistema de Mantenimiento* ⚙️\n\n` +
       `📝 *Modos disponibles:*\n` +
-      `• ${usedPrefix}${command} on <comando>\n` +
-      `• ${usedPrefix}${command} off <comando>\n\n` +
+      `• ${usedPrefix}${command} on <archivo.js>\n` +
+      `• ${usedPrefix}${command} off <archivo.js>\n\n` +
       `💡 *Ejemplos:*\n` +
-      `• ${usedPrefix}${command} on anime\n` +
-      `• ${usedPrefix}${command} off juego\n\n` +
-      `📚 "Activa o desactiva comandos del sistema" 🎨`,
+      `• ${usedPrefix}${command} on main-menu.js\n` +
+      `• ${usedPrefix}${command} off anime.js\n\n` +
+      `📚 "Activa o desactiva archivos completos del sistema" 🎨`,
       m, ctxWarn
     )
   }
 
   // Inicializar array si no existe
-  if (!global.maintenanceCommands) global.maintenanceCommands = []
+  if (!global.maintenanceFiles) global.maintenanceFiles = []
 
-  const commands = Object.values(global.plugins)
-    .filter(v => v.help && v.help.length > 0)
-    .map(v => v.help[0].split(' ')[0].toLowerCase())
-  
-  if (!commands.includes(commandName)) {
+  // Verificar si el archivo existe en los plugins
+  const fileExists = Object.values(global.plugins).some(plugin => {
+    const pluginFile = plugin.filename || ''
+    return pluginFile.toLowerCase().includes(fileName)
+  })
+
+  if (!fileExists) {
     return conn.reply(m.chat, 
-      `🍙❌ *ITSUKI - Comando No Encontrado* 🔍\n\n` +
-      `⚠️ El comando "${commandName}" no existe\n\n` +
-      `📚 "Verifica el nombre del comando" 📝`,
+      `🍙❌ *ITSUKI - Archivo No Encontrado* 🔍\n\n` +
+      `⚠️ El archivo "${fileName}" no existe\n\n` +
+      `📚 "Verifica el nombre del archivo .js" 📝`,
       m, ctxErr
     )
   }
 
   try {
     if (action === 'on') {
-      if (global.maintenanceCommands.includes(commandName)) {
+      if (global.maintenanceFiles.includes(fileName)) {
         return conn.reply(m.chat, 
           `🍙⚠️ *ITSUKI - Ya en Mantenimiento* 🚧\n\n` +
-          `ℹ️ El comando "${commandName}" ya está en mantenimiento\n\n` +
+          `ℹ️ El archivo "${fileName}" ya está en mantenimiento\n\n` +
           `📚 "No es necesario activarlo nuevamente" 🛠️`,
           m, ctxWarn
         )
       }
-      global.maintenanceCommands.push(commandName)
-      
+      global.maintenanceFiles.push(fileName)
+
       await conn.reply(m.chat, 
         `🍙✅ *ITSUKI - Mantenimiento Activado* ⚙️✨\n\n` +
-        `🎉 Comando "${commandName}" puesto en mantenimiento\n\n` +
-        `📚 "El comando ha sido desactivado temporalmente"\n` +
-        `🛠️ "Los usuarios no podrán usarlo hasta nuevo aviso"\n\n` +
-        `✅ *Estado:* 🚧 En mantenimiento`,
+        `🎉 Archivo "${fileName}" puesto en mantenimiento\n\n` +
+        `📚 "Todos los comandos de este archivo han sido desactivados"\n` +
+        `🛠️ "Nadie podrá usar sus comandos hasta que sea reactivado"\n` +
+        `🔒 "Incluyendo al propietario"\n\n` +
+        `✅ *Estado:* 🚧 En mantenimiento total`,
         m, ctxOk
       )
-      
+
     } else if (action === 'off') {
-      if (!global.maintenanceCommands.includes(commandName)) {
+      if (!global.maintenanceFiles.includes(fileName)) {
         return conn.reply(m.chat, 
           `🍙⚠️ *ITSUKI - No en Mantenimiento* ✅\n\n` +
-          `ℹ️ El comando "${commandName}" no está en mantenimiento\n\n` +
-          `📚 "Este comando ya está activo" 🛠️`,
+          `ℹ️ El archivo "${fileName}" no está en mantenimiento\n\n` +
+          `📚 "Este archivo ya está activo" 🛠️`,
           m, ctxWarn
         )
       }
-      global.maintenanceCommands = global.maintenanceCommands.filter(cmd => cmd !== commandName)
-      
+      global.maintenanceFiles = global.maintenanceFiles.filter(file => file !== fileName)
+
       await conn.reply(m.chat, 
         `🍙✅ *ITSUKI - Mantenimiento Desactivado* ⚙️✨\n\n` +
-        `🎉 Comando "${commandName}" activado nuevamente\n\n` +
-        `📚 "El comando ha sido reactivado exitosamente"\n` +
-        `🛠️ "Los usuarios ya pueden usarlo normalmente"\n\n` +
+        `🎉 Archivo "${fileName}" activado nuevamente\n\n` +
+        `📚 "Todos los comandos han sido reactivados exitosamente"\n` +
+        `🛠️ "Los usuarios ya pueden usar sus comandos normalmente"\n\n` +
         `✅ *Estado:* 🟢 Activo y funcionando`,
         m, ctxOk
       )
@@ -108,7 +111,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
 
 handler.command = ['mantenimiento', 'maintenance', 'mant']
 handler.tags = ['owner']
-handler.help = ['mantenimiento on/off <comando>']
+handler.help = ['mantenimiento on/off <archivo.js>']
 handler.owner = true
 handler.group = false
 handler.rowner = true
