@@ -56,7 +56,7 @@ let handler = async (m, { conn }) => {
     try {
         const characters = await loadCharacters()
         const harem = await loadHarem()
-        
+
         const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
         const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
 
@@ -71,12 +71,12 @@ let handler = async (m, { conn }) => {
 │ 🎴 Nombre ➪ *${randomCharacter.name}*
 │ ⚧️ Género ➪ *${randomCharacter.gender}*
 │ 💎 Valor ➪ *${randomCharacter.value}*
-│ 🎯 Estado ➪ *${statusMessage}*
+│ 🎯 Estado ➪ ${statusMessage}
 │ 📚 Fuente ➪ *${randomCharacter.source}*
 │ 🪪 ID: *${randomCharacter.id}*
-╰━━━━━━━━━━━━━━━━━━━━━━⬣`
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
-${!userHarem ? `🍜 *¡Personaje disponible!*\n📖 *Usa .reclamar ${randomCharacter.id} para añadirlo a tu harem* 🎀` : `📚 *Este personaje ya tiene dueño*\n🌸 *Sigue intentando para encontrar uno disponible*`}`
+${!userHarem ? `🍜 *¡Personaje disponible!*\n📖 *Responde con .c para reclamarlo* 🎀` : `📚 *Este personaje ya tiene dueño*\n🌸 *Sigue intentando para encontrar uno disponible*`}`
 
         const mentions = userHarem ? [userHarem.userId] : []
 
@@ -103,7 +103,7 @@ ${!userHarem ? `🍜 *¡Personaje disponible!*\n📖 *Usa .reclamar ${randomChar
         await conn.reply(m.chat, 
             `╭━━━〔 🎀 𝐄𝐑𝐑𝐎𝐑 🎀 〕━━━⬣\n│ ❌ *Error:* ${error.message}\n╰━━━━━━━━━━━━━━━━━━━━━━⬣\n\n🌸 *Itsuki lo intentará de nuevo...* (´；ω；\`)`, 
         m)
-        
+
         await conn.sendMessage(m.chat, {
             react: {
                 text: '❎',
