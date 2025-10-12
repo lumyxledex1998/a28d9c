@@ -19,11 +19,11 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
     return conn.reply(m.chat, 
       `🍙🛠️ *ITSUKI - Sistema de Mantenimiento* ⚙️\n\n` +
       `📝 *Modos disponibles:*\n` +
-      `• ${usedPrefix}${command} on <archivo.js>\n` +
-      `• ${usedPrefix}${command} off <archivo.js>\n\n` +
+      `• ${usedPrefix}${command} on <archivo>\n` +
+      `• ${usedPrefix}${command} off <archivo>\n\n` +
       `💡 *Ejemplos:*\n` +
-      `• ${usedPrefix}${command} on main-menu.js\n` +
-      `• ${usedPrefix}${command} off anime.js\n\n` +
+      `• ${usedPrefix}${command} on main-menu\n` +
+      `• ${usedPrefix}${command} off anime\n\n` +
       `📚 "Activa o desactiva archivos completos del sistema" 🎨`,
       m, ctxWarn
     )
@@ -32,36 +32,57 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
   // Inicializar array si no existe
   if (!global.maintenanceFiles) global.maintenanceFiles = []
 
-  // Verificar si el archivo existe en los plugins
-  const fileExists = Object.values(global.plugins).some(plugin => {
-    const pluginFile = plugin.filename || ''
-    return pluginFile.toLowerCase().includes(fileName)
-  })
-
-  if (!fileExists) {
-    return conn.reply(m.chat, 
-      `🍙❌ *ITSUKI - Archivo No Encontrado* 🔍\n\n` +
-      `⚠️ El archivo "${fileName}" no existe\n\n` +
-      `📚 "Verifica el nombre del archivo .js" 📝`,
-      m, ctxErr
-    )
-  }
-
   try {
+    // Buscar el archivo en los plugins
+    let foundFile = null
+    let availableFiles = []
+    
+    for (let plugin of Object.values(global.plugins)) {
+      if (plugin.filename) {
+        const fullPath = plugin.filename
+        const simpleName = fullPath.split('/').pop().replace('.js', '').toLowerCase()
+        availableFiles.push(simpleName)
+        
+        if (simpleName === fileName.toLowerCase() || fullPath.toLowerCase().includes(fileName.toLowerCase())) {
+          foundFile = simpleName
+          break
+        }
+      }
+    }
+
+    if (!foundFile) {
+      let errorMsg = `🍙❌ *ITSUKI - Archivo No Encontrado* 🔍\n\n`
+      errorMsg += `⚠️ El archivo "${fileName}" no existe\n\n`
+      errorMsg += `📋 *Archivos disponibles:*\n`
+      
+      // Mostrar primeros 10 archivos disponibles
+      availableFiles.slice(0, 10).forEach((file, index) => {
+        errorMsg += `${index + 1}. ${file}\n`
+      })
+      
+      if (availableFiles.length > 10) {
+        errorMsg += `... y ${availableFiles.length - 10} más\n`
+      }
+      
+      errorMsg += `\n📚 "Usa solo el nombre sin .js" 📝`
+      
+      return conn.reply(m.chat, errorMsg, m, ctxErr)
+    }
+
     if (action === 'on') {
-      if (global.maintenanceFiles.includes(fileName)) {
+      if (global.maintenanceFiles.includes(foundFile)) {
         return conn.reply(m.chat, 
           `🍙⚠️ *ITSUKI - Ya en Mantenimiento* 🚧\n\n` +
-          `ℹ️ El archivo "${fileName}" ya está en mantenimiento\n\n` +
+          `ℹ️ El archivo "${foundFile}" ya está en mantenimiento\n\n` +
           `📚 "No es necesario activarlo nuevamente" 🛠️`,
           m, ctxWarn
         )
       }
-      global.maintenanceFiles.push(fileName)
+      global.maintenanceFiles.push(foundFile)
 
       await conn.reply(m.chat, 
         `🍙✅ *ITSUKI - Mantenimiento Activado* ⚙️✨\n\n` +
-        `🎉 Archivo "${fileName}" puesto en mantenimiento\n\n` +
+        `🎉 Archivo "${foundFile}" puesto en mantenimiento\n\n` +
         `📚 "Todos los comandos de este archivo han sido desactivados"\n` +
         `🛠️ "Nadie podrá usar sus comandos hasta que sea reactivado"\n` +
         `🔒 "Incluyendo al propietario"\n\n` +
@@ -70,19 +91,19 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
       )
 
     } else if (action === 'off') {
-      if (!global.maintenanceFiles.includes(fileName)) {
+      if (!global.maintenanceFiles.includes(foundFile)) {
         return conn.reply(m.chat, 
           `🍙⚠️ *ITSUKI - No en Mantenimiento* ✅\n\n` +
-          `ℹ️ El archivo "${fileName}" no está en mantenimiento\n\n` +
+          `ℹ️ El archivo "${foundFile}" no está en mantenimiento\n\n` +
           `📚 "Este archivo ya está activo" 🛠️`,
           m, ctxWarn
         )
       }
-      global.maintenanceFiles = global.maintenanceFiles.filter(file => file !== fileName)
+      global.maintenanceFiles = global.maintenanceFiles.filter(file => file !== foundFile)
 
       await conn.reply(m.chat, 
         `🍙✅ *ITSUKI - Mantenimiento Desactivado* ⚙️✨\n\n` +
-        `🎉 Archivo "${fileName}" activado nuevamente\n\n` +
+        `🎉 Archivo "${foundFile}" activado nuevamente\n\n` +
         `📚 "Todos los comandos han sido reactivados exitosamente"\n` +
         `🛠️ "Los usuarios ya pueden usar sus comandos normalmente"\n\n` +
         `✅ *Estado:* 🟢 Activo y funcionando`,
@@ -111,7 +132,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, args }) => {
 
 handler.command = ['mantenimiento', 'maintenance', 'mant']
 handler.tags = ['owner']
-handler.help = ['mantenimiento on/off <archivo.js>']
+handler.help = ['mantenimiento on/off <archivo>']
 handler.owner = true
 handler.group = false
 handler.rowner = true
