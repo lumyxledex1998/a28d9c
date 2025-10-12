@@ -1,15 +1,24 @@
-// cheat-yenes.js - CÓDIGO PEQUEÑO PARA YENES INFINITOS
+// cheat-yenes.js - YENES INFINITOS (ACTUALIZADO)
 let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) => {
   const ctxErr = global.rcanalx || {}
   const ctxWarn = global.rcanalw || {}
   const ctxOk = global.rcanalr || {}
   
-  // Inicializar sistema de yenes
-  if (!global.yenesData) global.yenesData = {}
+  // Inicializar sistema de yenes SIEMPRE
+  if (!global.yenesData) global.yenesData = { users: {} }
   if (!global.yenesData.users) global.yenesData.users = {}
   
-  const getYenes = (userId) => global.yenesData.users[userId] || 0
-  const setYenes = (userId, amount) => global.yenesData.users[userId] = amount < 0 ? 0 : amount
+  const getYenes = (userId) => {
+    if (!global.yenesData.users[userId]) {
+      global.yenesData.users[userId] = 0
+    }
+    return global.yenesData.users[userId]
+  }
+  
+  const setYenes = (userId, amount) => {
+    global.yenesData.users[userId] = amount < 0 ? 0 : amount
+    return global.yenesData.users[userId]
+  }
 
   // Yenes infinitos para mí
   if (command === 'infinito') {
@@ -17,6 +26,8 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
     return conn.reply(m.chat, 
       `🍙∞ *YENES INFINITOS ACTIVADOS* 💴✨\n\n` +
       `💰 *Ahora tienes:* 999,999,999 ¥\n` +
+      `👤 *Usuario:* ${m.name || 'Tú'}\n\n` +
+      `💡 Usa ${usedPrefix}perfil para ver tus yenes\n\n` +
       `👑 *Poder de creador activado*`,
       m, ctxOk
     )
@@ -28,17 +39,16 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
     let amount = parseInt(args[1]) || 999999
     
     if (!target) {
-      // Si no hay target, chetearse a sí mismo
       setYenes(sender, amount)
       return conn.reply(m.chat, 
         `🍙💰 *AUTOCHEAT ACTIVADO* 💴\n\n` +
         `👤 *Para:* ${m.name || 'Tú'}\n` +
-        `💰 *Yenes:* ${amount.toLocaleString()} ¥`,
+        `💰 *Yenes:* ${amount.toLocaleString()} ¥\n\n` +
+        `💡 Usa ${usedPrefix}perfil para verificar`,
         m, ctxOk
       )
     }
 
-    // Procesar mención
     if (target.startsWith('@')) {
       target = target.replace('@', '') + '@s.whatsapp.net'
     } else if (!target.includes('@')) {
@@ -51,8 +61,8 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
     return conn.reply(m.chat, 
       `🍙⚡ *CHETEADO EXITOSO* 💴\n\n` +
       `👤 *Usuario:* ${targetName}\n` +
-      `💰 *Yenes asignados:* ${amount.toLocaleString()} ¥\n` +
-      `🎯 *Estado:* Cheteado con éxito`,
+      `💰 *Yenes asignados:* ${amount.toLocaleString()} ¥\n\n` +
+      `💡 El usuario puede verlo con ${usedPrefix}perfil`,
       m, ctxOk
     )
   }
@@ -73,6 +83,7 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
     return conn.reply(m.chat, 
       `🍙🔍 *YENES DE USUARIO* 💴\n\n` +
       `👤 *Usuario:* ${targetName}\n` +
+      `📱 *ID:* ${target.split('@')[0]}\n` +
       `💰 *Yenes:* ${yenes.toLocaleString()} ¥`,
       m, ctxOk
     )
@@ -82,16 +93,16 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, args, sender }) =>
   if ((command === 'chetar' || command === 'beryenes') && !isOwner) {
     return conn.reply(m.chat, 
       `🍙❌ *ACCESO DENEGADO* 🔒\n\n` +
-      `⚠️ Este comando es exclusivo para el propietario\n\n` +
-      `📚 "Lo siento, solo LeoXzz puede usar este comando" 🎀`,
+      `⚠️ Comando exclusivo para el propietario\n\n` +
+      `💡 Usa ${usedPrefix}infinito para obtener yenes`,
       m, ctxErr
     )
   }
 }
 
 handler.command = ['infinito', 'chetar', 'beryenes']
-handler.tags = ['owner']
-handler.help = ['Yenes Infinito']
+handler.tags = ['Yenes Infinito']
+handler.help = ['infinito', 'chetar @usuario cantidad', 'beryenes @usuario']
 handler.owner = true
 
 export default handler
