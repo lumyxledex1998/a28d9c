@@ -68,12 +68,12 @@ let handler = async (m, { conn }) => {
 
         const message = 
 `╭━━━〔 🌸 𝐏𝐄𝐑𝐒𝐎𝐍𝐀𝐉𝐄 𝐀𝐋𝐄𝐀𝐓𝐎𝐑𝐈𝐎 🌸 〕━━━⬣
-│ 🎴 *Nombre* ➪ *${randomCharacter.name}*
-│ ⚧️ *Género* ➪ *${randomCharacter.gender}*
-│ 💎 *Valor* ➪ *${randomCharacter.value}*
-│ 🎯 *Estado* ➪ *${statusMessage}*
-│ 📚 *Fuente* ➪ *${randomCharacter.source}*
-│ 🪪 *ID:* *${randomCharacter.id}*
+│ 🎴 Nombre ➪ *${randomCharacter.name}*
+│ ⚧️ Género ➪ *${randomCharacter.gender}*
+│ 💎 Valor ➪ *${randomCharacter.value}*
+│ 🎯 Estado ➪ *${statusMessage}*
+│ 📚 Fuente ➪ *${randomCharacter.source}*
+│ 🪪 ID: *${randomCharacter.id}*
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣`
 
 ${!userHarem ? `🍜 *¡Personaje disponible!*\n📖 *Usa .reclamar ${randomCharacter.id} para añadirlo a tu harem* 🎀` : `📚 *Este personaje ya tiene dueño*\n🌸 *Sigue intentando para encontrar uno disponible*`}`
