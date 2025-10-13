@@ -25,6 +25,9 @@ global.prefixes = Array.isArray(config.prefix) ? [...config.prefix] : []
 global.owner = Array.isArray(config.owner) ? config.owner : []
 global.opts = global.opts && typeof global.opts === 'object' ? global.opts : {}
 
+if (!existsSync("./tmp")) {
+  mkdirSync("./tmp");
+}
 
 const CONFIG_PATH = path.join(__dirname, 'config.js')
 watchFile(CONFIG_PATH, async () => {
