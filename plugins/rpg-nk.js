@@ -10,21 +10,50 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
             users: {},
             batallas: {},
             misiones: {},
+            recompensas: {},
+            razas: {
+                'Humano': { 
+                    vida: 10, ataque: 8, defensa: 7, energia: 6,
+                    habilidad: 'Adaptabilidad - +10% EXP en todas las actividades'
+                },
+                'Elfo': { 
+                    vida: 7, ataque: 9, defensa: 6, energia: 9,
+                    habilidad: 'Precisión Élfica - +15% de daño crítico'
+                },
+                'Mago': { 
+                    vida: 6, ataque: 12, defensa: 5, energia: 10,
+                    habilidad: 'Poder Arcano - +20% de daño mágico'
+                },
+                'Brujo': { 
+                    vida: 8, ataque: 10, defensa: 8, energia: 8,
+                    habilidad: 'Alquimia Oscura - +15% de vida al usar pociones'
+                },
+                'Demonio': { 
+                    vida: 12, ataque: 11, defensa: 9, energia: 7,
+                    habilidad: 'Furia Infernal - +25% de daño cuando vida < 30%'
+                }
+            },
             objetos: {
                 armas: {
-                    'Espada Básica': { ataque: 15, precio: 100 },
-                    'Bastón Mágico': { ataque: 25, precio: 300 },
-                    'Arco de Itsuki': { ataque: 35, precio: 500 }
+                    'Espada Básica': { ataque: 15, precio: 100, tipo: 'fisica' },
+                    'Bastón Mágico': { ataque: 25, precio: 300, tipo: 'magica' },
+                    'Arco de Itsuki': { ataque: 35, precio: 500, tipo: 'fisica' },
+                    'Grimorio Oscuro': { ataque: 40, precio: 700, tipo: 'magica' },
+                    'Guadaña Demoníaca': { ataque: 45, precio: 900, tipo: 'demoníaca' }
                 },
                 armaduras: {
                     'Túnica Básica': { defensa: 10, precio: 80 },
                     'Armadura de Acero': { defensa: 20, precio: 250 },
-                    'Manto de Itsuki': { defensa: 30, precio: 400 }
+                    'Manto de Itsuki': { defensa: 30, precio: 400 },
+                    'Túnica Élfica': { defensa: 25, precio: 350 },
+                    'Armadura Demoníaca': { defensa: 35, precio: 600 }
                 },
                 consumibles: {
                     'Poción de Vida': { vida: 50, precio: 50 },
                     'Poción de Energía': { energia: 30, precio: 40 },
-                    'Onigiri Mágico': { vida: 100, energia: 50, precio: 100 }
+                    'Onigiri Mágico': { vida: 100, energia: 50, precio: 100 },
+                    'Elixir de Fuerza': { ataque: 10, duracion: 3, precio: 150 },
+                    'Poción de Defensa': { defensa: 8, duracion: 3, precio: 120 }
                 }
             }
         }
@@ -38,6 +67,11 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
             exp: 0,
             expNecesaria: 100,
             puntos: 0,
+
+            // RAZA Y CLASE
+            raza: 'Humano',
+            clase: 'Novato',
+            titulo: 'Estudiante Primerizo',
 
             // STATS BASE
             stats: {
@@ -62,17 +96,17 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
                 'Poción de Energía': 2
             },
 
-            // CLASE Y TÍTULO
-            clase: 'Novato',
-            titulo: 'Estudiante Primerizo',
-
             // BATALLAS
             victorias: 0,
             derrotas: 0,
             misionesCompletadas: 0,
 
             // ECONOMÍA
-            coin: 1000
+            coin: 1000,
+
+            // RECOMPENSAS
+            recompensasRecibidas: [],
+            ultimaRecompensa: 0
         }
     }
 
@@ -116,6 +150,16 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         return entrenar()
     }
 
+    // 👤 RAZAS
+    if (subCommand === 'razas' || subCommand === 'races') {
+        return mostrarRazas()
+    }
+
+    // 🎁 RECOMPENSA
+    if (subCommand === 'recompensa' || subCommand === 'reward') {
+        return reclamarRecompensa()
+    }
+
     // FUNCIONES PRINCIPALES
     async function mostrarMenuPrincipal() {
         const progreso = Math.min((user.exp / user.expNecesaria) * 100, 100)
@@ -124,7 +168,8 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         const menu = 
 `╭━━━〔 👑 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 𝐍𝐊-𝐈𝐀 𝐑𝐏𝐆 🔥 〕━━━⬣
 │ 👤 *Aventurero:* ${userName}
-│ ⭐ *Nivel:* ${user.nivel} | ${user.clase}
+│ 🧬 *Raza:* ${user.raza} | ${user.clase}
+│ ⭐ *Nivel:* ${user.nivel} 
 │ 📊 *EXP:* [${barra}] ${progreso.toFixed(1)}%
 │ 🏷️ *Título:* ${user.titulo}
 │ 
@@ -155,6 +200,12 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 📜 *Misiones:*
 • ${usedPrefix}nkrpg misiones
 
+🧬 *Razas:*
+• ${usedPrefix}nkrpg razas
+
+🎁 *Recompensa:*
+• ${usedPrefix}nkrpg recompensa
+
 🎯 *Entrenar:*
 • ${usedPrefix}nkrpg entrenar
 
@@ -166,14 +217,18 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
     async function mostrarPerfil() {
         const armamento = user.equipo.arma ? `🗡️ ${user.equipo.arma}` : 'Sin arma'
         const proteccion = user.equipo.armadura ? `🛡️ ${user.equipo.armadura}` : 'Sin armadura'
+        const razaInfo = global.nkRPG.razas[user.raza]
 
         const perfil = 
 `╭━━━〔 📋 𝐏𝐄𝐑𝐅𝐈𝐋 𝐍𝐊-𝐈𝐀 ⚔️ 〕━━━⬣
 │ 👤 *Aventurero:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
 │ ⭐ *Nivel:* ${user.nivel}
 │ 📊 *EXP:* ${user.exp}/${user.expNecesaria}
 │ 🎯 *Clase:* ${user.clase}
 │ 🏷️ *Título:* ${user.titulo}
+│ 
+│ 💫 *HABILIDAD:* ${razaInfo.habilidad}
 │ 
 │ ⚔️ *EQUIPAMIENTO:*
 │ ${armamento}
@@ -196,6 +251,142 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 *Para mejorar tus stats*`
 
         return conn.reply(m.chat, perfil, m, ctxOk)
+    }
+
+    async function mostrarRazas() {
+        const razas = 
+`╭━━━〔 🧬 𝐒𝐄𝐋𝐄𝐂𝐂𝐈𝐎𝐍 𝐃𝐄 𝐑𝐀𝐙𝐀𝐒 💫 〕━━━⬣
+│ 👤 *Jugador:* ${userName}
+│ 
+│ 🧬 *RAZAS DISPONIBLES:*
+│ 
+│ 👨 *HUMANO:*
+│ ❤️ Vida: +10 | 🗡️ Ataque: +8
+│ 🛡️ Defensa: +7 | ⚡ Energía: +6
+│ 💫 *Habilidad:* Adaptabilidad
+│ 📈 +10% EXP en todas las actividades
+│ 
+│ 🧝 *ELFO:*
+│ ❤️ Vida: +7 | 🗡️ Ataque: +9
+│ 🛡️ Defensa: +6 | ⚡ Energía: +9
+│ 💫 *Habilidad:* Precisión Élfica
+│ 🎯 +15% de daño crítico
+│ 
+│ 🔮 *MAGO:*
+│ ❤️ Vida: +6 | 🗡️ Ataque: +12
+│ 🛡️ Defensa: +5 | ⚡ Energía: +10
+│ 💫 *Habilidad:* Poder Arcano
+│ ✨ +20% de daño mágico
+│ 
+│ 🧙 *BRUJO:*
+│ ❤️ Vida: +8 | 🗡️ Ataque: +10
+│ 🛡️ Defensa: +8 | ⚡ Energía: +8
+│ 💫 *Habilidad:* Alquimia Oscura
+│ 🧪 +15% de vida al usar pociones
+│ 
+│ 😈 *DEMONIO:*
+│ ❤️ Vida: +12 | 🗡️ Ataque: +11
+│ 🛡️ Defensa: +9 | ⚡ Energía: +7
+│ 💫 *Habilidad:* Furia Infernal
+│ 🔥 +25% de daño cuando vida < 30%
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+📝 *Usa:* ${usedPrefix}elegirraza <nombre>
+*Para elegir tu raza*`
+
+        return conn.reply(m.chat, razas, m, ctxOk)
+    }
+
+    async function reclamarRecompensa() {
+        const ahora = Date.now()
+        const ultimaRecompensa = user.ultimaRecompensa || 0
+        const tiempoEspera = 24 * 60 * 60 * 1000 // 24 horas
+
+        if (ahora - ultimaRecompensa < tiempoEspera) {
+            const tiempoRestante = tiempoEspera - (ahora - ultimaRecompensa)
+            const horasRestantes = Math.floor(tiempoRestante / (60 * 60 * 1000))
+            const minutosRestantes = Math.floor((tiempoRestante % (60 * 60 * 1000)) / (60 * 1000))
+
+            return conn.reply(m.chat,
+`╭━━━〔 🎁 𝐑𝐄𝐂𝐎𝐌𝐏𝐄𝐍𝐒𝐀 𝐃𝐈𝐀𝐑𝐈𝐀 🎁 〕━━━⬣
+│ ❌ *Ya reclamaste tu recompensa hoy*
+│ 
+│ ⏰ *Tiempo restante:*
+│ ${horasRestantes} horas ${minutosRestantes} minutos
+│ 
+│ 💡 *Vuelve mañana para recibir:*
+│ • Monedas aleatorias
+│ • EXP extra
+│ • Objetos especiales
+│ • Pociones de energía
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`, m, ctxWarn)
+        }
+
+        // Generar recompensa aleatoria
+        const recompensas = [
+            { tipo: 'coin', cantidad: Math.floor(Math.random() * 200) + 100, nombre: 'Yenes' },
+            { tipo: 'exp', cantidad: Math.floor(Math.random() * 50) + 30, nombre: 'EXP' },
+            { tipo: 'objeto', cantidad: 1, nombre: 'Poción de Vida' },
+            { tipo: 'objeto', cantidad: 1, nombre: 'Poción de Energía' },
+            { tipo: 'coin', cantidad: Math.floor(Math.random() * 300) + 150, nombre: 'Yenes' }
+        ]
+
+        const recompensa = recompensas[Math.floor(Math.random() * recompensas.length)]
+        
+        // Aplicar recompensa
+        let mensajeRecompensa = ''
+        switch (recompensa.tipo) {
+            case 'coin':
+                user.coin += recompensa.cantidad
+                mensajeRecompensa = `💰 *${recompensa.cantidad} ${recompensa.nombre}*`
+                break
+            case 'exp':
+                user.exp += recompensa.cantidad
+                mensajeRecompensa = `⭐ *${recompensa.cantidad} ${recompensa.nombre}*`
+                break
+            case 'objeto':
+                if (!user.inventario[recompensa.nombre]) {
+                    user.inventario[recompensa.nombre] = 0
+                }
+                user.inventario[recompensa.nombre] += recompensa.cantidad
+                mensajeRecompensa = `🎁 *${recompensa.nombre} x${recompensa.cantidad}*`
+                break
+        }
+
+        // Bonus por raza
+        let bonus = ''
+        if (user.raza === 'Humano') {
+            const bonusExp = Math.floor(recompensa.cantidad * 0.1)
+            user.exp += bonusExp
+            bonus = `\n│ 🧬 *Bonus Humano:* +${bonusExp} EXP`
+        }
+
+        user.ultimaRecompensa = ahora
+        user.recompensasRecibidas.push({
+            tipo: recompensa.tipo,
+            cantidad: recompensa.cantidad,
+            fecha: ahora
+        })
+
+        await verificarNivel(user)
+
+        const recompensaMsg = 
+`╭━━━〔 🎁 𝐑𝐄𝐂𝐎𝐌𝐏𝐄𝐍𝐒𝐀 𝐃𝐈𝐀𝐑𝐈𝐀 🎁 〕━━━⬣
+│ 👤 *Jugador:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
+│ 
+│ 🎊 *¡RECOMPENSA RECIBIDA!*
+│ ${mensajeRecompensa}${bonus}
+│ 
+│ 📦 *INVENTARIO ACTUAL:*
+│ 💰 Yenes: ${user.coin}
+│ ⭐ EXP: ${user.exp}/${user.expNecesaria}
+│ 🎒 Objetos: ${Object.keys(user.inventario).length}
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+🤗 *¡Vuelve mañana por más recompensas!* ✨️`
+
+        return conn.reply(m.chat, recompensaMsg, m, ctxOk)
     }
 
     async function iniciarBatalla() {
@@ -244,9 +435,17 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         user.stats.energia -= 10
         objetivo.stats.energia -= 10
 
-        // Calcular daño
-        const dañoJugador = Math.max(1, user.stats.ataque - objetivo.stats.defensa / 2)
-        const dañoObjetivo = Math.max(1, objetivo.stats.ataque - user.stats.defensa / 2)
+        // Calcular daño con bonus de raza
+        let dañoJugador = Math.max(1, user.stats.ataque - objetivo.stats.defensa / 2)
+        let dañoObjetivo = Math.max(1, objetivo.stats.ataque - user.stats.defensa / 2)
+
+        // Aplicar habilidades de raza
+        if (user.raza === 'Elfo' && Math.random() < 0.15) {
+            dañoJugador = Math.floor(dañoJugador * 1.15)
+        }
+        if (objetivo.raza === 'Elfo' && Math.random() < 0.15) {
+            dañoObjetivo = Math.floor(dañoObjetivo * 1.15)
+        }
 
         // Determinar ganador
         let ganador = user
@@ -273,6 +472,14 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         user.exp += expGanada // Ambos ganan EXP
         ganador.coin += yenesGanados
 
+        // Bonus de humano
+        if (user.raza === 'Humano') {
+            user.exp += Math.floor(expGanada * 0.1)
+        }
+        if (objetivo.raza === 'Humano') {
+            objetivo.exp += Math.floor(expGanada * 0.1)
+        }
+
         // Verificar subida de nivel
         await verificarNivel(ganador)
         await verificarNivel(user)
@@ -280,7 +487,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         const resultadoBatalla = 
 `╭━━━〔 ⚔️ 𝐁𝐀𝐓𝐀𝐋𝐋𝐀 𝐅𝐈𝐍𝐀𝐋𝐈𝐙𝐀𝐃𝐀 🗡 〕━━━⬣
 │ ⚔️ *COMBATIENTES:*
-│ 🎯 ${userName} vs ${nombreObjetivo}
+│ 🎯 ${userName} (${user.raza}) vs ${nombreObjetivo} (${objetivo.raza})
 │ 
 │ 💥 *DAÑOS:*
 │ 🗡️ ${userName}: ${dañoJugador} de daño
@@ -313,6 +520,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         const inventario = 
 `╭━━━〔 🎒 𝐈𝐍𝐕𝐄𝐍𝐓𝐀𝐑𝐈𝐎 🎒 〕━━━⬣
 │ 👤 *Jugador:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
 │ 
 │ 📦 *OBJETOS:*
 │ ${inventarioTexto}
@@ -332,11 +540,12 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         const tienda = 
 `╭━━━〔 🏪 𝐓𝐈𝐄𝐍𝐃𝐀 𝐍𝐊-𝐈𝐀 🏪 〕━━━⬣
 │ 👤 *Jugador:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
 │ 💰 *Yenes:* ${user.coin || 0}
 │ 
 │ ⚔️ *ARMAS:*
 ${Object.entries(global.nkRPG.objetos.armas).map(([nombre, stats]) => 
-    `│ 🗡️ ${nombre} - Ataque: ${stats.ataque} | Precio: ${stats.precio}¥`
+    `│ 🗡️ ${nombre} - Ataque: ${stats.ataque} | Tipo: ${stats.tipo} | Precio: ${stats.precio}¥`
 ).join('\n')}
 │ 
 │ 🛡️ *ARMADURAS:*
@@ -360,6 +569,7 @@ ${Object.entries(global.nkRPG.objetos.consumibles).map(([nombre, stats]) =>
         const misiones = 
 `╭━━━〔 🎯 𝐌𝐈𝐒𝐈𝐎𝐍𝐄𝐒 🎯 〕━━━⬣
 │ 👤 *Aventurero:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
 │ 📜 *Completadas:* ${user.misionesCompletadas}
 │ 
 │ 🎯 *MISIONES DISPONIBLES:*
@@ -392,7 +602,13 @@ ${Object.entries(global.nkRPG.objetos.consumibles).map(([nombre, stats]) =>
         }
 
         user.stats.energia -= 5
-        const expGanada = 10 + Math.floor(Math.random() * 10)
+        let expGanada = 10 + Math.floor(Math.random() * 10)
+
+        // Bonus de humano
+        if (user.raza === 'Humano') {
+            expGanada = Math.floor(expGanada * 1.1)
+        }
+
         user.exp += expGanada
 
         // Posibilidad de ganar puntos de stat
@@ -407,6 +623,7 @@ ${Object.entries(global.nkRPG.objetos.consumibles).map(([nombre, stats]) =>
         const entrenamiento = 
 `╭━━━〔 ⚡️ 𝐄𝐍𝐓𝐑𝐄𝐍𝐀𝐌𝐈𝐄𝐍𝐓𝐎 ⚡️ 〕━━━⬣
 │ 👤 *Entrenando:* ${userName}
+│ 🧬 *Raza:* ${user.raza}
 │ 
 │ 📈 *RESULTADOS:*
 │ ⭐ EXP: +${expGanada}
@@ -451,9 +668,78 @@ ${Object.entries(global.nkRPG.objetos.consumibles).map(([nombre, stats]) =>
 
 }
 
-handler.help = ['nkrpg [opción]']
+// Comando para elegir raza
+let handler2 = async (m, { conn, text }) => {
+    const user = global.nkRPG.users[m.sender]
+    if (!user) {
+        return conn.reply(m.chat, '❌ *Primero debes registrarte en el RPG con* `' + usedPrefix + 'nkrpg`', m)
+    }
+
+    if (user.nivel > 1) {
+        return conn.reply(m.chat, '❌ *Solo puedes elegir raza en nivel 1*', m)
+    }
+
+    const raza = text?.toLowerCase()
+    const razasDisponibles = {
+        'humano': 'Humano',
+        'elfo': 'Elfo', 
+        'mago': 'Mago',
+        'brujo': 'Brujo',
+        'demonio': 'Demonio'
+    }
+
+    if (!raza || !razasDisponibles[raza]) {
+        return conn.reply(m.chat,
+`╭━━━〔 🧬 𝐄𝐋𝐄𝐆𝐈𝐑 𝐑𝐀𝐙𝐀 💫 〕━━━⬣
+│ ❌ *Debes especificar una raza válida*
+│ 
+│ 📝 *Uso:*
+│ ${usedPrefix}elegirraza <raza>
+│ 
+│ 🎯 *Razas disponibles:*
+│ • humano 🧑
+│ • elfo 🧝
+│ • mago 🔮
+│ • brujo 🧙
+│ • demonio 😈
+│ 
+│ 💡 *Solo disponible en nivel 1*
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`, m)
+    }
+
+    const razaElegida = razasDisponibles[raza]
+    const statsRaza = global.nkRPG.razas[razaElegida]
+
+    // Aplicar stats de la raza
+    user.raza = razaElegida
+    user.stats.vidaMax += statsRaza.vida
+    user.stats.vida = user.stats.vidaMax
+    user.stats.ataque += statsRaza.ataque
+    user.stats.defensa += statsRaza.defensa
+    user.stats.energiaMax += statsRaza.energia
+    user.stats.energia = user.stats.energiaMax
+
+    conn.reply(m.chat,
+`╭━━━〔 🧬 𝐑𝐀𝐙𝐀 𝐄𝐋𝐄𝐆𝐈𝐃𝐀 💫 〕━━━⬣
+│ 🎉 *¡Felicidades!*
+│ 🧬 *Raza seleccionada:* ${razaElegida}
+│ 
+│ 📊 *BONUS DE RAZA:*
+│ ❤️ Vida: +${statsRaza.vida}
+│ 🗡️ Ataque: +${statsRaza.ataque}
+│ 🛡️ Defensa: +${statsRaza.defensa}
+│ ⚡ Energía: +${statsRaza.energia}
+│ 
+│ 💫 *HABILIDAD ESPECIAL:*
+│ ${statsRaza.habilidad}
+│ 
+│ 🎯 *¡Comienza tu aventura!*
+╰━━━━━━━━━━━━━━━━━━━━━━⬣`, m)
+}
+
+handler.help = ['nkrpg [opción]', 'elegirraza <raza>', 'comprar <objeto>', 'unirseclan <nombre>']
 handler.tags = ['rpg']
-handler.command = ['nkrpg', 'nkrpg', 'nkia', 'rpgitsuki']
+handler.command = ['nkrpg', 'rpgitsuki', 'nkia', 'elegirraza', 'selectrace', 'comprar', 'buy', 'unirseclan', 'joinclan']
 handler.register = true
 
 export default handler
