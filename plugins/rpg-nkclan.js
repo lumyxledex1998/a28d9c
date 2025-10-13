@@ -721,7 +721,7 @@ ${listaTexto}
 
 handler.help = ['nkrpg [clan]']
 handler.tags = ['rpg']
-handler.command = ['nkrpgclan']
+handler.command = ['rpgclan', 'sistemaclan']
 handler.register = true
 
 export default handler
