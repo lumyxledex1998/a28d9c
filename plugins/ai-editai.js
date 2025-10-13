@@ -26,7 +26,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     m, ctxErr);
   }
 
-  if (!m.quoted || !m.quoted.mimetype || !m.quoted.mimetype.startsWith('image/')) {
+  // Verificación CORREGIDA de la cita
+  if (!m.quoted) {
     return conn.reply(m.chat,
 `╭━━━〔 🎀 𝐄𝐃𝐈𝐓𝐎𝐑 𝐀𝐈 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
 │ ❌ *Debes responder a una imagen*
@@ -45,6 +46,22 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     m, ctxWarn);
   }
 
+  // Verificación CORREGIDA del tipo de archivo
+  if (!m.quoted.mimetype || !m.quoted.mimetype.startsWith('image/')) {
+    return conn.reply(m.chat,
+`╭━━━〔 🎀 𝐄𝐃𝐈𝐓𝐎𝐑 𝐀𝐈 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
+│ ❌ *Archivo no compatible*
+│ 
+│ 📌 *Solo se aceptan:*
+│ • Imágenes (JPG, PNG, etc.)
+│ • Debes responder a una imagen
+│ • No videos ni documentos
+╰━━━━━━━━━━━━━━━━━━━━━━⬣
+
+🌸 *Itsuki solo puede editar imágenes...* 📸`, 
+    m, ctxWarn);
+  }
+
   if (!text) {
     return conn.reply(m.chat,
 `╭━━━〔 🎀 𝐄𝐃𝐈𝐓𝐎𝐑 𝐀𝐈 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
@@ -55,7 +72,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 │ 
 │ 🎨 *Ejemplos creativos:*
 │ • "hacerla estilo anime"
-│ • "cambiar fondo a playa"
+│ • "cambiar fondo a playa" 
 │ • "agregar efectos mágicos"
 │ • "convertir en pintura al óleo"
 │ • "hacer estilo cyberpunk"
@@ -80,27 +97,56 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 🌸 *Itsuki está trabajando en tu edición...* 🖌️`, 
     m, ctxWarn);
 
-    const buffer = await m.quoted.download()
+    // DESCARGAR LA IMAGEN - CORREGIDO
+    let buffer;
+    try {
+      buffer = await m.quoted.download();
+    } catch (downloadError) {
+      throw new Error('No se pudo descargar la imagen');
+    }
+
+    // Verificar que el buffer no esté vacío
+    if (!buffer || buffer.length === 0) {
+      throw new Error('La imagen está vacía o corrupta');
+    }
 
     const form = new FormData()
     form.append('reqtype', 'fileupload')
-    form.append('fileToUpload', buffer, { filename: 'image.jpg' })
-
-    const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
-      headers: form.getHeaders()
+    form.append('fileToUpload', buffer, { 
+      filename: 'image.jpg',
+      contentType: m.quoted.mimetype
     })
 
-    const url = data?.trim()
-    if (!url || !url.startsWith('http')) {
-      throw new Error('Error al subir la imagen')
+    // Subir imagen a catbox
+    let url;
+    try {
+      const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
+        headers: form.getHeaders(),
+        timeout: 30000
+      })
+      url = data?.trim()
+    } catch (uploadError) {
+      throw new Error('Error al subir la imagen al servidor');
     }
 
+    if (!url || !url.startsWith('http')) {
+      throw new Error('No se obtuvo un enlace válido para la imagen');
+    }
+
+    // Procesar con IA
     const apiUrl = `https://mayapi.ooguy.com/photoeditor?image=${encodeURIComponent(url)}&q=${encodeURIComponent(text)}&apikey=may-f53d1d49`
-    const res = await axios.get(apiUrl)
+    
+    let res;
+    try {
+      res = await axios.get(apiUrl, { timeout: 45000 })
+    } catch (apiError) {
+      throw new Error('El servidor de IA no responde');
+    }
+
     const finalImg = res?.data?.result?.url
     
     if (!finalImg) {
-      throw new Error('No se pudo generar la edición')
+      throw new Error('La IA no pudo generar la edición solicitada');
     }
 
     // Mensaje de éxito
@@ -116,7 +162,17 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 🌸 *Itsuki ha terminado tu edición...* 🎨`, 
     m, ctxOk);
 
-    const imgBuffer = await axios.get(finalImg, { responseType: 'arraybuffer' }).then(res => res.data)
+    // Descargar y enviar imagen editada
+    let imgBuffer;
+    try {
+      imgBuffer = await axios.get(finalImg, { 
+        responseType: 'arraybuffer',
+        timeout: 30000 
+      }).then(res => res.data)
+    } catch (finalError) {
+      throw new Error('Error al obtener la imagen editada');
+    }
+
     await conn.sendFile(m.chat, imgBuffer, 'edit-premium.jpg', 
 `╭━━━〔 🎀 𝐑𝐄𝐒𝐔𝐋𝐓𝐀𝐃𝐎 𝐏𝐑𝐄𝐌𝐈𝐔𝐌 🎀 〕━━━⬣
 │ ✅ *Edición IA completada*
@@ -142,14 +198,18 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 │ 📝 *Detalles:* ${error.message}
 │ 
 │ 🔍 *Posibles causas:*
-│ • Prompt muy complejo
-│ • Imagen no compatible
-│ • Error del servidor AI
-│ • Intenta con otro prompt
+│ • ${error.message.includes('descargar') ? 'Error al obtener la imagen' : 
+       error.message.includes('subir') ? 'Error al subir la imagen' :
+       error.message.includes('IA') ? 'Servicio de IA no disponible' :
+       error.message.includes('vacía') ? 'Imagen corrupta o muy pesada' :
+       'Problema técnico temporal'}
+│ • Imagen muy pesada
+│ • Servicio ocupado
+│ • Intenta con otra imagen
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
 🌸 *Itsuki lo sentirá mucho...* (´；ω；\`)
-🎀 *Por favor, intenta con otra imagen o prompt*`, 
+🎀 *Por favor, intenta de nuevo*`, 
     m, ctxErr);
   }
 }
