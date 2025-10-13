@@ -21,16 +21,16 @@ global.owner = [
    ['50493732693', 'Ado 🐢', true]
 ];
 
-global.mods = ['16503058299', '595972314588', '', '']
-global.suittag = ['16503058299', '595972314588', '']
-global.prems = ['16503058299', '595972314588', '', '']
+global.mods = ['16503058299', '595972314588', '51921826291']
+global.suittag = ['16503058299', '595972314588', '51921826291']
+global.prems = ['16503058299', '595972314588', '51921826291']
 
 // Información del bot 
 
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.9'
 global.languaje = 'Español'
-global.vs = '2.2.0'
+global.vs = '4.3.1'
 global.vsJB = '5.0'
 global.nameqr = 'Itsukiqr'
 global.namebot = 'Itsuki-IA'
@@ -53,7 +53,7 @@ global.textbot = 'Itsuki|IA- Leo Xzsy'
 global.etiqueta = '@Leo Xzsy'
 global.gt = '© creado Por Leo Xzsy'
 global.me = '𝐈𝐭𝐬𝐮𝐤𝐢-𝐖𝐀𝐁𝐎𝐓'
-global.listo = '* Aqui tiene*'
+global.listo = '*Aqui tiene*'
 global.moneda = 'Yenes'
 global.multiplier = 69
 global.maxwarn = 3
@@ -79,14 +79,15 @@ global.APIs = {
   xteam: 'https://api.xteam.xyz',
   lol: 'https://api.lolhuman.xyz',
   delirius: 'https://delirius-apiofc.vercel.app',
-  siputzx: 'https://api.siputzx.my.id' // usado como fallback para sugerencias IA
+  siputzx: 'https://api.siputzx.my.id', // usado como fallback para sugerencias IA
+  mayapi: 'https://mayapi.ooguy.com'
 }
 
 global.APIKeys = {
   'https://api.xteam.xyz': 'YOUR_XTEAM_KEY',
   'https://api.lolhuman.xyz': 'API_KEY',
   'https://api.betabotz.eu.org': 'API_KEY',
-  // 'https://api.siputzx.my.id': 'API_KEY_OPCIONAL'
+  'https://mayapi.ooguy.com': 'may-f53d1d49'
 }
 
 // Endpoints de IA
