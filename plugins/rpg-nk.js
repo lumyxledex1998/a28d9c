@@ -9,7 +9,6 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         global.nkRPG = {
             users: {},
             batallas: {},
-            clanes: {},
             misiones: {},
             objetos: {
                 armas: {
@@ -39,7 +38,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
             exp: 0,
             expNecesaria: 100,
             puntos: 0,
-            
+
             // STATS BASE
             stats: {
                 vida: 100,
@@ -50,36 +49,35 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
                 defensa: 10,
                 velocidad: 5
             },
-            
+
             // EQUIPAMIENTO
             equipo: {
                 arma: null,
                 armadura: null
             },
-            
+
             // INVENTARIO
             inventario: {
                 'Poción de Vida': 3,
                 'Poción de Energía': 2
             },
-            
+
             // CLASE Y TÍTULO
             clase: 'Novato',
             titulo: 'Estudiante Primerizo',
-            
-            // CLAN
-            clan: null,
-            rangoClan: null,
-            
+
             // BATALLAS
             victorias: 0,
             derrotas: 0,
-            misionesCompletadas: 0
+            misionesCompletadas: 0,
+
+            // ECONOMÍA
+            coin: 1000
         }
     }
 
     const user = global.nkRPG.users[m.sender]
-    const userName = await conn.getName(m.sender).catch(() => 'Aventurero')
+    const userName = conn.getName(m.sender) || 'Aventurero'
     const args = text ? text.split(' ') : []
     const subCommand = args[0]?.toLowerCase()
 
@@ -113,11 +111,6 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         return mostrarMisiones()
     }
 
-    // 👥 CLANES
-    if (subCommand === 'clanes' || subCommand === 'clans') {
-        return mostrarClanes()
-    }
-
     // 🎮 ENTRENAR
     if (subCommand === 'entrenar' || subCommand === 'train') {
         return entrenar()
@@ -142,7 +135,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 │ 
 │ ⚔️  *Batallas:* ${user.victorias}🏆 ${user.derrotas}💀
 │ 📜 *Misiones:* ${user.misionesCompletadas}
-│ 👑 *Clan:* ${user.clan || 'Sin clan'}
+│ 💰 *Yenes:* ${user.coin}
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 
 🎮 *𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 𝐃𝐈𝐒𝐏𝐎𝐍𝐈𝐁𝐋𝐄𝐒:*
@@ -161,9 +154,6 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 
 📜 *Misiones:*
 • ${usedPrefix}nkrpg misiones
-
-👥 *Clanes:*
-• ${usedPrefix}nkrpg clanes
 
 🎯 *Entrenar:*
 • ${usedPrefix}nkrpg entrenar
@@ -196,6 +186,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 │ 🏃 *VELOCIDAD:* ${user.stats.velocidad}
 │ 
 │ 📈 *PUNTOS DISPONIBLES:* ${user.puntos}
+│ 💰 *YENES:* ${user.coin}
 │ 
 │ ⚔️ *RÉCORD:* ${user.victorias}🏆 ${user.derrotas}💀
 │ 📜 *MISIONES:* ${user.misionesCompletadas}
@@ -209,7 +200,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 
     async function iniciarBatalla() {
         const mencionado = m.mentionedJid?.[0]
-        
+
         if (!mencionado) {
             return conn.reply(m.chat,
 `╭━━━〔 🛡 𝐁𝐀𝐓𝐀𝐋𝐋𝐀 𝐏𝐕𝐏 ⚔️ 〕━━━⬣
@@ -238,7 +229,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
         }
 
         const objetivo = global.nkRPG.users[mencionado]
-        const nombreObjetivo = await conn.getName(mencionado).catch(() => 'Oponente')
+        const nombreObjetivo = conn.getName(mencionado) || 'Oponente'
 
         // Verificar energía
         if (user.stats.energia < 10) {
@@ -280,6 +271,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 
         ganador.exp += expGanada
         user.exp += expGanada // Ambos ganan EXP
+        ganador.coin += yenesGanados
 
         // Verificar subida de nivel
         await verificarNivel(ganador)
@@ -310,7 +302,7 @@ let handler = async (m, { conn, text, usedPrefix, command, isOwner, mentionedJid
 
     async function mostrarInventario() {
         let inventarioTexto = '🎒 *INVENTARIO VACÍO*'
-        
+
         const items = Object.entries(user.inventario).filter(([_, cantidad]) => cantidad > 0)
         if (items.length > 0) {
             inventarioTexto = items.map(([item, cantidad]) => 
@@ -394,36 +386,6 @@ ${Object.entries(global.nkRPG.objetos.consumibles).map(([nombre, stats]) =>
         return conn.reply(m.chat, misiones, m, ctxOk)
     }
 
-    async function mostrarClanes() {
-        const infoClan = user.clan ? 
-            `│ 👑 *Clan Actual:* ${user.clan}\n│ 🎯 *Rango:* ${user.rangoClan || 'Miembro'}` : 
-            '│ ❌ *No perteneces a ningún clan*'
-
-        const clanes = 
-`╭━━━〔 💯 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 𝐃𝐄 𝐂𝐋𝐀𝐍𝐄𝐒 👥️ 〕━━━⬣
-│ 👤 *Jugador:* ${userName}
-${infoClan}
-│ 
-│ 🏆 *CLANES DISPONIBLES:*
-│ 
-│ 🎯 *Clan Itsuki:* Liderado por Itsuki
-│ 👥 *Clan Nakano:* Especializado en estudio
-│ ⚔️ *Clan Guerrero:* Enfocado en batallas
-│ 🔮 *Clan Místico:* Magia y habilidades
-│ 
-│ 💡 *BENEFICIOS DE CLAN:*
-│ • Bonificación de stats
-│ • Batallas entre clanes
-│ • Recursos compartidos
-│ • Eventos exclusivos
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-
-📝 *Usa:* ${usedPrefix}unirseclan <nombre>
-*Para unirte a un clan*`
-
-        return conn.reply(m.chat, clanes, m, ctxOk)
-    }
-
     async function entrenar() {
         if (user.stats.energia < 5) {
             return conn.reply(m.chat, '❌ *No tienes suficiente energía para entrenar*', m, ctxErr)
@@ -469,13 +431,13 @@ ${infoClan}
             jugador.nivel++
             jugador.expNecesaria = Math.floor(jugador.expNecesaria * 1.5)
             jugador.puntos += 2
-            
+
             // Mejorar stats al subir de nivel
             jugador.stats.vidaMax += 10
             jugador.stats.energiaMax += 5
             jugador.stats.ataque += 2
             jugador.stats.defensa += 1
-            
+
             // Restaurar stats
             jugador.stats.vida = jugador.stats.vidaMax
             jugador.stats.energia = jugador.stats.energiaMax
