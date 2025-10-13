@@ -6,29 +6,14 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   const ctxWarn = (global.rcanalw || {})
   const ctxOk = (global.rcanalr || {})
 
-  if (!text) {
-    return conn.reply(m.chat, `
-🍙📚 Itsuki Nakano - Descargar Multimedia 🎵🎥✨
-
-📝 Forma de uso:
-• ${usedPrefix}play <nombre de la canción>
-
-💡 Ejemplos:
-• ${usedPrefix}play unravel Tokyo ghoul
-• ${usedPrefix}play crossing field
-
-🎯 Formato disponible:
-🎵 Audio MP3 (alta calidad)
-
-🍱 ¡Encuentra y descarga tu música favorita! 🎶
-    `.trim(), m, ctxWarn)
-  }
+  if (!text) return conn.reply(m.chat, '💢 ¡Insecto! Di el nombre de la canción o no perderé mi tiempo contigo.', m, ctxWarn)
 
   try {
-    await conn.reply(m.chat, '🎵 Buscando *audio*...', m, ctxOk)
+    await conn.reply(m.chat, '🌀 Vegeta está buscando tu *audio*... ¡Espero que valga la pena, débil terrícola!', m, ctxOk)
 
     const search = await yts(text)
-    if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
+    if (!search.videos.length)
+      throw new Error('¡Nada encontrado! Tus gustos son tan lamentables como los de Kakarotto.')
 
     const video = search.videos[0]
     const { title, url, thumbnail } = video
@@ -39,11 +24,12 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         const resp = await fetch(thumbnail)
         thumbBuffer = Buffer.from(await resp.arrayBuffer())
       } catch (err) {
-        console.log('No se pudo obtener la miniatura:', err.message)
+        console.log('⚠️ No se pudo obtener la miniatura:', err.message)
       }
     }
 
     const fuentes = [
+      { api: 'Sylphy', endpoint: `https://api.sylphy.xyz/download/ytmp3?url=${encodeURIComponent(url)}&apikey=sylphy-def8`, extractor: res => res?.result?.download || res?.result?.url || res?.result },
       { api: 'Adonix', endpoint: `https://apiadonix.kozow.com/download/ytmp3?apikey=${global.apikey}&url=${encodeURIComponent(url)}`, extractor: res => res?.data?.url },
       { api: 'ZenzzXD', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res?.download_url },
       { api: 'ZenzzXD v2', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res?.download_url },
@@ -73,7 +59,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
     if (!exito) {
       await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
-      return conn.reply(m.chat, '🥲 No se pudo enviar el audio desde ninguna API.', m, ctxErr)
+      return conn.reply(m.chat, '💀 Ninguna API resistió el poder del Príncipe Saiyajin. ¡Patético!', m, ctxErr)
     }
 
     await conn.sendMessage(
@@ -83,16 +69,18 @@ let handler = async (m, { conn, text, usedPrefix }) => {
         mimetype: 'audio/mpeg',
         ptt: false,
         jpegThumbnail: thumbBuffer,
-        caption: `🎼 ${title}\n🌐 API usada: ${apiUsada}`
+        caption: `
+🎧 *${title}*
+🔥 Descargado con el orgullo del Príncipe Saiyajin.
+⚡ "¡Kakarotto, ni tú tienes una playlist así!" ⚡
+        `.trim()
       },
       { quoted: m }
     )
 
-    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m, ctxOk)
-
   } catch (e) {
-    console.error('❌ Error en play:', e)
-    await conn.reply(m.chat, `❌ Error: ${e.message}`, m, ctxErr)
+    console.error('💀 Error en play:', e)
+    await conn.reply(m.chat, `💢 ¡Error, maldito insecto!: ${e.message}`, m, ctxErr)
   }
 }
 
