@@ -1,40 +1,34 @@
-import { downloadMediaMessage } from '@whiskeysockets/baileys'
 import fs from 'fs'
 import axios from 'axios'
-import path from 'path'
 import FormData from 'form-data'
 
 let handler = async (m, { conn, text }) => {
   if (!m.quoted || !m.quoted.mimetype || !m.quoted.mimetype.startsWith('image/')) return
   if (!text) return
 
-  let mediaMessage = m.quoted.msg || m.quoted
-  let stream = await downloadMediaMessage(mediaMessage, 'buffer', {}, {
-    logger: conn.logger,
-    reuploadRequest: conn.updateMediaMessage
-  })
+  const buffer = await m.quoted.download()
+  if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp')
+  const filePath = './tmp/editai.jpg'
+  fs.writeFileSync(filePath, buffer)
 
-  let filePath = './tmp/image.jpg'
-  fs.writeFileSync(filePath, stream)
-
-  let form = new FormData()
+  const form = new FormData()
   form.append('reqtype', 'fileupload')
   form.append('fileToUpload', fs.createReadStream(filePath))
 
-  let { data } = await axios.post('https://catbox.moe/user/api.php', form, {
+  const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
     headers: form.getHeaders()
   })
 
-  let url = data?.trim()
-  if (!url.startsWith('http')) return
+  const url = data?.trim()
+  if (!url || !url.startsWith('http')) return
 
-  let api = `https://mayapi.ooguy.com/photoeditor?image=${encodeURIComponent(url)}&q=${encodeURIComponent(text)}&apikey=nevi`
-  let res = await axios.get(api)
-  let img = res?.data?.result?.url
-  if (!img) return
+  const apiUrl = `https://mayapi.ooguy.com/photoeditor?image=${encodeURIComponent(url)}&q=${encodeURIComponent(text)}&apikey=nevi`
+  const res = await axios.get(apiUrl)
+  const finalImg = res?.data?.result?.url
+  if (!finalImg) return
 
-  let buffer = await axios.get(img, { responseType: 'arraybuffer' }).then(res => res.data)
-  await conn.sendFile(m.chat, buffer, 'result.jpg', '', m)
+  const imgBuffer = await axios.get(finalImg, { responseType: 'arraybuffer' }).then(res => res.data)
+  await conn.sendFile(m.chat, imgBuffer, 'result.jpg', '', m)
 }
 
 handler.help = ['editai <prompt>']
