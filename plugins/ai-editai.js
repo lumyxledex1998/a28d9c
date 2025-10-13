@@ -1,4 +1,3 @@
-import fs from 'fs'
 import axios from 'axios'
 import FormData from 'form-data'
 
@@ -7,13 +6,10 @@ let handler = async (m, { conn, text }) => {
   if (!text) return
 
   const buffer = await m.quoted.download()
-  if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp')
-  const filePath = './tmp/editai.jpg'
-  fs.writeFileSync(filePath, buffer)
 
   const form = new FormData()
   form.append('reqtype', 'fileupload')
-  form.append('fileToUpload', fs.createReadStream(filePath))
+  form.append('fileToUpload', buffer, { filename: 'image.jpg' })
 
   const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
     headers: form.getHeaders()
@@ -22,13 +18,13 @@ let handler = async (m, { conn, text }) => {
   const url = data?.trim()
   if (!url || !url.startsWith('http')) return
 
-  const apiUrl = `https://mayapi.ooguy.com/photoeditor?image=${encodeURIComponent(url)}&q=${encodeURIComponent(text)}&apikey=nevi`
+  const apiUrl = `https://mayapi.ooguy.com/photoeditor?image=${encodeURIComponent(url)}&q=${encodeURIComponent(text)}&apikey=may-f53d1d49`
   const res = await axios.get(apiUrl)
   const finalImg = res?.data?.result?.url
   if (!finalImg) return
 
   const imgBuffer = await axios.get(finalImg, { responseType: 'arraybuffer' }).then(res => res.data)
-  await conn.sendFile(m.chat, imgBuffer, 'result.jpg', '', m)
+  await conn.sendFile(m.chat, imgBuffer, 'edit.jpg', '', m)
 }
 
 handler.help = ['editai <prompt>']
