@@ -25,7 +25,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
-    await conn.reply(m.chat, '⚡️ Buscando audio...', m, ctxOk)
+    await conn.reply(m.chat, '🎵 Buscando audio...', m, ctxOk)
 
     const search = await yts(text)
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
