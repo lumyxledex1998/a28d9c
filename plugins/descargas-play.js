@@ -2,10 +2,7 @@ import fetch from 'node-fetch'
 import yts from 'yt-search'
 
 let handler = async (m, { conn, text, usedPrefix }) => {
-  // Definir valores por defecto si las variables globales no existen
-  const ctxErr = global.rcanalx || { key: { participant: '0@s.whatsapp.net' }, message: { conversation: 'Error' } }
-  const ctxWarn = global.rcanalw || { key: { participant: '0@s.whatsapp.net' }, message: { conversation: 'Advertencia' } }
-  const ctxOk = global.rcanalr || { key: { participant: '0@s.whatsapp.net' }, message: { conversation: 'Éxito' } }
+  const rcanal = (global.rcanal || {})
 
   if (!text) {
     return conn.reply(m.chat, `
@@ -22,11 +19,11 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 🎵 Audio MP3 (alta calidad)
 
 🍱 ¡Encuentra y descarga tu música favorita! 🎶
-`.trim(), m)
+`.trim(), m, rcanal)
   }
 
   try {
-    await conn.reply(m.chat, '🎵 Buscando audio...', m)
+    await conn.reply(m.chat, '🎵 Buscando audio...', m, rcanal)
 
     const search = await yts(text)  
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')  
@@ -37,8 +34,8 @@ let handler = async (m, { conn, text, usedPrefix }) => {
     let thumbBuffer = null  
     if (thumbnail) {  
       try {  
-        const resp = await fetch(thumbnail)
-        thumbBuffer = await resp.buffer()
+        const resp = await fetch(thumbnail)  
+        thumbBuffer = Buffer.from(await resp.arrayBuffer())  
       } catch (err) {  
         console.log('No se pudo obtener la miniatura:', err.message)  
       }  
@@ -56,19 +53,14 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
     for (let fuente of fuentes) {  
       try {  
-        console.log(`Probando API: ${fuente.api}`)
         const response = await fetch(fuente.endpoint)  
-        if (!response.ok) {
-          console.log(`API ${fuente.api} no respondió OK: ${response.status}`)
-          continue
-        }  
+        if (!response.ok) continue  
         const data = await response.json()  
         const link = fuente.extractor(data)  
         if (link && typeof link === 'string' && link.startsWith('http')) {  
           audioUrl = link  
           apiUsada = fuente.api  
           exito = true  
-          console.log(`✅ API exitosa: ${fuente.api}`)
           break  
         }  
       } catch (err) {  
@@ -78,42 +70,31 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
     if (!exito) {  
       await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })  
-      return conn.reply(m.chat, '🥲 No se pudo descargar el audio desde ninguna API.', m)  
+      return conn.reply(m.chat, '🥲 No se pudo enviar el audio desde ninguna API.', m, rcanal)  
     }  
 
-    console.log(`Enviando audio desde: ${audioUrl}`)
-    
     await conn.sendMessage(  
       m.chat,  
       {  
         audio: { url: audioUrl },  
         mimetype: 'audio/mpeg',  
-        ptt: false,
-        fileName: `${title}.mp3`,
-        contextInfo: {
-          externalAdReply: {
-            title: title,
-            body: `API: ${apiUsada}`,
-            thumbnail: thumbBuffer,
-            mediaType: 1,
-            previewType: 0,
-            renderLargerThumbnail: true
-          }
-        }
+        ptt: false,  
+        jpegThumbnail: thumbBuffer,  
+        caption: `🎼 ${title}\n🌐 API usada: ${apiUsada}`  
       },  
       { quoted: m }  
     )  
 
-    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m)
+    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m, rcanal)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
-    await conn.reply(m.chat, `❌ Error: ${e.message}`, m)
+    await conn.reply(m.chat, `❌ Error: ${e.message}`, m, rcanal)
   }
 }
 
 handler.help = ['play <nombre de la canción>']
 handler.tags = ['downloader']
-handler.command = ['play', 'music']
+handler.command = ['play']
 
 export default handler
