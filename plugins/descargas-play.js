@@ -87,7 +87,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       { quoted: m }
     )
 
-    await conn.reply(m.chat, `✅ Descarga completa 🤗\n🍉 ${title}`, m, ctxOk)
+    await conn.reply(m.chat, `✅ Descarga completa 🤗\n🍉 ${title}\n| *API:* ${apiUsada}`, m, ctxOk)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
