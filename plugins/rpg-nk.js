@@ -922,7 +922,7 @@ ${inventarioTexto}
 }
 
 handler.help = ['nkrpg', 'elegirraza <raza>', 'comprar <objeto>']
-handler.tags = ['rpg']
+handler.tags = ['rpgnk']
 handler.command = ['nkrpg', 'rpgitsuki', 'elegirraza', 'comprar']
 handler.register = true
 
