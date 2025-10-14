@@ -8,7 +8,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
   if (!text) {
     return conn.reply(m.chat, `
-⚡️ Gaara-Ultra-MD - Descargar Multimedia 🎥⚡️
+🍙📚 Itsuki Nakano - Descargar Multimedia 🎵🎥✨
 
 📝 Forma de uso:
 • ${usedPrefix}play <nombre de la canción>
@@ -20,7 +20,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 🎯 Formato disponible:
 🎵 Audio MP3 (alta calidad)
 
-🌟 ¡Encuentra y descarga tu música favorita! 🎶
+🍱 ¡Encuentra y descarga tu música favorita! 🎶
     `.trim(), m, ctxWarn)
   }
 
@@ -89,7 +89,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       { quoted: m }
     )
 
-    await conn.reply(m.chat, `✅ Descarga completa ⚡️\n🌟 ${title}`, m, ctxOk)
+    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m, ctxOk)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
