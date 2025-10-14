@@ -8,7 +8,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
   if (!text) {
     return conn.reply(m.chat, `
-🍙📚 Itsuki Nakano - Descargar Multimedia 🎵🎥✨
+🎀 Itsuki-Nakano - Descargar Multimedia 🎥✨️
 
 📝 Forma de uso:
 • ${usedPrefix}play <nombre de la canción>
@@ -20,12 +20,12 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 🎯 Formato disponible:
 🎵 Audio MP3 (alta calidad)
 
-🍱 ¡Encuentra y descarga tu música favorita! 🎶
+🌟 ¡Encuentra y descarga tu música favorita! 🎶
     `.trim(), m, ctxWarn)
   }
 
   try {
-    await conn.reply(m.chat, '🎵 Buscando audio...', m, ctxOk)
+    await conn.reply(m.chat, '🔎 Buscando audio...', m, ctxOk)
 
     const search = await yts(text)
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
@@ -45,8 +45,8 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
     // ===== APIs para audio MP3 =====
     const fuentes = [
-     { api: 'Adonix', endpoint: `https://apiadonix.kozow.com/download/ytmp3?apikey=${global.apikey}&url=${encodeURIComponent(url)}`, extractor: res => res?.data?.url },
-     { api: 'ZenzzXD', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
+      { api: 'Adonix', endpoint: `https://api-adonix.ultraplus.click/download/ytmp3?apikey=${global.apikey}&url=${encodeURIComponent(url)}`, extractor: res => res?.data?.url },
+      { api: 'ZenzzXD', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
       { api: 'ZenzzXD v2', endpoint: `https://api.zenzxz.my.id/downloader/ytmp3v2?url=${encodeURIComponent(url)}`, extractor: res => res.download_url },
       { api: 'Vreden', endpoint: `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`, extractor: res => res.result?.download?.url },
       { api: 'Delirius', endpoint: `https://api.delirius.my.id/download/ymp3?url=${encodeURIComponent(url)}`, extractor: res => res.data?.download?.url },
@@ -89,7 +89,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       { quoted: m }
     )
 
-    await conn.reply(m.chat, `✅ Descarga completa 🍙\n🎵 ${title}`, m, ctxOk)
+    await conn.reply(m.chat, `✅ Descarga completa 🤗\n🍉 ${title}`, m, ctxOk)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
