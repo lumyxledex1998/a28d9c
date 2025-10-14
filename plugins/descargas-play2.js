@@ -2,7 +2,7 @@ import yts from 'yt-search'
 import fetch from 'node-fetch'
 
 async function apiAdonix(url) {
-  const apiURL = `https://apiadonix.kozow.com/download/ytmp4?apikey=${global.apikey}&url=${encodeURIComponent(url)}`
+  const apiURL = `https://api-adonix.ultraplus.click/download/ytmp4?apikey=${global.apikey}&url=${encodeURIComponent(url)}`
   const res = await fetch(apiURL)
   const data = await res.json()
 
@@ -68,7 +68,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 👤 *Autor:* ${video.author.name}
 🔗 *URL:* ${video.url}
 
-🌐 *Fuente:* ${fuente}
+🌐 *API:* ${fuente}
 🌷 ¡Disfruta y no olvides sonreír! 🌷
 > 🍱 Gracias por elegirme para tus descargas 
 `.trim()
