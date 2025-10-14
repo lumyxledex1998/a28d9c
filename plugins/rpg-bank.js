@@ -51,7 +51,7 @@ ${coin > bank ? '⚠️ *Advertencia:* Tienes mucho dinero en tu cartera' : '✅
 }
 
 handler.help = ['bal']
-handler.tags = ['rpg']
+handler.tags = ['economy']
 handler.command = ['bal', 'balance', 'bank'] 
 handler.group = true 
 
