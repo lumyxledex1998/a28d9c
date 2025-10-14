@@ -95,7 +95,7 @@ async function handler(m, { conn, args, usedPrefix, command }) {
 }
 
 handler.help = ['pay']
-handler.tags = ['rpg']
+handler.tags = ['economy']
 handler.command = ['pay', 'coinsgive', 'givecoins', 'transferir']
 handler.group = true
 
