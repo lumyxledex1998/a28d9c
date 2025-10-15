@@ -88,7 +88,7 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
     // Enviar el video directamente desde la URL
     await conn.sendMessage(m.chat, {
       video: { url: videoUrl },
-      caption: `🎀 *Itsuki-Nakano IA v3.4.0 Beta*\n` +
+      caption: `🎀 *Itsuki-Nakano IA v4.3.1 Oficial*\n` +
               `╰ Creado por: LeoXzzsy 👑\n\n` +
               `📹 ${videoTitle}\n` +
               `⭐ Descargado desde Facebook`
