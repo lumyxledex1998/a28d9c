@@ -96,7 +96,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
     } else {
       await conn.sendMessage(m.chat, {
         image: { url: mediaUrl },
-        caption: `🎀 *Itsuki-Nakano IA v3.5.1 Beta*\n` +
+        caption: `🎀 *Itsuki-Nakano IA v4.3.1 Oficial*\n` +
                  `╰ Creado por: LeoXzzsy 👑(Erenz)\n\n` +
                  `🖼️ ${mediaTitle}\n` +
                  `⭐ Descargado desde Instagram\n` +
