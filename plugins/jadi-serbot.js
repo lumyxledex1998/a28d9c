@@ -369,3 +369,5 @@ try {
 	await conn.newsletterFollow('120363377833048768@newsletter').catch(() => {})
 } catch {}
 }
+
+export { startSubBot as jadibts }
