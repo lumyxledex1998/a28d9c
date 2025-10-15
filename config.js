@@ -42,7 +42,7 @@ global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
 // Números y settings globales para varios códigos
 
-global.botNumber = '18098199966'
+global.botNumber = '18732594125'
 
 global.packname = 'La Mejor Bot De WhatsApp'
 global.botname = '𝐈𝐭𝐬𝐮𝐤𝐢 𝐍𝐚𝐤𝐚𝐧𝐨-𝐈𝐀 𝐖𝐚𝐛𝐨𝐭 👑✨'
