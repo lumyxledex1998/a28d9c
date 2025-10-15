@@ -63,7 +63,7 @@ let handler = async (m, { conn }) => {
         // Verificar si el personaje ya está reclamado
         const userHarem = harem.find(entry => entry.characterId === randomCharacter.id)
         const statusMessage = userHarem 
-            ? `🔒 Reclamado por @${userHarem.userId.split('@')[0]}` 
+            ? '🔴 Ya este personaje ha sido reclamado' 
             : '🟢 Disponible para reclamar'
 
         const message = 
