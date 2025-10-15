@@ -115,7 +115,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Enviar con imagen usando sendMessage correctamente
     await conn.sendMessage(m.chat, {
-      image: { url: 'https://qu.ax/GJBXU.jpg' },
+      image: { url: 'https://files.catbox.moe/6uxtap.jpg' },
       caption: headerText,
       footer: `⎯ ✦ ⴜ⍺𝖽ᧉ 𝖻ɥ : *${creador}* ✦`,
       templateButtons: [
