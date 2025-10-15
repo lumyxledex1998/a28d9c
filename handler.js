@@ -591,7 +591,7 @@ group:    { text: '🌸 ¡Baka! Este comando solo se puede usar en grupos, ¿qu�
 private:  { text: '🌸 Este comando solo funciona en mi chat privado, ¿tanto miedo tienes de estar a solas conmigo? 😏', ctx: ctxInfo },
 admin:    { text: '🌸 Solo los administradores del grupo pueden usar esto. ¡No seas entrometido! 😤', ctx: ctxDenied },
 botAdmin: { text: '🌸 ¡Tch! Necesito ser administradora para ejecutar este comando… ¿qué esperabas? 🙄', ctx: ctxInfo },
-unreg:    { text: '🌸 ¡Baka! No estás registrado aún.\n\nRegístrate primero con:\n\n/reg nombre.edad\n\n_Ejemplo: /reg Itsuki.18_\n\nY nada de jugar con los * * 😒', ctx: ctxInfo },
+unreg:    { text: '🌸 ¡Baka! No estás registrado aún.\n\nRegístrate primero con:\n\n.reg nombre.edad\n\n_Ejemplo: .reg Itsuki.18_\n\nY nada de jugar con los * * 😒', ctx: ctxInfo },
 restrict: { text: '🌸 Esta característica está deshabilitada. Así que ni lo intentes, ¿ok? 💢', ctx: ctxInfo },
 }[type]
 if (!cfg) return
