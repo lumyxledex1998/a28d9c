@@ -8,7 +8,7 @@ import qrcode from 'qrcode-terminal'
 import libPhoneNumber from 'google-libphonenumber'
 import cfonts from 'cfonts'
 import pino from 'pino'
-import { subBot } from './plugins/jadi-serbot.js';
+import { jadibts } from './plugins/jadi-serbot.js';
 import { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, Browsers, jidNormalizedUser } from '@whiskeysockets/baileys'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import config from './config.js'
@@ -423,14 +423,14 @@ async function startBot() {
             console.log(chalk.bold.cyan(`[Sub-Bots] La carpeta '${subbotsDir}' ya existe.`));
           }
       
-          const subBotFolders = fs.readdirSync(global.rutaJadiBot);
-          if (subBotFolders.length > 0) {
-            console.log(chalk.bold.yellow(`[Sub-Bots] Intentando iniciar ${subBotFolders.length} sub-bot(s) guardado(s)...`));
-            for (const folder of subBotFolders) {
+          const jadibtsFolders = fs.readdirSync(global.rutaJadiBot);
+          if (jadibtsFolders.length > 0) {
+            console.log(chalk.bold.yellow(`[Sub-Bots] Intentando iniciar ${jadibtsFolders.length} sub-bot(s) guardado(s)...`));
+            for (const folder of jadibtsFolders) {
               const botPath = path.join(global.rutaJadiBot, folder);
               if (fs.existsSync(path.join(botPath, 'creds.json'))) {
-                subBot({
-                  pathsubBot: botPath,
+                jadibts({
+                  pathjadibts: botPath,
                   conn: sock,
                   m: null, 
                   args: '',
