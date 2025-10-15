@@ -83,19 +83,15 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     const isOfficialBot = botJid === officialBotNumber
 
-    let menuText = `*𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈*
-⎯ Ꮺׄ ㅤდㅤ *${name}* ㅤ 𖹭𑩙
-⎯ ୨ㅤ ֵ *ᥙ⍴𝗍іmᥱ* ㅤׄㅤ ✰
-      ${uptime}
-
-⎯ ୨ㅤ ֵ *⍴rᥱmіᥙm* ㅤׄㅤ ✰
-      ${totalPremium} usuarios
-
-⎯ ୨ㅤ ֵ *᥎ᥱrsі᥆ᥒ* ㅤׄㅤ ✰
-      ${version}
-
-⎯ ୨ㅤ ֵ *ᥕᥱᑲ* ㅤׄㅤ ✰
-      ${web}
+    let menuText = `┏━━━ೋ ཻུ۪۪ 🌸 ︵ ‿୨‿︵ 🌸 ཻུ۪۪ ೋ━━━┓
+   *𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈*
+┗━━━ೋ ཻུ۪۪ 🌸 ︵ ‿୨‿︵ 🌸 ཻུ۪۪ ೋ━━━┛
+╭─ ꒰ ✿ *Info* ✿ ꒱
+│ ✧ *Usuario* : ${name}
+│ ✧ *Uptime* : ${uptime}
+│ ✧ *Premium* : ${totalPremium}
+│ ✧ *Versión* : ${version}
+╰─────────────────
 
 `
 
@@ -103,17 +99,18 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       let comandos = help.filter(menu => menu.tags.includes(tag))
       if (!comandos.length) continue
 
-      menuText += `
-꒰⌢ ʚ˚₊‧ ✿ ꒱꒱ :: ${tags[tag].toLowerCase()} ıllı
+      menuText += `╭─ ✦ *${tags[tag]}* ✦
 ${comandos.map(menu => menu.help.map(cmd =>
-  `> ੭੭ ﹙ ❀᪶ ᪶ ﹚:: \`\`\`${_p}${cmd}\`\`\`${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
+  `│ ⊹ ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
 ).join('\n')).join('\n')}
-> 。°。°。°。°。°。°。°。°。°。°。°
+╰─────────────────
 
 `
     }
 
-    menuText += `⎯ ダ ⴜ⍺𝖽ᧉ 𝖻ɥ : *${creador}* ギ`
+    menuText += `┏━━━ೋ ཻུ۪۪ ✨ ︵ ‿୨‿︵ ✨ ཻུ۪۪ ೋ━━━┓
+     *Made by ${creador}*
+┗━━━ೋ ཻུ۪۪ ✨ ︵ ‿୨‿︵ ✨ ཻུ۪۪ ೋ━━━┛`
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
