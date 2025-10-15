@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
-const version = '`4.3.1 Versión Oficial`'
+const version = '4.3.1'
 const web = 'https://xzys-ultra.vercel.app'  
 
 let tags = {
@@ -43,7 +43,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let totalPremium = Object.values(global.db.data.users).filter(u => u.premium).length
 
-    // Fake contact para hacer transparente el mensaje
+    // Fake contact para transparencia
     global.fkontak = {
       key: {
         participant: '0@s.whatsapp.net',
@@ -64,87 +64,66 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       premium: plugin.premium,
     }))
 
-    let date = new Date()
-    let time = date.toLocaleTimeString('es-MX', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit', 
-      hour12: false 
-    })
-
     let uptime = clockString(process.uptime() * 1000)
-
-    // Detectar automáticamente si es bot oficial o sub-bot
-    const botJid = conn.user.jid
-    const officialBotNumber = '18292605400@s.whatsapp.net'
-
     let name = conn.getName(m.sender) || 'Usuario'
-    let taguser = '@' + m.sender.split('@')[0]
 
-    const isOfficialBot = botJid === officialBotNumber
-
-    let menuText = `┏━━━ೋ ཻུ۪۪ 🌸 ︵ ‿୨‿︵ 🌸 ཻུ۪۪ ೋ━━━┓
-   *𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈*
-┗━━━ೋ ཻུ۪۪ 🌸 ︵ ‿୨‿︵ 🌸 ཻུ۪۪ ೋ━━━┛
-╭─ ꒰ ✿ *Info* ✿ ꒱
-│ ✧ *Usuario* : ${name}
-│ ✧ *Uptime* : ${uptime}
-│ ✧ *Premium* : ${totalPremium}
-│ ✧ *Versión* : ${version}
-╰─────────────────
-
-`
-
+    // Crear las secciones del menú list
+    let sections = []
+    
     for (let tag in tags) {
       let comandos = help.filter(menu => menu.tags.includes(tag))
       if (!comandos.length) continue
 
-      menuText += `╭─ ✦ *${tags[tag]}* ✦
-${comandos.map(menu => menu.help.map(cmd =>
-  `│ ⊹ ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
-).join('\n')).join('\n')}
-╰─────────────────
+      let rows = comandos.map(menu => menu.help.map(cmd => ({
+        title: `${_p}${cmd}`,
+        description: `${menu.limit ? '💋 Límite' : ''}${menu.premium ? ' 🙈 Premium' : ''}`,
+        id: `${_p}${cmd}`
+      }))).flat()
 
-`
+      sections.push({
+        title: tags[tag],
+        rows: rows
+      })
     }
 
-    menuText += `┏━━━ೋ ཻུ۪۪ ✨ ︵ ‿୨‿︵ ✨ ཻུ۪۪ ೋ━━━┓
-     *Made by ${creador}*
-┗━━━ೋ ཻུ۪۪ ✨ ︵ ‿୨‿︵ ✨ ཻུ۪۪ ೋ━━━┛`
+    // Texto del header
+    let headerText = `*𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈*
+⎯ ༊ ㅤ✧ㅤ *${name}* ㅤ✧ ㅤ༊
+⎯ ୨ ✦ *ᥙ⍴𝗍іmᥱ* : ${uptime}
+⎯ ୨ ✦ *⍴rᥱmіᥙm* : ${totalPremium}
+⎯ ୨ ✦ *᥎ᥱrsі᥆ᥒ* : ${version}
+
+˚₊· ͟͟͞➳❥ *Selecciona una categoría*`
+
+    // Enviar el list message
+    let listMessage = {
+      text: headerText,
+      footer: `⎯ ✦ ⴜ⍺𝖽ᧉ 𝖻ɥ : *${creador}* ✦`,
+      title: '⊹ ࣪ ˖🌸 𝐌𝐄𝐍𝐔 𝐈𝐓𝐒𝐔𝐊𝐈 🌸⊹ ࣪ ˖',
+      buttonText: "✨ 𝗩𝗘𝗥 𝗠𝗘𝗡𝗨 ✨",
+      sections: sections
+    }
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    let vidBuffer = await (await fetch('https://files.catbox.moe/j6hx6k.mp4')).buffer()
-    await conn.sendMessage(
-  m.chat,
-  {
-    video: vidBuffer,
-    gifPlayback: true,
-    caption: menuText,
-    contextInfo: {
-      mentionedJid: [userId],
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: idchannel, 
-        serverMessageId: 100, 
-        newsletterName: namechannel 
-      },
-      externalAdReply: {
-        showAdAttribution: false,
-        renderLargerThumbnail: false,
-        mediaType: 2,
-        mediaUrl: web,
-        title: botname,
-        body: 'By ' + creador,
-        sourceUrl: web,
-        thumbnailUrl: 'https://qu.ax/GJBXU.jpg'
+    // Enviar con imagen
+    await conn.sendMessage(m.chat, listMessage, {
+      quoted: fkontak,
+      contextInfo: {
+        externalAdReply: {
+          title: botname,
+          body: 'By ' + creador,
+          thumbnailUrl: 'https://qu.ax/GJBXU.jpg',
+          sourceUrl: web,
+          mediaType: 1,
+          showAdAttribution: false,
+          renderLargerThumbnail: false
+        }
       }
-    }
-  },
-  { quoted: fkontak }
-)
+    })
 
   } catch (e) {
+    console.error(e)
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
   }
 }
@@ -160,9 +139,9 @@ function clockString(ms) {
   let m = Math.floor(ms / 60000) % 60
   let s = Math.floor(ms / 1000) % 60
   let texto = []
-  if (d > 0) texto.push(`${d} ${d == 1 ? 'día' : 'días'}`)
-  if (h > 0) texto.push(`${h} ${h == 1 ? 'hora' : 'horas'}`)
-  if (m > 0) texto.push(`${m} ${m == 1 ? 'minuto' : 'minutos'}`)
-  if (s > 0) texto.push(`${s} ${s == 1 ? 'segundo' : 'segundos'}`)
-  return texto.length ? texto.join(', ') : '0 segundos'
+  if (d > 0) texto.push(`${d}d`)
+  if (h > 0) texto.push(`${h}h`)
+  if (m > 0) texto.push(`${m}m`)
+  if (s > 0) texto.push(`${s}s`)
+  return texto.length ? texto.join(' ') : '0s'
 }
