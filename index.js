@@ -429,8 +429,8 @@ async function startBot() {
             for (const folder of subBotFolders) {
               const botPath = path.join(global.rutaJadiBot, folder);
               if (fs.existsSync(path.join(botPath, 'creds.json'))) {
-                jadibts({
-                  pathjadibts: botPath,
+                subBot({
+                  pathsubBot: botPath,
                   conn: sock,
                   m: null, 
                   args: '',
