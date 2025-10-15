@@ -1,118 +1,138 @@
-import fetch from 'node-fetch'
+import axios from 'axios';
+import baileys from '@whiskeysockets/baileys';
 
-/**
- * 🎀 CREADO POR: LeoXzzsy
- * 🌸 ADAPTADO PARA: Itsuki-Nakano IA
- * 📚 VERSIÓN: 3.4.0 (Beta)
- * 🏷️ DESCARGADOR PINTEREST
- */
-
-let handler = async (m, { conn, usedPrefix, command, args }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
-
-  try {
-    // Verificar URL
-    if (!args[0]) {
-      return conn.reply(m.chat,
-        `🎀 *Itsuki-Nakano IA - Descargador Pinterest*\n\n` +
-        `✦ *Uso correcto:*\n` +
-        `*${usedPrefix + command}* <url_de_pinterest>\n\n` +
-        `✦ *Ejemplo:*\n` +
-        `*${usedPrefix + command}* https://pin.it/xxxxx\n\n` +
-        `🌸 *Itsuki te ayudará a descargar tus pins UwU* (◕‿◕✿)`,
-      m, ctxWarn)
-    }
-
-    const url = args[0]
-
-    // Verificar enlace válido
-    if (!url.match(/pinterest|pin\.it/)) {
-      return conn.reply(m.chat,
-        `🎀 *Itsuki-Nakano IA*\n\n` +
-        `❌ *URL no válida*\n\n` +
-        `✦ Envía un enlace de Pinterest válido\n` +
-        `• https://pin.it/xxxxx\n` +
-        `• https://pinterest.com/pin/xxxxx\n\n` +
-        `🌸 *Itsuki se ha confundido...* (´･ω･\`)`,
-      m, ctxErr)
-    }
-
-    // Mensaje de espera - NO se borrará
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `📌 *Procesando enlace de Pinterest...*\n` +
-      `✦ Analizando contenido...\n` +
-      `✦ Extrayendo medios...\n\n` +
-      `🌸 *Itsuki está buscando tu pin...* 📥`,
-      m, ctxWarn
-    )
-
-    // 🧠 Nueva API Insana
-    const apiUrl = `https://mayapi.ooguy.com/pinterest?url=${encodeURIComponent(url)}&apikey=may-f53d1d49`
-    const response = await fetch(apiUrl)
-    if (!response.ok) throw new Error('Error al conectar con MayAPI')
-
-    const data = await response.json()
-    if (!data.status || !data.result?.url) throw new Error('No se pudo obtener el contenido del pin')
-
-    const { id, title, url: mediaUrl } = data.result
-    const { username, requests_made_today, limit } = data.user || {}
-
-    // Detectar si es imagen o video (solo imagen por ahora)
-    const isVideo = mediaUrl.endsWith('.mp4') || mediaUrl.includes('video')
-
-    // Enviar resultado - NO se borra el mensaje anterior
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `✅ *¡Pin encontrado con éxito!*\n\n` +
-      `🆔 *ID:* ${id}\n` +
-      `🖋️ *Título:* ${title}\n` +
-      `🔗 *Fuente:* Pinterest\n` +
-      (username ? `👤 *Usuario API:* ${username}\n📊 *Usos hoy:* ${requests_made_today}/${limit}\n\n` : '\n') +
-      `🌸 *Descargando tu pin...* (´｡• ᵕ •｡\`)`,
-      m, ctxOk
-    )
-
-    if (isVideo) {
-      await conn.sendFile(m.chat, mediaUrl, 'pinterest_video.mp4',
-        `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
-        `╰ Creado por: LeoXzzsy 👑\n\n` +
-        `📹 *Video de Pinterest*\n` +
-        `⭐ *Título:* ${title}`,
-        m
-      )
-    } else {
-      await conn.sendFile(m.chat, mediaUrl, 'pinterest_image.jpg',
-        `🎀 *Itsuki-Nakano IA v3.5.0 (MayAPI)*\n` +
-        `╰ Creado por: LeoXzzsy 👑\n\n` +
-        `🖼️ *Imagen de Pinterest*\n` +
-        `⭐ *Título:* ${title}`,
-        m
-      )
-    }
-
-    await m.react('✅')
-
-  } catch (error) {
-    console.error('Error en Pinterest (MayAPI):', error)
-
-    await m.react('❌')
-    await conn.reply(m.chat,
-      `🎀 *Itsuki-Nakano IA*\n\n` +
-      `❌ *Error al descargar desde MayAPI*\n\n` +
-      `✦ *Detalles:* ${error.message}\n\n` +
-      `🌸 *Intenta con otro enlace o más tarde...* (´；ω；\`)\n\n` +
-      `🎀 *Itsuki-Nakano IA v3.5.0*`,
-      m, ctxErr
-    )
+async function sendAlbumMessage(conn, jid, medias, options = {}) {
+  if (typeof jid !== "string") {
+    throw new TypeError(`jid must be string, received: ${jid} (${jid?.constructor?.name})`);
   }
+
+  for (const media of medias) {
+    if (!media.type || (media.type !== "image" && media.type !== "video")) {
+      throw new TypeError(`media.type must be "image" or "video", received: ${media.type} (${media.type?.constructor?.name})`);
+    }
+    if (!media.data || (!media.data.url && !Buffer.isBuffer(media.data))) {
+      throw new TypeError(`media.data must be object with url or buffer, received: ${media.data} (${media.data?.constructor?.name})`);
+    }
+  }
+
+  if (medias.length < 2) {
+    throw new RangeError("Minimum 2 media");
+  }
+
+  const caption = options.text || options.caption || "";
+  const delay = !isNaN(options.delay) ? options.delay : 500;
+  delete options.text;
+  delete options.caption;
+  delete options.delay;
+
+  const album = baileys.generateWAMessageFromContent(
+    jid,
+    {
+      messageContextInfo: {},
+      albumMessage: {
+        expectedImageCount: medias.filter(media => media.type === "image").length,
+        expectedVideoCount: medias.filter(media => media.type === "video").length,
+        ...(options.quoted
+          ? {
+              contextInfo: {
+                remoteJid: options.quoted.key.remoteJid,
+                fromMe: options.quoted.key.fromMe,
+                stanzaId: options.quoted.key.id,
+                participant: options.quoted.key.participant || options.quoted.key.remoteJid,
+                quotedMessage: options.quoted.message,
+              },
+            }
+          : {}),
+      },
+    },
+    {}
+  );
+
+  await conn.relayMessage(album.key.remoteJid, album.message, { messageId: album.key.id });
+
+  for (let i = 0; i < medias.length; i++) {
+    const { type, data } = medias[i];
+    const img = await baileys.generateWAMessage(
+      album.key.remoteJid,
+      { [type]: data, ...(i === 0 ? { caption } : {}) },
+      { upload: conn.waUploadToServer }
+    );
+    img.message.messageContextInfo = {
+      messageAssociation: { associationType: 1, parentMessageKey: album.key },
+    };
+    await conn.relayMessage(img.key.remoteJid, img.message, { messageId: img.key.id });
+    await baileys.delay(delay);
+  }
+
+  return album;
 }
 
-handler.help = ['pinterest <url>', 'pin <url>', 'pindl <url>']
-handler.tags = ['downloader']
-handler.command = ['pinterest', 'pin', 'pindl', 'pinteres']
-handler.register = true
+const pins = async (judul) => {
+  try {
+    const res = await axios.get(`https://api.kirito.my/api/pinterest?q=${encodeURIComponent(judul)}&apikey=by_deylin`);
+    if (Array.isArray(res.data.images)) {
+      return res.data.images.map(url => ({
+        image_large_url: url,
+        image_medium_url: url,
+        image_small_url: url
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
+};
 
-export default handler
+let handler = async (m, { conn, text }) => {
+  if (!text) return conn.reply(m.chat, `${emojis} Ingresa un texto. Ejemplo: .pinterest ${botname}`, m, rcanal);
+
+  try {
+    const res2 = await fetch('https://files.catbox.moe/875ido.png');
+    const thumb2 = Buffer.from(await res2.arrayBuffer());
+
+    const userJid = m.sender;
+    const fkontak = {
+      key: { fromMe: false, participant: userJid },
+      message: {
+        documentMessage: {
+          title: botname,
+          fileName: `𝗛𝗢𝗟𝗔, 𝗘𝗦𝗧𝗘 𝗘𝗦 𝗘𝗟 𝗣𝗜𝗡𝗧𝗘𝗥𝗘𝗧𝗦 𝗠𝗔𝗦 𝗣𝗢𝗧𝗘𝗡𝗧𝗘`,
+          jpegThumbnail: thumb2
+        }
+      }
+    };
+
+    m.react('🕒');
+
+    const results = await pins(text);
+    if (!results || results.length === 0) return conn.reply(m.chat, `No se encontraron resultados para "${text}".`, m, rcanal);
+
+    const maxImages = Math.min(results.length, 15);
+    const medias = [];
+
+    for (let i = 0; i < maxImages; i++) {
+      medias.push({
+        type: 'image',
+        data: { url: results[i].image_large_url || results[i].image_medium_url || results[i].image_small_url }
+      });
+    }
+
+    await sendAlbumMessage(conn, m.chat, medias, {
+      caption: `𝗥𝗲𝘀𝘂𝗹𝘁𝗮𝗱𝗼𝘀 𝗱𝗲: ${text}\n𝗖𝗮𝗻𝘁𝗶𝗱𝗮𝗱 𝗱𝗲 𝗿𝗲𝘀𝘂𝗹𝘁𝗮𝗱𝗼𝘀: ${maxImages}`,
+      quoted: fkontak
+    });
+
+    await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+
+  } catch (error) {
+    console.error(error);
+    conn.reply(m.chat, 'Error al obtener imágenes de Pinterest.', m, rcanal);
+  }
+};
+
+handler.help = ['pinterest'];
+handler.command = ['pinterest', 'pin'];
+handler.tags = ['buscador'];
+
+export default handler;
