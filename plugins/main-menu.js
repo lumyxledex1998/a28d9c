@@ -43,6 +43,20 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     let totalPremium = Object.values(global.db.data.users).filter(u => u.premium).length
 
+    // Fake contact para hacer transparente el mensaje
+    global.fkontak = {
+      key: {
+        participant: '0@s.whatsapp.net',
+        remoteJid: 'status@broadcast'
+      },
+      message: {
+        contactMessage: {
+          displayName: creador,
+          vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;${creador};;;\nFN:${creador}\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Móvil\nEND:VCARD`
+        }
+      }
+    }
+
     let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => ({
       help: Array.isArray(plugin.help) ? plugin.help : (plugin.help ? [plugin.help] : []),
       tags: Array.isArray(plugin.tags) ? plugin.tags : (plugin.tags ? [plugin.tags] : []),
@@ -62,16 +76,16 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-        const officialBotNumber = '18292605400@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+    const officialBotNumber = '18292605400@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
 
-let name = conn.getName(m.sender) || 'Usuario'
-let taguser = '@' + m.sender.split('@')[0]
-    
+    let name = conn.getName(m.sender) || 'Usuario'
+    let taguser = '@' + m.sender.split('@')[0]
+
     const isOfficialBot = botJid === officialBotNumber
     const botType = isOfficialBot ? '🎀 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
     let menuText = `
-╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
+╭─°❀⋆.ೃ࿔*:･ 🌸 *ITSUKI NAKANO-AI MENU* 🌸 ─°❀⋆.ೃ࿔*:･⬣
 ┃ 👋🏻 *Hola* @${userId.split('@')[0]} ✨
 ┃ 👑 *Creador*: *${creador}*
 ┃ ${botType}
@@ -80,7 +94,7 @@ let taguser = '@' + m.sender.split('@')[0]
 ┃ 🪷 *Versión*: *${version}*
 ┃ 💻 *Web Oficial*: *${web}*
 ┃ 🔰 *Baileys-Sistem*: *xzy-Baileys*
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
+╰─°❀⋆.ೃ࿔*:･──°❀⋆.ೃ࿔*:･─°❀⋆.ೃ࿔*:･⬣
 `
 
     for (let tag in tags) {
@@ -88,11 +102,11 @@ let taguser = '@' + m.sender.split('@')[0]
       if (!comandos.length) continue
 
       menuText += `
-╭━━━〔 ${tags[tag]} 〕━━━⬣
+╭─°❀⋆.ೃ࿔*:･ ${tags[tag]} ─°❀⋆.ೃ࿔*:･⬣
 ${comandos.map(menu => menu.help.map(cmd =>
   `┃ 🌷 ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
 ).join('\n')).join('\n')}
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
+╰─°❀⋆.ೃ࿔*:･──°❀⋆.ೃ࿔*:･─°❀⋆.ೃ࿔*:･⬣
 `
     }
 
@@ -112,10 +126,20 @@ ${comandos.map(menu => menu.help.map(cmd =>
         newsletterJid: idchannel, 
         serverMessageId: 100, 
         newsletterName: namechannel 
+      },
+      externalAdReply: {
+        showAdAttribution: false,
+        renderLargerThumbnail: false,
+        mediaType: 2,
+        mediaUrl: web,
+        title: botname,
+        body: 'By ' + creador,
+        sourceUrl: web,
+        thumbnailUrl: 'https://qu.ax/GJBXU.jpg'
       }
     }
   },
-  { quoted: m }
+  { quoted: fkontak }
 )
 
   } catch (e) {
