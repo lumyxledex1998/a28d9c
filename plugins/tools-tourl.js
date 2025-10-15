@@ -9,7 +9,7 @@ const GITHUB_HARDCODED_REPO = process.env.GITHUB_REPO || 'WillZek/Storage-CB2'
 
 async function makeFkontak() {
   try {
-    const res = await fetch('https://i.postimg.cc/rFfVL8Ps/image.jpg')
+    const res = await fetch('https://files.catbox.moe/jem7nf.jpg')
     const thumb2 = Buffer.from(await res.arrayBuffer())
     return {
       key: { participants: '0@s.whatsapp.net', remoteJid: 'status@broadcast', fromMe: false, id: 'Halo' },
@@ -121,7 +121,7 @@ async function sendChooser(m, conn, usedPrefix) {
   let fkontak = await makeFkontak()
   if (!fkontak) fkontak = m
   try {
-    const avatarUrl = 'https://files.catbox.moe/xr2m6u.jpg'
+    const avatarUrl = 'https://files.catbox.moe/jem7nf.jpg'
     const device = await getDevice(m.key.id)
     if (device !== 'desktop' && device !== 'web') {
       const media = await prepareWAMessageMedia({ image: { url: avatarUrl } }, { upload: conn.waUploadToServer })
@@ -186,7 +186,7 @@ async function doUpload(m, conn, serviceKey) {
 
   if (!results.length) { await conn.reply(m.chat, 'No se obtuvo ninguna URL', m); return true }
 
-  let txt = '乂  L I N K S - E N L A C E S 乂\n\n'
+  let txt = '💫  L I N K S - E N L A C E S 💫\n\n'
   for (const r of results) {
     txt += `*${r.name}*\n• Enlace: ${r.url}\n• Tamaño: ${r.size}\n\n`
   }
@@ -219,7 +219,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     const q = m.quoted ? (m.quoted.msg || m.quoted) : m
     const mime = (q.mimetype || q.mediaType || q.mtype || '').toString().toLowerCase()
     if (!/image|video|audio|sticker|document/.test(mime)) {
-      await conn.reply(m.chat, 'Responde a una imagen / video / audio / documento', m)
+      await conn.reply(m.chat, '*Responde a una imagen / video / audio / documento*', m)
       return true
     }
     const buffer = await q.download()
