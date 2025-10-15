@@ -8,7 +8,7 @@ import qrcode from 'qrcode-terminal'
 import libPhoneNumber from 'google-libphonenumber'
 import cfonts from 'cfonts'
 import pino from 'pino'
-import { jadibts } from './plugins/jadi-serbot.js';
+import { subBot } from './plugins/jadi-serbot.js';
 import { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, Browsers, jidNormalizedUser } from '@whiskeysockets/baileys'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import config from './config.js'
