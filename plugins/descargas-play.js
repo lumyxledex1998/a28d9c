@@ -25,7 +25,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
-    await conn.reply(m.chat, '🔎 Buscando audio...', m, ctxOk)
+    await conn.reply(m.chat, '🔎 Itsuki Esta Buscando Tu *Audio Musical*', m, ctxOk)
 
     const search = await yts(text)
     if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
@@ -74,7 +74,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
     if (!exito) {
       await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
-      return conn.reply(m.chat, '🥲 No se pudo enviar el audio desde ninguna API.', m, ctxErr)
+      return conn.reply(m.chat, '*🧋 No se pudo enviar el audio desde ninguna API.*', m, ctxErr)
     }
 
     await conn.sendMessage(
@@ -88,8 +88,6 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       },
       { quoted: m }
     )
-
-    await conn.reply(m.chat, `✅ Descarga completa 🤗\n🍉 ${title}\n| *API:* ${apiUsada}`, m, ctxOk)
 
   } catch (e) {
     console.error('❌ Error en play:', e)
