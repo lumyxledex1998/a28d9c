@@ -98,7 +98,7 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    let vidBuffer = await (await fetch('https://files.catbox.moe/j6hx6k.mp4')).buffer()
+    let vidBuffer = await (await fetch('https://1024terabox.com/s/1L-iui1UpULsRd5pTN7EPBA')).buffer()
     await conn.sendMessage(
   m.chat,
   {
