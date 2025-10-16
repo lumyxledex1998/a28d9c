@@ -11,14 +11,14 @@ import { dirname } from 'path'
 global.__dirname = (url) => dirname(fileURLToPath(url));
 
 // Configuraciones principales
-
 global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
    ['16503058299', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
    ['15614809253', 'AyeitsRyze', true],
    ['573133374132', 'YO SOY YO', true],
    ['51921826291', '𝐒𝐨𝐲𝐌𝐚𝐲𝐜𝐨𝐥 <𝟑', true],
-   ['50493732693', 'Ado 🐢', true]
+   ['50493732693', 'Ado 🐢', true],
+   ['51953255954', 'Shiroko Devs', true]
 ];
 
 global.mods = ['16503058299', '595972314588', '51921826291']
@@ -26,7 +26,6 @@ global.suittag = ['16503058299', '595972314588', '51921826291']
 global.prems = ['16503058299', '595972314588', '51921826291']
 
 // Información del bot 
-
 global.libreria = 'Baileys'
 global.baileys = 'V 6.7.9'
 global.languaje = 'Español'
@@ -40,10 +39,9 @@ global.ItsukiJadibts = true
 global.Choso = true
 global.prefix = ['.', '!', '/' , '#', '%']
 global.apikey = 'ItsukiNakanoIA'
+
 // Números y settings globales para varios códigos
-
 global.botNumber = '50578440363'
-
 global.packname = 'La Mejor Bot De WhatsApp'
 global.botname = '𝐈𝐭𝐬𝐮𝐤𝐢 𝐍𝐚𝐤𝐚𝐧𝐨-𝐈𝐀 𝐖𝐚𝐛𝐨𝐭 👑✨'
 global.wm = '© 𝐋𝐞𝐨  𝐗𝐬𝐳𝐲'
@@ -64,8 +62,7 @@ global.fetch = fetch
 global.axios = axios
 global.moment = moment
 
-// Enlaces oficiales del bot 
-
+// Enlaces oficiales del bot
 global.gp1 = 'https://chat.whatsapp.com/EteP5pnrAZC14y9wReGF1V'
 global.comunidad1 = 'https://chat.whatsapp.com/DeJvBuS7QgB3Ybp1BZulWL'
 global.channel = 'https://whatsapp.com/channel/0029Vb4cQJu2f3EB7BS7o11M'
@@ -74,7 +71,6 @@ global.md = 'https://github.com/xzzys26/Itsuki-Nakano'
 global.correo = 'xzzysultra@gmail.com'
 
 // Apis para las descargas y más
-
 global.APIs = {
   ryzen: 'https://api.ryzendesu.vip',
   xteam: 'https://api.xteam.xyz',
@@ -92,7 +88,6 @@ global.APIKeys = {
 }
 
 // Endpoints de IA
-
 global.SIPUTZX_AI = {
   base: global.APIs?.siputzx || 'https://api.siputzx.my.id',
   bardPath: '/api/ai/bard',
@@ -134,7 +129,6 @@ watchFile(file, () => {
 })
 
 // Configuraciones finales
-
 export default {
   prefix: global.prefix,
   owner: global.owner,
