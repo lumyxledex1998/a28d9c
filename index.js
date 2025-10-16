@@ -8,7 +8,6 @@ import qrcode from 'qrcode-terminal'
 import libPhoneNumber from 'google-libphonenumber'
 import cfonts from 'cfonts'
 import pino from 'pino'
-import { jadibts } from './plugins/jadi-serbot.js';
 import { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, Browsers, jidNormalizedUser } from '@whiskeysockets/baileys'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import config from './config.js'
@@ -410,43 +409,6 @@ async function startBot() {
       } catch (e) {
         console.log(chalk.red('[Open] Error en post-conexión:', e.message))
       }
-      
-      try {
-        const subbotsDir = 'jadibts';
-        global.rutaJadiBot = path.join(__dirname, `./${subbotsDir}`);
-        
-        if (global.ItsukiJadibts) { 
-          if (!fs.existsSync(global.rutaJadiBot)) {
-            fs.mkdirSync(global.rutaJadiBot, { recursive: true });
-            console.log(chalk.bold.cyan(`[Sub-Bots] La carpeta '${subbotsDir}' se creó correctamente.`));
-          } else {
-            console.log(chalk.bold.cyan(`[Sub-Bots] La carpeta '${subbotsDir}' ya existe.`));
-          }
-      
-          const jadibtsFolders = fs.readdirSync(global.rutaJadiBot);
-          if (jadibtsFolders.length > 0) {
-            console.log(chalk.bold.yellow(`[Sub-Bots] Intentando iniciar ${jadibtsFolders.length} sub-bot(s) guardado(s)...`));
-            for (const folder of jadibtsFolders) {
-              const botPath = path.join(global.rutaJadiBot, folder);
-              if (fs.existsSync(path.join(botPath, 'creds.json'))) {
-                jadibts({
-                  pathjadibts: botPath,
-                  conn: sock,
-                  m: null, 
-                  args: '',
-                  usedPrefix: '/',
-                  command: 'serbot'
-                })
-                .then(() => console.log(chalk.green(`[Sub-Bots] Sub-bot en la carpeta '${folder}' iniciado.`)))
-                .catch(e => console.error(chalk.red(`[Sub-Bots] Error al iniciar sub-bot en '${folder}':`), e));
-              }
-            }
-          }
-        }
-      } catch (e) {
-        console.error(chalk.red('[Sub-Bots] Error crítico en el sistema de arranque nativo de sub-bots:'), e);
-      }
-
     }
   })
 
