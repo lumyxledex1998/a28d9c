@@ -1,11 +1,4 @@
-//Creador del menu: BrayanOFC y adaptado para Itsuki Nakano IA 
-
 import fetch from 'node-fetch'
-
-const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
-const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
-const version = '4.3.1'
-const web = 'https://xzys-ultra.vercel.app'  
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
   try {
@@ -30,26 +23,19 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     const isOfficialBot = botJid === officialBotNumber
 
     
-    let menuText = `┏━━ ⸙ ✨ *ITSUKI NAKANO AI* ✨ ⸙
-┃ 👤 Usuario: @${userId.split('@')[0]}
-┃ ⏰ Activo: ${uptime}
-┃ 💎 Premium: ${totalPremium}
-┃ 📌 V${version}
-┗━━━━━━━━━━━━━━━━━━━⬣
-
-`
-
+    let menuText = `Ꮺׄ ㅤდㅤ   *ꪱׁׁׁׅׅׅtׁׅׅ꯱υׁׅƙׁׅꪱׁׁׁׅׅׅ* ㅤ 𖹭𑩙
+୨ㅤ   ֵ      *݊ꪀɑׁׅƙׁׅɑׁׅ݊ꪀᨵׁׅׅ* ㅤ ׄㅤ  ✰\n\n`
     
     let categories = {
-      '⚙️ *PRINCIPAL*': ['main', 'info'],
-      '🤖 *BOTS & IA*': ['bots', 'ia'],
-      '🎮 *JUEGOS & RPG*': ['game', 'rpgnk', 'gacha'],
-      '💰 *ECONOMÍA*': ['economy'],
-      '👥 *GRUPOS*': ['group'],
-      '📥 *DESCARGAS*': ['downloader'],
-      '🎨 *MULTIMEDIA*': ['sticker', 'audio', 'anime'],
-      '🔧 *HERRAMIENTAS*': ['tools', 'search', 'advanced'],
-      '✨ *EXTRAS*': ['fun', 'premium', 'social', 'custom']
+      '*PRINCIPAL*': ['main', 'info'],
+      '*ASISTENTES*': ['bots', 'ia'],
+      '*JUEGOS*': ['game', 'gacha'],
+      '*ECONOMÍA*': ['economy', 'rpgnk'],
+      '*GRUPOS*': ['group'],
+      '*DESCARGAS*': ['downloader'],
+      '*MULTIMEDIA*': ['sticker', 'audio', 'anime'],
+      '*HERRAMIENTAS*': ['tools', 'search', 'advanced'],
+      '*EXTRAS*': ['fun', 'premium', 'social', 'custom']
     }
 
     for (let catName in categories) {
@@ -57,19 +43,16 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       let comandos = help.filter(menu => menu.tags.some(tag => catTags.includes(tag)))
       
       if (comandos.length) {
-        menuText += `${catName}\n`
+        menuText += `꒰⌢ ʚ˚₊‧  ❍  ꒱꒱ :: ${catName} ıllı\n`
         let uniqueCommands = [...new Set(comandos.flatMap(menu => menu.help))]
         uniqueCommands.slice(0, 8).forEach(cmd => {
-          menuText += `  ◦ ${_p}${cmd}\n`
+          menuText += `> ੭੭ ﹙ ᰔᩚ ᪶ ﹚:: \`\`\`${_p}${cmd}\`\`\`\n`
         })
-        menuText += `\n`
+        menuText += `> 。°。°。°。°。°。°。°。°。°。°。°\n\n`
       }
     }
 
-    menuText += `┏━━━━━━━━━━━━━━━━━━━⬣
-┃ 💻 ${web}
-┃ 👑 By: ${creador}
-┗━━━━━━━━━━━━━━━━━━━⬣`
+    menuText += `\nダ ძᥱsіgᥒᥱძ ᑲᥡ  :  *ׅׅ꯱hׁׁׅׅ֮֮ꪱׁׁׁׅׅׅꭈׁׅᨵׁׅׅƙׁׅᨵׁׅׅ ժׁׅ݊ꫀׁׁׅܻׅ݊᥎ׁׅׅ꯱* ギ\nダ mᥲძᥱ ᑲᥡ  :  *ᥣׁׅ֪ꫀׁׅܻ݊ᨵׁׅׅ ᥊ׁׅzׁׅ֬zׁׅׅ֬꯱ᨮׁׅ֮* ギ`
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
