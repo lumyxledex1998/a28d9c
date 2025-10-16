@@ -20,7 +20,7 @@ let drm2 = ""
 let rtx =  "🌱 S U B - B O T   I T S U K I 🌱\n\n";
 rtx +=     "➺ *Paso 1:* Abre WhatsApp en tu otro dispositivo\n";
 rtx +=     "➺ *Paso 2:* Ve a ⋮ y selecciona *WhatsApp Web*\n";
-rtx +=     "➺ *Paso 3:* Escanea este código QR con amor ♡\n\n";
+rtx +=     "➺ *Paso 3:* Escanea este código QR con amor\n\n";
 rtx +=     "⏰ *Expira en 15 segundos*\n";
 rtx +=     "📝 *Nota de Itsuki:* Úsame con cariño y responsabilidad~";
 
