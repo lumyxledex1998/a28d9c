@@ -13,28 +13,11 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
     if (!/webp|image|video/g.test(mime) && !args[0]) {
       return conn.reply(m.chat, `
-🍙🎨 *Itsuki Nakano - Creador de Stickers* ✨
+🍙 *Itsuki Nakano - Stickers* 🖼
 
-🌟 ¡Como tutora creativa, puedo ayudarte a crear stickers!
+*✨️ Onii-chan~ Responde a una imagen/video con .s 🪷*
 
-📝 *Formas de usar:*
-• Responde a una imagen con !s
-• Responde a un video con !s 
-• Responde a un sticker con !s
-• Envía una imagen/video con !s
-• !s <url_de_imagen>
-
-💡 *Ejemplos:*
-• Responde a una foto con !s
-• Envía un video corto con !s
-• !s https://ejemplo.com/imagen.jpg
-
-🎯 *Formatos soportados:*
-🖼️ Imágenes (JPG, PNG, GIF, WEBP)
-🎥 Videos (MP4, máximo 8 segundos)
-🔗 URLs de imágenes
-
-🍱 ¡Dale vida a tus conversaciones! 🎨✨
+> 🎨 ¡Hagámoslo juntos! 🎀
       `.trim(), m, ctxWarn)
     }
 
