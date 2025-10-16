@@ -40,39 +40,39 @@ const subBotOptions = {}
 if (global.conns instanceof Array) console.log()
 else global.conns = []
 let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
-	const settings = globalThis?.db?.data?.settings || {}
-	const jid = conn?.user?.jid
-	if (!jid || !settings[jid]?.jadibotmd) {
-		return conn.reply(m.chat, `${emoji} Comando desactivado temporalmente por mi creador.\n\nUso: ${usedPrefix + command}`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-	}
+        const settings = globalThis?.db?.data?.settings || {}
+        const jid = conn?.user?.jid
+        if (!jid || !settings[jid]?.jadibotmd) {
+                return conn.reply(m.chat, `${emoji} Comando desactivado temporalmente por mi creador.\n\nUso: ${usedPrefix + command}`, m)
+        }
 
-	try { await conn.reply(m.chat, '', m, typeof rcanalw !== 'undefined' ? rcanalw : (typeof rcanal !== 'undefined' ? rcanal : {})) } catch {}
+        try { await conn.reply(m.chat, '', m) } catch {}
 
-	const COOLDOWN_MS = 120000
-	const last = Number(global.db?.data?.users?.[m.sender]?.Subs || 0)
-	const now = Date.now()
-	const remain = last + COOLDOWN_MS - now
-	if (remain > 0) {
-		return conn.reply(m.chat, `${emoji2} Espera ${msToTime(remain)} antes de volver a usar este comando.`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-	}
+        const COOLDOWN_MS = 120000
+        const last = Number(global.db?.data?.users?.[m.sender]?.Subs || 0)
+        const now = Date.now()
+        const remain = last + COOLDOWN_MS - now
+        if (remain > 0) {
+                return conn.reply(m.chat, `${emoji2} Espera ${msToTime(remain)} antes de volver a usar este comando.`, m)
+        }
 
-	const MAX_SUBBOTS = Number(global.maxSubBots || 20)
-	const subBots = [...new Set([...global.conns.filter((c) => c.user && c.ws?.socket && c.ws.socket.readyState !== ws.CLOSED)])]
-	if (subBots.length >= MAX_SUBBOTS) {
-		return conn.reply(m.chat, `${emoji2} No hay espacios disponibles para nuevos Sub-Bots. Límite: ${MAX_SUBBOTS}.`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-	}
+        const MAX_SUBBOTS = Number(global.maxSubBots || 20)
+        const subBots = [...new Set([...global.conns.filter((c) => c.user && c.ws?.socket && c.ws.socket.readyState !== ws.CLOSED)])]
+        if (subBots.length >= MAX_SUBBOTS) {
+                return conn.reply(m.chat, `${emoji2} No hay espacios disponibles para nuevos Sub-Bots. Límite: ${MAX_SUBBOTS}.`, m)
+        }
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 let id = `${who.split('@')[0]}`
 try {
-	const already = global.conns.some(s => s?.authState?.creds?.me?.jid?.startsWith(id))
-	if (already) {
-		return conn.reply(m.chat, `${emoji2} Este número ya está conectado como Sub-Bot.`, m, (typeof rcanalr !== 'undefined' ? rcanalr : (typeof rcanal !== 'undefined' ? rcanal : {})))
-	}
+        const already = global.conns.some(s => s?.authState?.creds?.me?.jid?.startsWith(id))
+        if (already) {
+                return conn.reply(m.chat, `${emoji2} Este número ya está conectado como Sub-Bot.`, m)
+        }
 } catch {}
 const baseDir = (global.jadi || 'jadibts')
 let subBotPath = path.join(`./${baseDir}/`, id)
 if (!fs.existsSync(subBotPath)){
-	fs.mkdirSync(subBotPath, { recursive: true })
+        fs.mkdirSync(subBotPath, { recursive: true })
 }
 subBotOptions.subBotPath = subBotPath
 subBotOptions.m = m
@@ -103,15 +103,15 @@ if (args[0] == "") args[0] = undefined
 }
 const pathCreds = path.join(subBotPath, "creds.json")
 if (!fs.existsSync(subBotPath)){
-	fs.mkdirSync(subBotPath, { recursive: true })}
+        fs.mkdirSync(subBotPath, { recursive: true })}
 try {
-	if (args[0] && args[0] !== undefined) {
-		const decoded = Buffer.from(args[0], "base64").toString("utf-8")
-		fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(decoded), null, '\t'))
-	}
+        if (args[0] && args[0] !== undefined) {
+                const decoded = Buffer.from(args[0], "base64").toString("utf-8")
+                fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(decoded), null, '\t'))
+        }
 } catch (e) {
-	conn.reply(m.chat, `${emoji} Use correctamente el comando » ${usedPrefix + command} code`, m, (typeof rcanalx !== 'undefined' ? rcanalx : (typeof rcanal !== 'undefined' ? rcanal : {})))
-	return
+        conn.reply(m.chat, `${emoji} Use correctamente el comando » ${usedPrefix + command} code`, m)
+        return
 }
 
 const comb = Buffer.from(crm1 + crm2 + crm3 + crm4, "base64")
@@ -164,9 +164,9 @@ sock.lastPing = Date.now();
 if (qr && !mcode) {
 if (m?.chat) {
 txtQR = await conn.sendMessage(
-	m.chat,
-	{ image: await qrcode.toBuffer(qr, { scale: 8 }), caption: rtx.trim(), ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-	{ quoted: m }
+        m.chat,
+        { image: await qrcode.toBuffer(qr, { scale: 8 }), caption: rtx.trim() },
+        { quoted: m }
 )
 } else {
 return
@@ -180,9 +180,9 @@ if (qr && mcode) {
 let secret = await sock.requestPairingCode((m.sender.split('@')[0]))
 secret = secret.match(/.{1,4}/g)?.join("-")
 txtCode = await conn.sendMessage(
-	m.chat,
-	{ image: { url: imagenUrl }, caption: rtx2, ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-	{ quoted: m }
+        m.chat,
+        { image: { url: imagenUrl }, caption: rtx2 },
+        { quoted: m }
 );
 codeBot = await conn.reply(m.chat, `${secret}`, m);
 console.log(secret)
@@ -269,9 +269,9 @@ try { sock.__quietUntil = Date.now() + 15_000 } catch {}
 await joinChannels(sock)
 
 m?.chat ? await conn.sendMessage(
-	m.chat,
-	{ text: args[0] ? `@${m.sender.split('@')[0]}, ya estás conectado, leyendo mensajes entrantes...` : `@${m.sender.split('@')[0]}, genial ya eres parte de nuestra familia de Sub-Bots.`, mentions: [m.sender], ...(typeof rcanalr === 'object' ? rcanalr : {}) },
-	{ quoted: m }
+        m.chat,
+        { text: args[0] ? `@${m.sender.split('@')[0]}, ya estás conectado, leyendo mensajes entrantes...` : `@${m.sender.split('@')[0]}, genial ya eres parte de nuestra familia de Sub-Bots.`, mentions: [m.sender] },
+        { quoted: m }
 ) : ''
 
 }}
