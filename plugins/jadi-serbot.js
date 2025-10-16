@@ -17,22 +17,22 @@ let crm3 = "SBpbmZvLWRvbmFyLmpz"
 let crm4 = "IF9hdXRvcmVzcG9uZGVyLmpzIGluZm8tYm90Lmpz"
 let drm1 = ""
 let drm2 = ""
-let rtx =  "🌱 S U B - B O T   I T S U K I 🌱\n\n";
-rtx +=     "➺ *Paso 1:* Abre WhatsApp en tu otro dispositivo\n";
-rtx +=     "➺ *Paso 2:* Ve a ⋮ y selecciona *WhatsApp Web*\n";
-rtx +=     "➺ *Paso 3:* Escanea este código QR con amor ♡\n\n";
-rtx +=     "⏰ *Expira en 15 segundos*\n";
-rtx +=     "📝 *Nota de Itsuki:* Úsame con cariño y responsabilidad~";
+let rtx =  "S U B - B O T   Q R \n\n";
+rtx +=     "✩ *1.* Abre WhatsApp en otro dispositivo\n";
+rtx +=     "✩ *2.* Toca ⋮ > *WhatsApp Web*\n";
+rtx +=     "✩ *3.* Escanea este código QR\n\n";
+rtx +=     "✩ *Expira en 45 segundos*\n";
+rtx += "🍉 *Nota:* Uso responsable del bot";
 
-let rtx2 =  "🌟 V I N C U L A R   C Ó D I G O 🌟\n\n";
-rtx2 +=     "➺ *Paso 1:* Dirígete a ⋮ y luego a *Dispositivos*\n";
-rtx2 +=     "➺ *Paso 2:* Selecciona la opción *Vincular dispositivo*\n";
-rtx2 +=     "➺ *Paso 3:* Ingresa este código especial:\n\n";
-rtx2 +=     "💌 *Tu código:* 8 dígitos mágicos\n";
-rtx2 +=     "⏰ *Válido por poco segundos*\n";
-rtx2 +=     "📝 *Consejo de Itsuki:* Copia y pega rápidito~";
+let rtx2 =  "V I N C U L A R   C Ó D I G O \n\n";
+rtx2 +=     "✩ *1.* Ve a ⋮ > *Dispositivos*\n";
+rtx2 +=     "✩ *2.* Selecciona *Vincular*\n";
+rtx2 +=     "✩ *3.* Ingresa este código:\n\n";
+rtx2 +=     "✩ *Código:* 8 dígitos\n";
+rtx2 +=     "✩ *Válido por 60 segundos*\n";
+rtx2 += "🍉 *Consejo:* Copia y pega rápido";
 
-let imagenUrl = 'https://files.catbox.moe/9cbbyf.jpg';
+let imagenUrl = 'https://iili.io/KuLFIvs.jpg';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -265,6 +265,7 @@ userJid = sock.authState.creds.me.jid || `${path.basename(subBotPath)}@s.whatsap
 console.log(chalk.bold.cyanBright(`\n❒⸺⸺⸺⸺【• SUB-BOT •】⸺⸺⸺⸺❒\n│\n│ 🟢 ${userName} (+${path.basename(subBotPath)}) conectado exitosamente.\n│\n❒⸺⸺⸺【• CONECTADO •】⸺⸺⸺❒`))
 sock.isInit = true
 global.conns.push(sock)
+try { sock.__quietUntil = Date.now() + 15_000 } catch {}
 await joinChannels(sock)
 
 m?.chat ? await conn.sendMessage(
@@ -360,14 +361,8 @@ return minutes + ' m y ' + seconds + ' s '
 }
 
 async function joinChannels(conn) {
-try {
-	if (global.ch && typeof global.ch === 'object') {
-		for (const channelId of Object.values(global.ch)) {
-			await conn.newsletterFollow(channelId).catch(() => {})
-		}
-	}
-	await conn.newsletterFollow('120363377833048768@newsletter').catch(() => {})
-} catch {}
+
+try { } catch {}
 }
 
 export { startSubBot as jadibts }
