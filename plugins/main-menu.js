@@ -9,7 +9,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     if (!global.db) global.db = {}
     if (!global.db.data) global.db.data = {}
     if (!global.db.data.users) global.db.data.users = {}
-    let user = global.db.data.users[userId] || { exp: 0, level: 1, premium: false }
+    let user = global.db.data.users[m.sender] || { exp: 0, level: 1, premium: false }
     let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => ({
       help: Array.isArray(plugin.help) ? plugin.help : (plugin.help ? [plugin.help] : []),
       tags: Array.isArray(plugin.tags) ? plugin.tags : (plugin.tags ? [plugin.tags] : []),
