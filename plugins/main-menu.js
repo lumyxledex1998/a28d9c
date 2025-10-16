@@ -4,33 +4,8 @@ import fetch from 'node-fetch'
 
 const botname = global.botname || '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎-𝐀𝐈 🌸'
 const creador = '𝗟𝗲𝗼  𝘅𝘇𝘅𝘀𝘆 ⚡'
-const version = '`4.3.1 Versión Oficial`'
+const version = '4.3.1'
 const web = 'https://xzys-ultra.vercel.app'  
-
-let tags = {
-  'bots': '❤️‍🩹 𝗦𝗨𝗕-𝗕𝗢𝗧𝗦',
-  'info': '🌸 𝗜𝗡𝗙𝗢𝗦',
-  'main': '📜 𝗠𝗘𝗡𝗨',
-  'nable': '🔮 𝗠𝗢𝗗𝗢 𝗔𝗩𝗔𝗡𝗭𝗔𝗗𝗢',
-  'cmd': '📝 𝗖𝗢𝗠𝗔𝗡𝗗𝗢𝗦',
-  'advanced': '🌟 𝗙𝗨𝗡𝗖𝗜𝗢𝗡𝗘𝗦',
-  'game': '🎮 𝗝𝗨𝗘𝗚𝗢𝗦',
-  'economy': '✨ 𝗘𝗖𝗢𝗡𝗢𝗠𝗜𝗔',
-  'gacha': '🧧 𝗚𝗔𝗖𝗛𝗔',
-  'rpgnk': '⚔️ 𝗥𝗣𝗚-𝗡𝗞',
-  'group': '📚 𝗚𝗥𝗨𝗣𝗢𝗦',
-  'downloader': '📥 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗦',
-  'sticker': '🍧 𝗦𝗧𝗜𝗖𝗞𝗘𝗥',
-  'audio': '🫧 𝗔𝗨𝗗𝗜𝗢',
-  'search': '🔎 𝗕𝗨𝗦𝗤𝗨𝗘𝗗𝗔',
-  'tools': '🧰 𝗛𝗘𝗥𝗔𝗠𝗜𝗘𝗡𝗧𝗔𝗦',
-  'fun': '💃 𝗗𝗜𝗩𝗘𝗥𝗦𝗜𝗢𝗡',
-  'ia': '🤖 𝗜𝗔',
-  'anime': '🪭 𝗔𝗡𝗜𝗠𝗘',
-  'premium': '💎 𝗣𝗥𝗘𝗠𝗜𝗨𝗠',
-  'social': '📸 𝗥𝗘𝗗𝗘𝗦',
-  'custom': '📕 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟'
-}
 
 let handler = async (m, { conn, usedPrefix: _p }) => {
   try {
@@ -46,80 +21,74 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => ({
       help: Array.isArray(plugin.help) ? plugin.help : (plugin.help ? [plugin.help] : []),
       tags: Array.isArray(plugin.tags) ? plugin.tags : (plugin.tags ? [plugin.tags] : []),
-      limit: plugin.limit,
-      premium: plugin.premium,
     }))
-
-    let date = new Date()
-    let time = date.toLocaleTimeString('es-MX', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit', 
-      hour12: false 
-    })
 
     let uptime = clockString(process.uptime() * 1000)
 
-    // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-        const officialBotNumber = '50578440363@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
-
-let name = conn.getName(m.sender) || 'Usuario'
-let taguser = '@' + m.sender.split('@')[0]
-    
+    const officialBotNumber = '50578440363@s.whatsapp.net'
     const isOfficialBot = botJid === officialBotNumber
-    const botType = isOfficialBot ? '🎀 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
-    let menuText = `
-╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
-┃ 👋🏻 *Hola* @${userId.split('@')[0]} ✨
-┃ 👑 *Creador*: *${creador}*
-┃ ${botType}
-┃ ⏳️ *Uptime*: *${uptime}*
-┃ 💎 *Premium*: *${totalPremium}*
-┃ 🪷 *Versión*: *${version}*
-┃ 💻 *Web Oficial*: *${web}*
-┃ 🔰 *Baileys-Sistem*: *xzy-Baileys*
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
+    
+    let menuText = `┏━━ ⸙ ✨ *ITSUKI NAKANO AI* ✨ ⸙
+┃ 👤 Usuario: @${userId.split('@')[0]}
+┃ ⏰ Activo: ${uptime}
+┃ 💎 Premium: ${totalPremium}
+┃ 📌 V${version}
+┗━━━━━━━━━━━━━━━━━━━⬣
+
 `
 
-    for (let tag in tags) {
-      let comandos = help.filter(menu => menu.tags.includes(tag))
-      if (!comandos.length) continue
-
-      menuText += `
-╭━━━〔 ${tags[tag]} 〕━━━⬣
-${comandos.map(menu => menu.help.map(cmd =>
-  `┃ 🌷 ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
-).join('\n')).join('\n')}
-╰━━━━━━━━━━━━━━━━━━━━━━⬣
-`
+    
+    let categories = {
+      '⚙️ *PRINCIPAL*': ['main', 'info'],
+      '🤖 *BOTS & IA*': ['bots', 'ia'],
+      '🎮 *JUEGOS & RPG*': ['game', 'rpgnk', 'gacha'],
+      '💰 *ECONOMÍA*': ['economy'],
+      '👥 *GRUPOS*': ['group'],
+      '📥 *DESCARGAS*': ['downloader'],
+      '🎨 *MULTIMEDIA*': ['sticker', 'audio', 'anime'],
+      '🔧 *HERRAMIENTAS*': ['tools', 'search', 'advanced'],
+      '✨ *EXTRAS*': ['fun', 'premium', 'social', 'custom']
     }
+
+    for (let catName in categories) {
+      let catTags = categories[catName]
+      let comandos = help.filter(menu => menu.tags.some(tag => catTags.includes(tag)))
+      
+      if (comandos.length) {
+        menuText += `${catName}\n`
+        let uniqueCommands = [...new Set(comandos.flatMap(menu => menu.help))]
+        uniqueCommands.slice(0, 8).forEach(cmd => {
+          menuText += `  ◦ ${_p}${cmd}\n`
+        })
+        menuText += `\n`
+      }
+    }
+
+    menuText += `┏━━━━━━━━━━━━━━━━━━━⬣
+┃ 💻 ${web}
+┃ 👑 By: ${creador}
+┗━━━━━━━━━━━━━━━━━━━⬣`
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    let vidBuffer = await (await fetch('https://files.catbox.moe/j6hx6k.mp4')).buffer()
+    
+    let imgUrl = 'https://files.catbox.moe/b10cv6.jpg' // Cambia por tu imagen
+    
     await conn.sendMessage(
-  m.chat,
-  {
-    video: vidBuffer,
-    gifPlayback: true,
-    caption: menuText,
-    contextInfo: {
-      mentionedJid: [userId],
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: idchannel, 
-        serverMessageId: 100, 
-        newsletterName: namechannel 
-      }
-    }
-  },
-  { quoted: m }
-)
+      m.chat,
+      {
+        image: { url: imgUrl },
+        caption: menuText,
+        mentions: [userId]
+      },
+      { quoted: m }
+    )
 
   } catch (e) {
-    await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
+    console.error(e)
+    await conn.sendMessage(m.chat, { text: `❌ Error: ${e.message}` }, { quoted: m })
   }
 }
 
@@ -129,14 +98,8 @@ handler.command = ['menu', 'menunakano', 'help', 'menuitsuki']
 export default handler
 
 function clockString(ms) {
-  let d = Math.floor(ms / 86400000) 
-  let h = Math.floor(ms / 3600000) % 24
+  let h = Math.floor(ms / 3600000)
   let m = Math.floor(ms / 60000) % 60
   let s = Math.floor(ms / 1000) % 60
-  let texto = []
-  if (d > 0) texto.push(`${d} ${d == 1 ? 'día' : 'días'}`)
-  if (h > 0) texto.push(`${h} ${h == 1 ? 'hora' : 'horas'}`)
-  if (m > 0) texto.push(`${m} ${m == 1 ? 'minuto' : 'minutos'}`)
-  if (s > 0) texto.push(`${s} ${s == 1 ? 'segundo' : 'segundos'}`)
-  return texto.length ? texto.join(', ') : '0 segundos'
+  return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
 }
