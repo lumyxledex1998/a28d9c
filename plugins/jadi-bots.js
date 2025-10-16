@@ -4,7 +4,7 @@ async function handler(m, { conn: stars, usedPrefix, command }) {
   let uniqueUsers = new Map()
 
   global.conns.forEach((conn) => {
-    if (conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED) {
+    if (conn.user && conn.ws?.socket && conn.ws.socket.readyState !== ws.CLOSED) {
       uniqueUsers.set(conn.user.jid, conn)
     }
   })
@@ -29,14 +29,23 @@ async function handler(m, { conn: stars, usedPrefix, command }) {
     responseMessage += `🌸 ¡Gracias por ser parte de nuestra familia!`
   }
 
-  // Reacción al mensaje
-  await m.react('🌱')
-
-  // Enviar mensaje con imagen
-  await stars.sendMessage(m.chat, { 
-    image: { url: 'https://files.catbox.moe/begfgc.jpg' },
-    caption: responseMessage.trim()
-  }, { quoted: m })
+  try {
+    // Reacción al mensaje
+    await m.react('🌱').catch(() => {})
+    
+    // Enviar mensaje con imagen
+    await stars.sendMessage(m.chat, { 
+      image: { url: 'https://files.catbox.moe/begfgc.jpg' },
+      caption: responseMessage.trim()
+    }, { quoted: m })
+    
+  } catch (error) {
+    console.error('Error al enviar mensaje:', error)
+    // En caso de error, enviar solo texto
+    await stars.sendMessage(m.chat, { 
+      text: responseMessage.trim()
+    }, { quoted: m })
+  }
 }
 
 handler.command = ['sockets', 'bots', 'listbots']
