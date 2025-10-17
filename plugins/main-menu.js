@@ -18,7 +18,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         tags: Array.isArray(plugin.tags) ? plugin.tags : plugin.tags ? [plugin.tags] : [],
       }))
 
-    // 🌸 Decoración original intacta
+    // 🌸 Decoración intacta
     let menuText = `> Ꮺׄ ㅤდㅤ   *ꪱׁׁׁׅׅׅtׁׅׅ꯱υׁׅƙׁׅꪱׁׁׁׅׅׅ* ㅤ 𖹭𑩙
 > ୨ㅤ   ֵ      *݊ꪀɑׁׅƙׁׅɑׁׅ݊ꪀᨵׁׅׅ* ㅤ ׄㅤ  ✰
 
@@ -36,7 +36,6 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       '*EXTRAS*': ['fun', 'premium', 'social', 'custom']
     }
 
-    // 💮 Armado del menú con tus decoraciones
     for (let catName in categories) {
       let catTags = categories[catName]
       let comandos = help.filter(menu => menu.tags.some(tag => catTags.includes(tag)))
@@ -51,7 +50,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       }
     }
 
-    // Créditos decorados
+    // Créditos finales
     menuText += `‐ ダ ძᥱsіgᥒᥱძ ᑲᥡ  :  *ׅׅ꯱hׁׁׅׅ֮֮ꪱׁׁׁׅׅׅꭈׁׅᨵׁׅׅƙׁׅᨵׁׅׅ ժׁׅ݊ꫀׁׁׅܻׅ݊᥎ׁׅׅ꯱* ギ
 ‐ ダ mᥲძᥱ ᑲᥡ  :  *ᥣׁׅ֪ꫀׁׅܻ݊ᨵׁׅׅ ᥊ׁׅzׁׅ֬zׁׅׅ֬꯱ᨮׁׅ֮* ギ`
 
@@ -61,12 +60,29 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Envío del menú principal (sin fallos de botones)
+    // 🌷 Envío del menú con botones funcionales
     await conn.sendMessage(
       m.chat,
       {
         image: { url: menuUrl },
         caption: menuText,
+        footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
+        templateButtons: [
+          {
+            index: 1,
+            urlButton: {
+              displayText: '💬 Canal Oficial',
+              url: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z'
+            }
+          },
+          {
+            index: 2,
+            quickReplyButton: {
+              displayText: '🌐 Ver más',
+              id: `${_p}menu`
+            }
+          }
+        ],
         contextInfo: {
           externalAdReply: {
             title: 'Menú Principal 🌸',
