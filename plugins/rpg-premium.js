@@ -261,9 +261,9 @@ ${Object.entries(plans).map(([plan, data]) =>
     await m.react('💎');
 };
 
-handler.help = ['comprarpremium', 'regalarpremium'];
+handler.help = ['comprarprm', 'regalarprm'];
 handler.tags = ['premium'];
-handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip', 'regalarpremium'];
+handler.command = ['comprarprm', 'premium', 'vip', 'comprarvip', 'regalarpremium'];
 handler.register = true;
 
 export default handler;
