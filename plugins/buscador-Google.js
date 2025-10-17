@@ -239,7 +239,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 }
 
-handler.help = ['gweb <consulta> [n | all]']
+handler.help = ['gweb']
 handler.tags = ['search']
 handler.command = /^(gweb|google|ghybrid|websearch)$/i
 
