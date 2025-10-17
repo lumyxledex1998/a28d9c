@@ -18,15 +18,15 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 `
 
     let categories = {
-      '*PRINCIPAL*': ['main', 'info'],
-      '*ASISTENTES*': ['bots', 'ia'],
+      '*NAKANO-INFO*': ['main', 'info'],
+      '*INTELIGENCIA*': ['bots', 'ia'],
       '*JUEGOS*': ['game', 'gacha'],
       '*ECONOMÍA*': ['economy', 'rpgnk'],
       '*GRUPOS*': ['group'],
       '*DESCARGAS*': ['downloader'],
       '*MULTIMEDIA*': ['sticker', 'audio', 'anime'],
-      '*HERRAMIENTAS*': ['tools', 'search', 'advanced'],
-      '*EXTRAS*': ['fun', 'premium', 'social', 'custom']
+      '*TOOLS*': ['tools', 'search', 'advanced'],
+      '*NK-PREM*': ['fun', 'premium', 'social', 'custom']
     }
 
     for (let catName in categories) {
