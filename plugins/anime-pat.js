@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     }
 }
 
-handler.help = ['patt/acariciar @tag'];
+handler.help = ['patt'];
 handler.tags = ['anime'];
 handler.command = ['pat','acariciar'];
 handler.group = true;
