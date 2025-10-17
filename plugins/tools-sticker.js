@@ -1,4 +1,4 @@
-import { Sticker, StickerTypes } from 'sticker-creator'
+import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
   const ctxErr = (global.rcanalx || {})
