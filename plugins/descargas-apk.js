@@ -161,7 +161,7 @@ await m.react('❌')
 }
 }
 
-handler.help = ['apk <nombre_app>']
+handler.help = ['apk']
 handler.tags = ['premium']
 handler.command = ['apk', 'apkdl', 'descargarapk']
 handler.register = true
