@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     }
 }
 
-handler.help = ['shy/timida @tag'];
+handler.help = ['shy'];
 handler.tags = ['anime'];
 handler.command = ['shy','timida'];
 handler.group = true;
