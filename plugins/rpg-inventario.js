@@ -1,7 +1,18 @@
+import moment from 'moment-timezone';
+
 let handler = async (m, { conn, usedPrefix }) => {
+    // Sistema rcanal
+    const ctxErr = (global.rcanalx || {})
+    const ctxWarn = (global.rcanalw || {})
+    const ctxOk = (global.rcanalr || {})
+    
     let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
 
     if (!(who in global.db.data.users)) {
+        // Usando ctxErr si está disponible
+        if (ctxErr.inventario) {
+            return conn.reply(m.chat, ctxErr.inventario, m);
+        }
         return conn.reply(m.chat, '❌ El usuario no se encuentra en mi base de Datos.', m);
     }
 
@@ -29,5 +40,18 @@ let handler = async (m, { conn, usedPrefix }) => {
                `┋ 📅 *Fecha:* ${new Date().toLocaleString('es-ES')}\n` +
                `╰━━━━━━━━━━━━⬣`;
 
+    // Usando ctxOk si está disponible para mensajes de éxito
+    if (ctxOk.inventario) {
+        text = ctxOk.inventario + '\n\n' + text;
+    }
+
     conn.reply(m.chat, text, m);
 }
+
+handler.help = ['inventario', 'inv'];
+handler.tags = ['rpgnk'];
+handler.command = ['inventario', 'inv']; 
+handler.group = true;
+handler.register = true;
+
+export default handler;
