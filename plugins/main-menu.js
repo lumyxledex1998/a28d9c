@@ -39,7 +39,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         uniqueCommands.forEach(cmd => {
           menuText += `> ੭੭ ﹙ ᰔᩚ ﹚ ❏ \`\`\`${_p}${cmd}\`\`\`\n`
         })
-        menuText += `> 。°。°。°。°。°。°。°。°。°。°。°\n\n`
+        menuText += `> °•°•°•°•°•°•°•°❀°•°•°•°•°•°•°•°\n\n`
       }
     }
 
