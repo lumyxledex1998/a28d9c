@@ -154,19 +154,19 @@ termux-setup-storage
 ```
 
 ```bash
-pkg update && pkg upgrade
+pkg update && pkg upgrade -y
 ```
 
 ```bash
-pkg install git nodejs ffmpeg imagemagick -y
+pkg install git nodejs ffmpeg imagemagick yarn -y
 ```
 
 ```bash
-git clone https://github.com/xzzys26/Gaara-Ultra-MD
+git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
 ```
 
 ```bash
-cd Gaara-Ultra-MD
+yarn install 
 ```
 
 ```bash
