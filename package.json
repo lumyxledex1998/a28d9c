@@ -14,6 +14,7 @@
     "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@xct007/frieren-scraper": "^0.0.2",
+    "@bochilteam/scraper": "^2.0.0"
     "@ibaraki-douji/pixivts": "^2.4.1",
     "awesome-phonenumber": "^3.4.0",
     "ruhend-scraper": "^7.0.4",
