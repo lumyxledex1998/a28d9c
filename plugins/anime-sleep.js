@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     }
 }
 
-handler.help = ['sleep/dormir @tag'];
+handler.help = ['sleep'];
 handler.tags = ['anime'];
 handler.command = ['sleep','dormir'];
 handler.group = true;
