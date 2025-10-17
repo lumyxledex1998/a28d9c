@@ -122,7 +122,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
   }
 }
 
-handler.help = ['ig <url>', 'instagram <url>']
+handler.help = ['ig']
 handler.tags = ['downloader']
 handler.command = ['ig', 'instagram', 'igdl']
 handler.register = true
