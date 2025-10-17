@@ -53,37 +53,22 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Envío del menú con LISTA interactiva
-    const sections = [
-      {
-        title: '🌸 Enlaces Oficiales',
-        rows: [
-          {
-            title: '🧋 Canal Oficial',
-            description: 'Únete a nuestro canal de WhatsApp',
-            rowId: '.canal'
-          },
-          {
-            title: '🪷 Donar',
-            description: 'Apoya el desarrollo del bot',
-            rowId: '.donar'
-          },
-          {
-            title: 'ℹ️ Información',
-            description: 'Información sobre el bot',
-            rowId: '.info'
-          }
-        ]
-      }
+    // 🌷 Botones simples que SÍ funcionan en WhatsApp normal
+    let buttons = [
+      { buttonId: '.canal', buttonText: { displayText: '🧋 Canal Oficial' }, type: 1 },
+      { buttonId: '.donar', buttonText: { displayText: '🪷 Donar' }, type: 1 },
+      { buttonId: '.info', buttonText: { displayText: 'ℹ️ Info' }, type: 1 }
     ]
 
-    await conn.sendMessage(m.chat, {
+    let buttonMessage = {
       image: { url: menuUrl },
       caption: menuText,
       footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
-      buttonText: '📋 Ver Opciones',
-      sections: sections
-    }, { quoted: m })
+      buttons: buttons,
+      headerType: 4
+    }
+
+    await conn.sendMessage(m.chat, buttonMessage, { quoted: m })
 
   } catch (e) {
     console.error(e)
