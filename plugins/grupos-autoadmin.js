@@ -107,7 +107,7 @@ const handler = async (m, { conn, isAdmin, isBotAdmin, isROwner, usedPrefix, com
   }
 }
 
-handler.help = ['autoadmin', 'autoadmin on', 'autoadmin off']
+handler.help = ['autoadmin']
 handler.tags = ['group', 'owner']
 handler.command = ['autoadmin']
 handler.group = true
