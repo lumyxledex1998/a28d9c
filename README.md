@@ -3,7 +3,7 @@
 
 <!-- Banner -->
 <h1 align="center">
-  <img src="https://files.catbox.moe/15voeu.jpg" width="700" alt="Gaara Ultra MD Banner"/>
+  <img src="https://files.catbox.moe/vcdr4w.jpg" width="700" alt="Itsuki-Nakano IA Banner Ofc"/>
 </h1>
 
 [![Version](https://img.shields.io/badge/Version-3.4.0-pink.svg)]()
