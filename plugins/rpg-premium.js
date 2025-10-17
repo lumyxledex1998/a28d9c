@@ -261,7 +261,7 @@ ${Object.entries(plans).map(([plan, data]) =>
     await m.react('💎');
 };
 
-handler.help = ['comprarpremium [plan]', 'regalarpremium @usuario [plan]'];
+handler.help = ['comprarpremium', 'regalarpremium'];
 handler.tags = ['premium'];
 handler.command = ['comprarpremium', 'premium', 'vip', 'comprarvip', 'regalarpremium'];
 handler.register = true;
