@@ -147,9 +147,39 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
 
 
+<summary><b>⚡️ Iniciar El Bot En Termux</b></summary>
+
+> Nota: Copie y pegue los comandos en termux uno por uno.
+
+```bash
+termux-setup-storage
+```
+
+```bash
+pkg update && pkg upgrade
+```
+
+```bash
+pkg install git nodejs ffmpeg imagemagick -y
+```
+
+```bash
+git clone https://github.com/xzzys26/Gaara-Ultra-MD
+```
+
+```bash
+cd Gaara-Ultra-MD
+```
+
+```bash
+npm install
+```
+
+```bash
+npm start
+```
+
 ## `Sitio web`: [¡Aqui!](https://itsuki-nakano-page.wuaze.com/?i=1)
-
-
 
 ## `INFO HOST 💻`
 
