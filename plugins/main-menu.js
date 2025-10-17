@@ -44,14 +44,14 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     }
 
     // Créditos finales
-    menuText += `‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ sʜɪʀᴏᴋᴏ ᴅᴇᴠs ✨
-‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑`
+    menuText += `*‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ sʜɪʀᴏᴋᴏ ᴅᴇᴠs ✨*
+*‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑*`
 
     // Reacción emoji
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
     // Imagen del menú
-    let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
+    let menuUrl = 'https://files.catbox.moe/vcdr4w.jpg'
 
     // 🌷 Botones con quickReply que envían los links automáticamente
     let buttons = [
