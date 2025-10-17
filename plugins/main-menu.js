@@ -12,8 +12,8 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       }))
 
     // 🌸 Decoración intacta
-    let menuText = `> Ꮺׄ ㅤდㅤ   *ꪱׁׁׁׅׅׅtׁׅׅ꯱υׁׅƙׁׅꪱׁׁׁׅׅׅ* ㅤ 𖹭𑩙
-> ୨ㅤ   ֵ      *݊ꪀɑׁׅƙׁׅɑׁׅ݊ꪀᨵׁׅׅ* ㅤ ׄㅤ  ✰
+    let menuText = `> Ꮺׄ ㅤდㅤ   *ɪᴛsᴜᴋɪ* ㅤ 𖹭𑩙
+> ୨ㅤ   ֵ      *݊ɴᴀᴋᴀɴᴏV2* ㅤ ׄㅤ  ꨄ︎
 
 `
 
@@ -34,18 +34,18 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       let comandos = help.filter(menu => menu.tags.some(tag => catTags.includes(tag)))
 
       if (comandos.length) {
-        menuText += `꒰⌢ ʚ˚₊‧  ❍  ꒱꒱ :: ${catName} ıllı\n`
+        menuText += `꒰⌢ ʚ˚₊‧  ✎  ꒱꒱ 🌱 ${catName} ıllı\n`
         let uniqueCommands = [...new Set(comandos.flatMap(menu => menu.help))]
         uniqueCommands.forEach(cmd => {
-          menuText += `> ੭੭ ﹙ ᰔᩚ ᪶ ﹚:: \`\`\`${_p}${cmd}\`\`\`\n`
+          menuText += `> ੭੭ ﹙ ✎ ﹚🌱 \`\`\`${_p}${cmd}\`\`\`\n`
         })
         menuText += `> 。°。°。°。°。°。°。°。°。°。°。°\n\n`
       }
     }
 
     // Créditos finales
-    menuText += `‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ  :  *ׅׅ꯱hׁׁׅׅ֮֮ꪱׁׁׁׅׅׅꭈׁׅᨵׁׅׅƙׁׅᨵׁׅׅ ժׁׅ݊ꫀׁׁׅܻׅ݊᥎ׁׅׅ꯱* ギ
-‐ ダ mᥲძᥱ ᑲᥡ  :  *ᥣׁׅ֪ꫀׁׅܻ݊ᨵׁׅׅ ᥊ׁׅzׁׅ֬zׁׅׅ֬꯱ᨮׁׅ֮* ギ`
+    menuText += `‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ sʜɪʀᴏᴋᴏ ᴅᴇᴠs ✨
+‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑`
 
     // Reacción emoji
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
@@ -101,7 +101,7 @@ handler.before = async function (m, { conn }) {
 
 👉 https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z
 
-¡Únete ahora! 🌸`
+> ¡Únete ahora! 🌸`
     }, { quoted: m })
     return true
   }
@@ -112,7 +112,7 @@ handler.before = async function (m, { conn }) {
 
 👉 https://paypal.me/Erenxs01
 
-¡Gracias por tu apoyo! 💖`
+> ¡Gracias por tu apoyo! 💖`
     }, { quoted: m })
     return true
   }
