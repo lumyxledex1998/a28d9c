@@ -36,7 +36,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       }
 
       try {
-        // Usar sticker-creator
+        // Usar sticker-creator (más moderno)
         const stickerOptions = {
           pack: 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ',
           author: '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑',
@@ -46,11 +46,22 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         }
 
         const sticker = new Sticker(img, stickerOptions)
-        stiker = await sticker.build()
+        stiker = await sticker.toBuffer() // o .build() dependiendo de la versión
 
       } catch (e) {
         console.error(e)
-        return conn.reply(m.chat, '❌ *Error al crear el sticker*', m, ctxErr)
+        // Fallback a sharp si sticker-creator falla
+        try {
+          stiker = await sharp(img)
+            .resize(512, 512, {
+              fit: 'contain',
+              background: { r: 0, g: 0, b: 0, alpha: 0 }
+            })
+            .webp({ quality: 80 })
+            .toBuffer()
+        } catch (fallbackError) {
+          return conn.reply(m.chat, '❌ *Error al crear el sticker*', m, ctxErr)
+        }
       }
 
     } else if (args[0]) {
@@ -66,7 +77,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
           }
 
           const sticker = new Sticker(args[0], stickerOptions)
-          stiker = await sticker.build()
+          stiker = await sticker.toBuffer()
 
         } catch (e) {
           console.error(e)
