@@ -55,7 +55,6 @@
     "node-cache": "^5.1.2",
     "uuid": "^10.0.0",
     "yargs": "^17.3.1",
-    "@bochilteam/scraper": "^2.0.0",
     "sticker-creator": "^1.0.2"
   }
 }
