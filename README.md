@@ -162,6 +162,10 @@ git clone https://github.com/xzzys26/Itsuki-Nakano
 ```
 
 ```bash
+cd Itsuki-Nakano 
+```
+
+```bash
 npm install
 ```
 
