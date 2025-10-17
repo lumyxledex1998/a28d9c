@@ -3,7 +3,7 @@
 
 <!-- Banner -->
 <h1 align="center">
-  <img src="https://files.catbox.moe/vcdr4w.jpg" width="700" alt="Itsuki-Nakano IA Banner Ofc"/>
+  <img src="https://files.catbox.moe/9k6mjb.jpg" width="700" alt="Itsuki-Nakano IA Banner Ofc"/>
 </h1>
 
 
