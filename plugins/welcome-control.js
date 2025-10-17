@@ -72,7 +72,7 @@ let handler = async (m, { conn, usedPrefix, command, isAdmin, isBotAdmin }) => {
   }
 }
 
-handler.help = ['welcome [on/off/status]']
+handler.help = ['welcome']
 handler.tags = ['group']
 handler.command = ['welcome']
 handler.admin = true
