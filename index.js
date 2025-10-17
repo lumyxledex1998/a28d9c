@@ -153,7 +153,7 @@ async function chooseMethod(authDir) {
   let ans
   do {
     console.clear()
-    const banner = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('    ⚙ MÉTODO DE CONEXIÓN BOT    ')}\n│「 🗯 」${chalk.yellow('Selecciona cómo quieres conectarte')}\n│「 📲 」${chalk.yellow.bgRed.bold('1. Escanear Código QR')}\n│「 🔛 」${chalk.red.bgGreenBright.bold('2. Código de Emparejamiento')}\n│\n│「 ℹ️ 」${chalk.gray('Usa el código si tienes problemas con el QR')}\n│「 🚀 」${chalk.gray('Ideal para la primera configuración')}\n│\n╰─────────────────────────────◉\n${chalk.magenta('--->')} ${chalk.bold('Elige (1 o 2): ')}`
+    const banner = `\n╭─────────────────────────────◉\n│ ${chalk.red.bgBlueBright.bold('    ⚙ MÉTODO DE CONEXIÓN BOT    ')}\n│「 🗯 」${chalk.yellow('Selecciona cómo quieres conectarte')}\n│「 📲 」${chalk.yellow.bgRed.bold('1. Escanear Código QR')}\n│「 🔛 」${chalk.red.bgGreenBright.bold('2. Código de Emparejamiento')}\n│\n│「 ✨️ 」${chalk.gray('Usa el código si tienes problemas con el QR')}\n│「 🚀 」${chalk.gray('Ideal para la primera configuración')}\n│\n╰─────────────────────────────◉\n${chalk.magenta('--->')} ${chalk.bold('Elige (1 o 2): ')}`
     ans = await ask(banner)
   } while (!['1','2'].includes(ans))
   return ans === '1' ? 'qr' : 'code'
