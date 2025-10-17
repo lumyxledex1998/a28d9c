@@ -88,6 +88,6 @@ const handler = async (m, { text, usedPrefix, command, conn }) => {
 
 handler.command = ['addcharacter', 'addrw', 'addpersonaje']
 handler.tags = ['gacha']
-handler.help = ['addcharacter <datos>']
+handler.help = ['addcharacter']
 
 export default handler
