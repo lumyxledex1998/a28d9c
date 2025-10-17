@@ -1,18 +1,14 @@
-import db from '../lib/database.js';
-import moment from 'moment-timezone';
-
 let handler = async (m, { conn, usedPrefix }) => {
-    let who = m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
+    let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
 
     if (!(who in global.db.data.users)) {
-        return conn.reply(m.chat, `${emoji} El usuario no se encuentra en mi base de Datos.`, m);
+        return conn.reply(m.chat, '❌ El usuario no se encuentra en mi base de Datos.', m);
     }
 
-    let img = 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745557972839.jpeg';
     let user = global.db.data.users[who];
     let name = conn.getName(who);
-
     let premium = user.premium ? '✅' : '❌';
+    let moneda = '¥';
 
     let text = `╭━〔 Inventario de ${name} 〕⬣\n` +
                `┋ 💸 *${moneda} en Cartera:* ${user.coin || 0}\n` +  
@@ -28,18 +24,10 @@ let handler = async (m, { conn, usedPrefix }) => {
                `┋ 🍬 *Dulces:* ${user.candies || 0}\n` + 
                `┋ 🎁 *Regalos:* ${user.gifts || 0}\n` + 
                `┋ 🎟️ *Tokens:* ${user.joincount || 0}\n` +  
-               `┋ ⚜️ *Premium:* ${premium}\n` + 
+               `┋ ✨️ *Premium:* ${premium}\n` + 
                `┋ ⏳ *Última Aventura:* ${user.lastAdventure ? moment(user.lastAdventure).fromNow() : 'Nunca'}\n` + 
-               `┋ 📅 *Fecha:* ${new Date().toLocaleString('id-ID')}\n` +
+               `┋ 📅 *Fecha:* ${new Date().toLocaleString('es-ES')}\n` +
                `╰━━━━━━━━━━━━⬣`;
 
-    await conn.sendFile(m.chat, img, 'yuki.jpg', text, fkontak);
+    conn.reply(m.chat, text, m);
 }
-
-handler.help = ['inventario', 'inv'];
-handler.tags = ['rpgnk'];
-handler.command = ['inventario', 'inv']; 
-handler.group = true;
-handler.register = true;
-
-export default handler;
