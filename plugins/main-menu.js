@@ -60,54 +60,36 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Envío del menú con botones actualizados y funcionales
+    // 🌷 Envío del menú con 2 botones directos a URLs
     await conn.sendMessage(
       m.chat,
       {
         image: { url: menuUrl },
         caption: menuText,
         footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
-        buttons: [
+        templateButtons: [
           {
-            buttonId: `${_p}allmenu`,
-            buttonText: { displayText: '📖 MENÚ COMPLETO' },
-            type: 1
+            index: 1,
+            urlButton: {
+              displayText: '🪷 𝐃𝐎𝐍𝐀𝐑',
+              url: 'https://paypal.me/Erenxs01'
+            }
           },
           {
-            buttonId: `${_p}owner`,
-            buttonText: { displayText: '👑 CREADOR' },
-            type: 1
-          },
-          {
-            buttonId: `${_p}donar`,
-            buttonText: { displayText: '💰 DONAR' },
-            type: 1
-          },
-          {
-            buttonId: `${_p}grupos`,
-            buttonText: { displayText: '👥 GRUPOS' },
-            type: 1
+            index: 2,
+            urlButton: {
+              displayText: '🧋 𝐂𝐀𝐍𝐀𝐋 𝐎𝐅𝐂', 
+              url: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z'
+            }
           }
-        ],
-        headerType: 4
+        ]
       },
       { quoted: m }
     )
 
   } catch (e) {
     console.error(e)
-    await conn.sendMessage(m.chat, { 
-      text: `❌ Error en el menú: ${e.message}\n\n⚠️ Intentando método alternativo...` 
-    }, { quoted: m })
-    
-    // Método alternativo si falla el principal
-    try {
-      await conn.sendFile(m.chat, menuUrl, 'menu.jpg', menuText, m)
-    } catch (e2) {
-      await conn.sendMessage(m.chat, { 
-        text: `📖 *MENÚ ITSUKI NAKANO AI*\n\n${menuText}\n\n🌸 *Bot activo y funcionando*` 
-      }, { quoted: m })
-    }
+    await conn.sendMessage(m.chat, { text: `❌ Error en el menú: ${e.message}` }, { quoted: m })
   }
 }
 
