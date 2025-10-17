@@ -4,13 +4,18 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   const ctxOk = (global.rcanalr || {})
 
   try {
-    if (!global.opts['owner']) return conn.reply(m.chat, ctxErr.grupos || '❌ No tienes permisos para usar este comando', m)
+    // Verificar si es propietario del bot (método corregido)
+    let owner = [conn.user.jid.split('@')[0] + '@s.whatsapp.net', ...global.conns.map(conn => conn.user.jid)]
+    if (!owner.includes(m.sender)) {
+      return conn.reply(m.chat, ctxErr.grupos || '❌ No tienes permisos para usar este comando', m)
+    }
     
+    // Obtener todos los chats
     let chats = conn.chats.all()
     let groups = chats.filter(chat => chat.jid.endsWith('@g.us'))
     
     if (groups.length === 0) {
-      return conn.reply(m.chat, ctxErr.grupos || '😕 No hay grupos disponibles', m)
+      return conn.reply(m.chat, ctxErr.grupos || '🍥 No hay grupos disponibles', m)
     }
 
     await conn.reply(m.chat, ctxWarn.grupos || '📚 Obteniendo información de grupos...', m)
@@ -41,7 +46,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
       groupInfo += `\n📝 *Mostrando 15 de ${totalGroups} grupos*\n`
     }
 
-    groupInfo += `\n✨️ *Itsuki Nakano - Siempre aprendiendo*`
+    groupInfo += `\n🍥 *Itsuki Nakano - Siempre aprendiendo*`
 
     await conn.reply(m.chat, (ctxOk.grupos || '✅ Información obtenida') + '\n\n' + groupInfo, m)
 
