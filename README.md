@@ -166,10 +166,6 @@ git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
 ```
 
 ```bash
-yarn install 
-```
-
-```bash
 npm install
 ```
 
