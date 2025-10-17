@@ -53,7 +53,7 @@ let handler = async (m, { conn, usedPrefix }) => {
   }
 }
 
-handler.help = ['total', 'comandos', 'totalcomandos']
+handler.help = ['total', 'comandos']
 handler.tags = ['info']
 handler.command = ['total', 'comandos', 'totalcomandos']
 
