@@ -159,7 +159,7 @@ ${usedPrefix + command} obtenerid
   }
 }
 
-handler.help = ['sugerencia', 'sugerir', 'idea', 'suggestion <texto>']
+handler.help = ['sugerir']
 handler.tags = ['main']
 handler.command = ['sugerencia', 'sugerir', 'idea', 'suggestion', 'propuesta']
 handler.private = false
