@@ -81,7 +81,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     }
 }
 
-handler.help = ['wimage <nombre del personaje>']
+handler.help = ['wimage']
 handler.tags = ['gacha']
 handler.command = ['charimage', 'wimage', 'waifuimage', 'imagen']
 handler.group = true
