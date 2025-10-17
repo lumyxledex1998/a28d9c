@@ -1,6 +1,6 @@
 {
-  "name": "itsuki-nakano-ia",
-  "version": "4.3.1-Oficial",
+  "name": "Itsuki-Nakano",
+  "version": "4.3.1",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -55,9 +55,8 @@
     "node-cache": "^5.1.2",
     "uuid": "^10.0.0",
     "yargs": "^17.3.1"
-},
-      "optionalDependencies": {
-    "wa-sticker-formatter": "^4.3.2",
-    "moment-timezone": "^0.5.37"
-}}
- 
+  },
+  "optionalDependencies": {
+    "wa-sticker-formatter": "^4.3.2"
+  }
+}
