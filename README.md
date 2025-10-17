@@ -1,5 +1,7 @@
 # 🎀 Itsuki Nakano - IA ✨
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Oswald+Code&pause=1000&color=FF69B4&width=435&lines=Bienvenido+al+Repositorio+Oficial;Itsuki+Nakano-IA;Un+Bot+IA+versión+4.3.1 Oficial ;Creado+por+LeoXzzsy;)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Oswald+Code&pause=100&color=00FF00&lines=Bienvenido+al+Repositorio;Mao+-+Chan+;Un+Bot+Lite+versión+1.0.0-beta;Creado+por+Izumi;)](https://git.io/typing-svg)
+![Azumi](https://iili.io/FrbNIr7.jpg)
+
 
 <!-- Banner -->
 <h1 align="center">
