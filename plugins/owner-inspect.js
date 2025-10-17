@@ -6,16 +6,6 @@ import axios from 'axios'
 
 let handler = async (m, { conn, command, usedPrefix, args, text, groupMetadata, isOwner, isROwner }) => {
 const isCommand1 = /^(inspect|inspeccionar)\b$/i.test(command)
-const isCommand2 = /^(seguircanal)\b$/i.test(command)
-const isCommand3 = /^(noseguircanal)\b$/i.test(command)
-const isCommand4 = /^(silenciarcanal)\b$/i.test(command)
-const isCommand5 = /^(nosilenciarcanal)\b$/i.test(command)
-const isCommand6 = /^(nuevafotochannel)\b$/i.test(command)
-const isCommand7 = /^(eliminarfotochannel)\b$/i.test(command)
-const isCommand8 = /^(avisoschannel|resiviravisos)\b$/i.test(command)
-const isCommand9 = /^(reactioneschannel|reaccioneschannel)\b$/i.test(command)
-const isCommand10 = /^(nuevonombrecanal)\b$/i.test(command)
-const isCommand11 = /^(nuevadescchannel)\b$/i.test(command)
 
 const channelUrl = text?.match(/(?:https:\/\/)?(?:www\.)?(?:chat\.|wa\.)?whatsapp\.com\/(?:channel\/|joinchat\/)?([0-9A-Za-z]{22,24})/i)?.[1]
 let txtBotAdminCh = '\n\n> *Verifique que el Bot sea admin en el canal, de lo contrario no funcionará el comando.*'
