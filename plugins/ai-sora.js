@@ -118,7 +118,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   }    
 }    
     
-handler.help = ['sora1 <prompt>']    
+handler.help = ['sora1']    
 handler.tags = ['premium']    
 handler.command = ['sora1']    
 handler.register = true    
