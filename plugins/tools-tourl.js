@@ -231,7 +231,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
   return doUpload(m, conn, service)
 }
 
-handler.help = ['tourl [servicio]']
+handler.help = ['tourl']
 handler.tags = ['tools']
 handler.command = /^(tourl|upload)$/i
 
