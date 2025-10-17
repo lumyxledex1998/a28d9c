@@ -71,7 +71,7 @@ await m.react('🪄')
 
 handler.command = ['gemini', 'geminis'];
 handler.tags = ['ia'];
-handler.help = ['gemini <pregunta>'];
+handler.help = ['gemini'];
 handler.group = false
 
 export default handler
