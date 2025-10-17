@@ -1,3 +1,5 @@
+// Tourl Creado Por DavidXzsy Adaptado Para Itsuki Nakano IA v2
+
 import fetch, { FormData, Blob } from 'node-fetch'
 import crypto from 'crypto'
 import { fileTypeFromBuffer } from 'file-type'
