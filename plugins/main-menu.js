@@ -53,31 +53,34 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Lista con formato alternativo
-    let rows = [
-      { title: '🧋 Canal Oficial', description: 'Únete a nuestro canal', rowId: '.canal' },
-      { title: '🪷 Donar', description: 'Apoya el desarrollo', rowId: '.donar' },
-      { title: 'ℹ️ Información', description: 'Info del bot', rowId: '.info' },
-      { title: '👥 Grupo', description: 'Únete a la comunidad', rowId: '.grupo' },
-      { title: '💬 Soporte', description: 'Obtén ayuda', rowId: '.soporte' }
+    // 🌷 Botones con quickReply que envían los links automáticamente
+    let buttons = [
+      { 
+        buttonId: `canal_${Date.now()}`, 
+        buttonText: { displayText: '🧋 Canal Oficial' }, 
+        type: 1 
+      },
+      { 
+        buttonId: `donar_${Date.now()}`, 
+        buttonText: { displayText: '🪷 Donar' }, 
+        type: 1 
+      }
     ]
 
-    await conn.sendList(
-      m.chat,
-      menuText,
-      '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
-      '🔽 Ver Opciones',
-      rows,
-      m
-    )
+    let buttonMessage = {
+      image: { url: menuUrl },
+      caption: menuText,
+      footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
+      buttons: buttons,
+      headerType: 4
+    }
+
+    await conn.sendMessage(m.chat, buttonMessage, { quoted: m })
 
   } catch (e) {
     console.error(e)
-    // Fallback con imagen
-    await conn.sendMessage(m.chat, {
-      image: { url: 'https://files.catbox.moe/b10cv6.jpg' },
-      caption: menuText + `\n\n🌸 *OPCIONES DISPONIBLES*\n\n🧋 .canal - Canal oficial\n🪷 .donar - Apoyar al bot\nℹ️ .info - Información\n👥 .grupo - Comunidad\n💬 .soporte - Ayuda`,
-      footer: '🌸 Escribe el comando para acceder'
+    await conn.sendMessage(m.chat, { 
+      text: `❌ Error en el menú: ${e.message}` 
     }, { quoted: m })
   }
 }
@@ -85,5 +88,34 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 handler.help = ['menu', 'menunakano', 'help', 'menuitsuki']
 handler.tags = ['main']
 handler.command = ['menu', 'menunakano', 'help', 'menuitsuki']
+
+// 🌷 Handler para detectar los botones presionados
+handler.before = async function (m, { conn }) {
+  if (!m.message) return
+  
+  const buttonResponse = m.message.buttonsResponseMessage?.selectedButtonId
+  
+  if (buttonResponse && buttonResponse.startsWith('canal_')) {
+    await conn.sendMessage(m.chat, {
+      text: `🧋 *CANAL OFICIAL*
+
+👉 https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z
+
+¡Únete ahora! 🌸`
+    }, { quoted: m })
+    return true
+  }
+  
+  if (buttonResponse && buttonResponse.startsWith('donar_')) {
+    await conn.sendMessage(m.chat, {
+      text: `🪷 *DONACIONES*
+
+👉 https://paypal.me/Erenxs01
+
+¡Gracias por tu apoyo! 💖`
+    }, { quoted: m })
+    return true
+  }
+}
 
 export default handler
