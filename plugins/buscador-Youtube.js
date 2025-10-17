@@ -71,7 +71,7 @@ handler.premium = false
 handler.free = true 
 handler.register = false
 
-handler.help = ['buscar <canción>']
+handler.help = ['buscar MSC']
 handler.tags = ['search']
 handler.command = ['buscar', 'song', 'musica', 'music', 'mp3']
 
