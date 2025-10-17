@@ -94,7 +94,7 @@ ${text}
   }
 }
 
-handler.help = ['reporte', 'report', 'bug', 'error <descripción>']
+handler.help = ['reporte']
 handler.tags = ['main']
 handler.command = ['reporte', 'report', 'bug', 'error', 'reportar']
 handler.private = false
