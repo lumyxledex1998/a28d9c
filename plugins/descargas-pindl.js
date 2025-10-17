@@ -182,7 +182,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
 handler.command = ['pinvideo', 'pindl', 'pinterestdl', 'pindescargar', 'pinmedia'];
 handler.register = true;
-handler.help = ['pinvideo <url>'];
+handler.help = ['pinvideo'];
 handler.tags = ['premium'];
 handler.premium = true;
 
