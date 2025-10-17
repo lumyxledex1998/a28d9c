@@ -91,8 +91,8 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 }
 
-handler.help = ['play <nombre de la canción>']
+handler.help = ['play']
 handler.tags = ['downloader']
-handler.command = ['play']
+handler.command = ['play1']
 
 export default handler
