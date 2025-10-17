@@ -1,4 +1,6 @@
 let cooldowns = {}
+let fkontak = { key: { participant: '0@s.whatsapp.net' }, message: { contactMessage: { displayName: '' }} }
+let moneda = '¥' // Yenes
 
 let handler = async (m, { conn }) => {
 let user = global.db.data.users[m.sender];
@@ -22,7 +24,7 @@ let hasil = Math.floor(Math.random() * 1000);
 let info = `⛏️ *Te has adentrando en lo profundo de las cuevas*\n\n` +
 `> *🍬 Obtuviste estos recursos*\n\n` +
 `✨ *Exp*: ${hasil}\n` +
-`💸 *${moneda}*: ${coin}\n` +
+`💸 *${moneda} Yenes*: ${coin}\n` +
 `♦️ *Esmeralda*: ${emerald}\n` +
 `🔩 *Hierro*: ${iron}\n` +
 `🏅 *Oro*: ${gold}\n` +
