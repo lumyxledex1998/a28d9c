@@ -75,7 +75,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     }
 }
 
-handler.help = ['topwaifus [página]']
+handler.help = ['topwaifus']
 handler.tags = ['gacha']
 handler.command = ['topwaifus', 'waifustop', 'waifusboard', 'topchars']
 handler.group = true
