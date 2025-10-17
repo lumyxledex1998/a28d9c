@@ -60,36 +60,77 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Envío del menú con 2 botones directos a URLs
+    // 🌷 Envío del menú con 2 botones: Donar y Canal Oficial
     await conn.sendMessage(
       m.chat,
       {
         image: { url: menuUrl },
         caption: menuText,
-        templateButtons: [
+        footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
+        buttons: [
           {
-            index: 1,
-            urlButton: {
-              displayText: '🪷 𝐃𝐎𝐍𝐀𝐑',
-              url: 'https://paypal.me/Erenxs01'
-            }
+            buttonId: `${_p}donate`,
+            buttonText: { displayText: '💰 DONAR' },
+            type: 1
           },
           {
-            index: 2,
-            urlButton: {
-              displayText: '🧋 𝐂𝐀𝐍𝐀𝐋 𝐎𝐅𝐂', 
-              url: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z'
-            }
+            buttonId: `${_p}channel`,
+            buttonText: { displayText: '💬 CANAL OFICIAL' },
+            type: 1
           }
-        ]
+        ],
+        headerType: 4
       },
       { quoted: m }
     )
 
   } catch (e) {
     console.error(e)
-    await conn.sendMessage(m.chat, { text: `❌ Error en el menú: ${e.message}` }, { quoted: m })
+    await conn.sendMessage(m.chat, { 
+      text: `❌ Error en el menú: ${e.message}\n\n⚠️ Intentando método alternativo...` 
+    }, { quoted: m })
+    
+    // Método alternativo si falla el principal
+    try {
+      await conn.sendFile(m.chat, 'https://files.catbox.moe/b10cv6.jpg', 'menu.jpg', menuText, m)
+    } catch (e2) {
+      await conn.sendMessage(m.chat, { 
+        text: `📖 *MENÚ ITSUKI NAKANO AI*\n\n${menuText}\n\n💝 *Apoya el desarrollo:*\nPayPal: paypal.me/tuusuario\n\n📢 *Canal Oficial:*\nhttps://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z` 
+      }, { quoted: m })
+    }
   }
+}
+
+// Comando adicional para donaciones
+handler.donate = async (m, { conn }) => {
+  await conn.sendMessage(m.chat, {
+    text: `💝 *APOYA EL DESARROLLO*\n\n📦 *Donar via PayPal:*\npaypal.me/tuusuario\n\n✨ Tu apoyo ayuda a mantener el bot activo y con nuevas funciones. ¡Gracias! 🌸`,
+    footer: 'Itsuki Nakano AI - Donaciones',
+    buttons: [
+      {
+        urlButton: {
+          displayText: '💰 DONAR AHORA',
+          url: 'https://paypal.me/tuusuario'
+        }
+      }
+    ]
+  }, { quoted: m })
+}
+
+// Comando adicional para canal
+handler.channel = async (m, { conn }) => {
+  await conn.sendMessage(m.chat, {
+    text: `📢 *CANAL OFICIAL ITSUKI NAKANO AI*\n\n🌐 Únete a nuestro canal para recibir actualizaciones, novedades y más contenido exclusivo del bot. ¡No te lo pierdas! ✨`,
+    footer: 'Itsuki Nakano AI - Canal Oficial',
+    buttons: [
+      {
+        urlButton: {
+          displayText: '📱 UNIRME AL CANAL',
+          url: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z'
+        }
+      }
+    ]
+  }, { quoted: m })
 }
 
 handler.help = ['menu', 'menunakano', 'help', 'menuitsuki']
