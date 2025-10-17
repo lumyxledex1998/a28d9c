@@ -57,12 +57,12 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let buttons = [
       { 
         buttonId: `canal_${Date.now()}`, 
-        buttonText: { displayText: '🧋 Canal Oficial' }, 
+        buttonText: { displayText: '🧋 𝐂𝐀𝐍𝐀𝐋 𝐎𝐅𝐂' }, 
         type: 1 
       },
       { 
         buttonId: `donar_${Date.now()}`, 
-        buttonText: { displayText: '🪷 Donar' }, 
+        buttonText: { displayText: '🪷 𝐃𝐎𝐍𝐀𝐑' }, 
         type: 1 
       }
     ]
