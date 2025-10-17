@@ -214,7 +214,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 }
 
-handler.help = ['editai <prompt>']
+handler.help = ['editai']
 handler.tags = ['premium']
 handler.command = ['editai', 'iaedit', 'editia', 'aiimage']
 handler.register = true
