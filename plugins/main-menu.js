@@ -51,7 +51,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     }
 
     // Créditos finales
-    menuText += `‐ ダ ძᥱsіgᥒᥱძ ᑲᥡ  :  *ׅׅ꯱hׁׁׅׅ֮֮ꪱׁׁׁׅׅׅꭈׁׅᨵׁׅׅƙׁׅᨵׁׅׅ ժׁׅ݊ꫀׁׁׅܻׅ݊᥎ׁׅׅ꯱* ギ
+    menuText += `‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ  :  *ׅׅ꯱hׁׁׅׅ֮֮ꪱׁׁׁׅׅׅꭈׁׅᨵׁׅׅƙׁׅᨵׁׅׅ ժׁׅ݊ꫀׁׁׅܻׅ݊᥎ׁׅׅ꯱* ギ
 ‐ ダ mᥲძᥱ ᑲᥡ  :  *ᥣׁׅ֪ꫀׁׅܻ݊ᨵׁׅׅ ᥊ׁׅzׁׅ֬zׁׅׅ֬꯱ᨮׁׅ֮* ギ`
 
     // Reacción emoji
@@ -60,50 +60,58 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Envío del menú con botones funcionales
+    // 🌷 Envío del menú con botones actualizados y funcionales
     await conn.sendMessage(
       m.chat,
       {
         image: { url: menuUrl },
         caption: menuText,
         footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
-        templateButtons: [
+        buttons: [
           {
-            index: 1,
-            urlButton: {
-              displayText: '💬 Canal Oficial',
-              url: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z'
-            }
+            buttonId: `${_p}allmenu`,
+            buttonText: { displayText: '📖 MENÚ COMPLETO' },
+            type: 1
           },
           {
-            index: 2,
-            quickReplyButton: {
-              displayText: '🌐 Ver más',
-              id: `${_p}menu`
-            }
+            buttonId: `${_p}owner`,
+            buttonText: { displayText: '👑 CREADOR' },
+            type: 1
+          },
+          {
+            buttonId: `${_p}donar`,
+            buttonText: { displayText: '💰 DONAR' },
+            type: 1
+          },
+          {
+            buttonId: `${_p}grupos`,
+            buttonText: { displayText: '👥 GRUPOS' },
+            type: 1
           }
         ],
-        contextInfo: {
-          externalAdReply: {
-            title: 'Menú Principal 🌸',
-            body: '✨ Itsuki Nakano AI - BrayanOFC',
-            thumbnailUrl: menuUrl,
-            sourceUrl: 'https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z',
-            mediaType: 1,
-            renderLargerThumbnail: true
-          }
-        }
+        headerType: 4
       },
       { quoted: m }
     )
 
   } catch (e) {
     console.error(e)
-    await conn.sendMessage(m.chat, { text: `❌ Error en el menú: ${e.message}` }, { quoted: m })
+    await conn.sendMessage(m.chat, { 
+      text: `❌ Error en el menú: ${e.message}\n\n⚠️ Intentando método alternativo...` 
+    }, { quoted: m })
+    
+    // Método alternativo si falla el principal
+    try {
+      await conn.sendFile(m.chat, menuUrl, 'menu.jpg', menuText, m)
+    } catch (e2) {
+      await conn.sendMessage(m.chat, { 
+        text: `📖 *MENÚ ITSUKI NAKANO AI*\n\n${menuText}\n\n🌸 *Bot activo y funcionando*` 
+      }, { quoted: m })
+    }
   }
 }
 
-handler.help = ['menu']
+handler.help = ['menu', 'menunakano', 'help', 'menuitsuki']
 handler.tags = ['main']
 handler.command = ['menu', 'menunakano', 'help', 'menuitsuki']
 
