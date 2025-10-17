@@ -92,7 +92,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }    
 }    
 
-handler.help = ['play2 <nombre>']    
+handler.help = ['play2']    
 handler.tags = ['downloader']    
 handler.command = ['play2']    
 
