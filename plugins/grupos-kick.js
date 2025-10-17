@@ -72,7 +72,7 @@ let handler = async (m, { conn, text, participants, parseUserTargets, getUserInf
   }
 }
 
-handler.help = ['kick @usuario | responder | numero']
+handler.help = ['kick']
 handler.tags = ['group']
 handler.command = ['kick', 'ban', 'expulsar']
 handler.group = true
