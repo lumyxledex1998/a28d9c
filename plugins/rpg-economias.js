@@ -290,8 +290,8 @@ let handler = async (m, { conn, args, usedPrefix, command, isAdmin }) => {
 
 // Configuración del handler
 handler.help = [
-  'economy <on/off>',
-  'balance [@usuario]', 
+  'economy',
+  'balance', 
   'daily',
   'cofre',
   'baltop'
