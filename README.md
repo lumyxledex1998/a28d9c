@@ -154,15 +154,11 @@ termux-setup-storage
 ```
 
 ```bash
-pkg update && pkg upgrade -y
+apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 
 ```bash
-pkg install git nodejs ffmpeg imagemagick yarn -y
-```
-
-```bash
-git clone https://github.com/xzzys26/Itsuki-Nakano && cd Itsuki-Nakano
+git clone https://github.com/xzzys26/Itsuki-Nakano
 ```
 
 ```bash
