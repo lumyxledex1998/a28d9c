@@ -11,7 +11,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
         tags: Array.isArray(plugin.tags) ? plugin.tags : plugin.tags ? [plugin.tags] : [],
       }))
 
-    // 🌸 Decoración intacta
+    
     let menuText = `> Ꮺׄ ㅤდㅤ   *ɪᴛsᴜᴋɪ* ㅤ 𖹭𑩙
 > ୨ㅤ   ֵ      *݊ɴᴀᴋᴀɴᴏV2* ㅤ ׄㅤ  ꨄ︎
 
@@ -43,17 +43,17 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       }
     }
 
-    // Créditos finales
+    
     menuText += `*‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ sʜɪʀᴏᴋᴏ ᴅᴇᴠs ✨*
 *‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑*`
 
-    // Reacción emoji
+    
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    // Imagen del menú
+    
     let menuUrl = 'https://files.catbox.moe/vcdr4w.jpg'
 
-    // 🌷 Botones con quickReply que envían los links automáticamente
+  
     let buttons = [
       { 
         buttonId: `canal_${Date.now()}`, 
@@ -70,7 +70,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     let buttonMessage = {
       image: { url: menuUrl },
       caption: menuText,
-      footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
+      footer: '> 𝐈𝐭𝐬𝐮𝐤𝐢 𝐍𝐚𝐤𝐚𝐧𝐨-𝐈𝐀 𝐯2 🌸',
       buttons: buttons,
       headerType: 4
     }
@@ -89,7 +89,7 @@ handler.help = ['menu', 'menunakano', 'help', 'menuitsuki']
 handler.tags = ['main']
 handler.command = ['menu', 'menunakano', 'help', 'menuitsuki']
 
-// 🌷 Handler para detectar los botones presionados
+
 handler.before = async function (m, { conn }) {
   if (!m.message) return
   
