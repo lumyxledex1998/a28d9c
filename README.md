@@ -147,8 +147,6 @@ Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
 </details>
 
 
-<summary><b>⚡️ Iniciar El Bot En Termux</b></summary>
-
 > Nota: Copie y pegue los comandos en termux uno por uno.
 
 ```bash
