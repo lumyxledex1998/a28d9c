@@ -3,8 +3,9 @@
 
 <!-- Banner -->
 <h1 align="center">
-  <img src="https://postimg.cc/4H6xH07s/fe52a85a" width="700" alt="Itsuki-Nakano IA BannerOfc"/>
+  <img src="https://files.catbox.moe/vcdr4w.jpg" width="700" alt="Itsuki-Nakano IA Banner Ofc"/>
 </h1>
+
 
 [![Version](https://img.shields.io/badge/Version-3.4.0-pink.svg)]()
 [![Baileys](https://img.shields.io/badge/Baileys-Multi--Device-blue.svg)]()
