@@ -11,7 +11,7 @@
     "node": ">=18.18"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.4.0",
+    "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",
     "awesome-phonenumber": "^5.5.1",
     "boxen": "^7.1.1",
     "chalk": "^5.3.0",
@@ -46,7 +46,7 @@
     "ruhend-scraper": "^7.0.4",
     "similarity": "^1.2.1",
     "lowdb": "^3.0.0",
-    "jimp": "^1.6.0",
+    "jimp": "^0.16.13",
     "jsdom": "^20.0.1",
     "human-readable": "^0.2.1",
     "hispamemes": "^1.0.7",
