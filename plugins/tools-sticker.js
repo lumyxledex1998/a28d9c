@@ -1,4 +1,4 @@
-import { Sticker, createSticker, StickerTypes } from 'wa-sticker-formatter'
+import { Sticker, StickerTypes } from 'sticker-creator'
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
   const ctxErr = (global.rcanalx || {})
@@ -36,39 +36,37 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       }
 
       try {
-        // Usar wa-sticker-formatter
+        // Usar sticker-creator
         const stickerOptions = {
           pack: 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ',
           author: '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑',
           type: StickerTypes.FULL,
           categories: ['🎨', '✨'],
           quality: 50,
-          background: 'transparent'
         }
 
         const sticker = new Sticker(img, stickerOptions)
-        stiker = await sticker.toBuffer()
+        stiker = await sticker.build()
 
       } catch (e) {
         console.error(e)
-        return conn.reply(m.chat, '❌ *Error al crear el sticker con wa-sticker-formatter*', m, ctxErr)
+        return conn.reply(m.chat, '❌ *Error al crear el sticker*', m, ctxErr)
       }
 
     } else if (args[0]) {
       if (isUrl(args[0])) {
         try {
-          // Para URLs usar wa-sticker-formatter
+          // Para URLs usar sticker-creator
           const stickerOptions = {
             pack: 'Itsuki Nakano',
             author: 'Tutora Virtual',
             type: StickerTypes.FULL,
             categories: ['🎨', '✨'],
             quality: 50,
-            background: 'transparent'
           }
 
           const sticker = new Sticker(args[0], stickerOptions)
-          stiker = await sticker.toBuffer()
+          stiker = await sticker.build()
 
         } catch (e) {
           console.error(e)
