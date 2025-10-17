@@ -44,8 +44,7 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     }
 
     
-    menuText += `*‐ ダ ძᥱsіg᥏ᥱძ ᑲᥡ sʜɪʀᴏᴋᴏ ᴅᴇᴠs ✨*
-*‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑*`
+    menuText += `*‐ ダ mᥲძᥱ ᑲᥡ ʟᴇᴏ xᴢᴢsʏ ᴏғᴄ 👑*`
 
     
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
