@@ -184,7 +184,7 @@ handler.before = async (m, { conn, isAdmin, isBotAdmin, participants }) => {
   await handler(m, { conn, args: [], usedPrefix: '!', command: 'antilink_detection', isAdmin, isBotAdmin, participants })
 }
 
-handler.help = ['antilink <activar/desactivar/estado>']
+handler.help = ['antilink on/off']
 handler.tags = ['group']
 handler.command = ['antilink', 'antienlace']
 handler.group = true
