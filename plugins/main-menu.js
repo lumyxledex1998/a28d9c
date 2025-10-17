@@ -1,4 +1,3 @@
-// * * * Creador del código: BrayanOFC
 // * * * Adaptación: Itsuki Nakano AI
 // * * * Base: Sunaookami Shiroko (S.D.D) Ltc.
 
