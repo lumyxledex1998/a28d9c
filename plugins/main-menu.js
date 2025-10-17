@@ -53,70 +53,32 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
     // Imagen del menú
     let menuUrl = 'https://files.catbox.moe/b10cv6.jpg'
 
-    // 🌷 Lista interactiva compatible con WhatsApp normal
-    const sections = [
-      {
-        title: '🌸 Enlaces Oficiales',
-        rows: [
-          {
-            title: '🧋 Canal Oficial',
-            description: 'Únete a nuestro canal de WhatsApp',
-            id: '.canal'
-          },
-          {
-            title: '🪷 Donar',
-            description: 'Apoya el desarrollo del bot',
-            id: '.donar'
-          },
-          {
-            title: 'ℹ️ Información',
-            description: 'Información sobre Itsuki Nakano AI',
-            id: '.info'
-          }
-        ]
-      },
-      {
-        title: '📱 Redes Sociales',
-        rows: [
-          {
-            title: '👥 Grupo Oficial',
-            description: 'Únete a la comunidad',
-            id: '.grupo'
-          },
-          {
-            title: '💬 Soporte',
-            description: 'Obtén ayuda del equipo',
-            id: '.soporte'
-          }
-        ]
-      }
+    // 🌷 Lista con formato alternativo
+    let rows = [
+      { title: '🧋 Canal Oficial', description: 'Únete a nuestro canal', rowId: '.canal' },
+      { title: '🪷 Donar', description: 'Apoya el desarrollo', rowId: '.donar' },
+      { title: 'ℹ️ Información', description: 'Info del bot', rowId: '.info' },
+      { title: '👥 Grupo', description: 'Únete a la comunidad', rowId: '.grupo' },
+      { title: '💬 Soporte', description: 'Obtén ayuda', rowId: '.soporte' }
     ]
 
-    const listMessage = {
-      text: menuText,
-      footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
-      title: '┊ ⟪ 📋 MENÚ PRINCIPAL ⟫',
-      buttonText: '🔽 Ver Opciones',
-      sections
-    }
-
-    await conn.sendMessage(m.chat, listMessage, { quoted: m })
+    await conn.sendList(
+      m.chat,
+      menuText,
+      '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸',
+      '🔽 Ver Opciones',
+      rows,
+      m
+    )
 
   } catch (e) {
     console.error(e)
-    
-    // Si la lista falla, enviar con imagen y texto simple
-    try {
-      await conn.sendMessage(m.chat, {
-        image: { url: 'https://files.catbox.moe/b10cv6.jpg' },
-        caption: menuText + `\n\n🌸 *ENLACES OFICIALES*\n\n🧋 Canal: .canal\n🪷 Donar: .donar\nℹ️ Info: .info`,
-        footer: '🌸 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 - 𝐀𝐈 🌸'
-      }, { quoted: m })
-    } catch (fallbackError) {
-      await conn.sendMessage(m.chat, { 
-        text: `❌ Error en el menú: ${e.message}\n\nUsa:\n• .canal - Ver canal oficial\n• .donar - Apoyar al bot\n• .info - Información` 
-      }, { quoted: m })
-    }
+    // Fallback con imagen
+    await conn.sendMessage(m.chat, {
+      image: { url: 'https://files.catbox.moe/b10cv6.jpg' },
+      caption: menuText + `\n\n🌸 *OPCIONES DISPONIBLES*\n\n🧋 .canal - Canal oficial\n🪷 .donar - Apoyar al bot\nℹ️ .info - Información\n👥 .grupo - Comunidad\n💬 .soporte - Ayuda`,
+      footer: '🌸 Escribe el comando para acceder'
+    }, { quoted: m })
   }
 }
 
