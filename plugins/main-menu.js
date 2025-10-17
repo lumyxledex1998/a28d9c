@@ -34,10 +34,10 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
       let comandos = help.filter(menu => menu.tags.some(tag => catTags.includes(tag)))
 
       if (comandos.length) {
-        menuText += `꒰⌢ ʚ˚₊‧  ✎  ꒱꒱ 🌱 ${catName} ıllı\n`
+        menuText += `꒰⌢ ʚ˚₊‧  ✎  ꒱꒱ ❐ ${catName} ❐\n`
         let uniqueCommands = [...new Set(comandos.flatMap(menu => menu.help))]
         uniqueCommands.forEach(cmd => {
-          menuText += `> ੭੭ ﹙ ✎ ﹚🌱 \`\`\`${_p}${cmd}\`\`\`\n`
+          menuText += `> ੭੭ ﹙ ᰔᩚ ﹚ ❏ \`\`\`${_p}${cmd}\`\`\`\n`
         })
         menuText += `> 。°。°。°。°。°。°。°。°。°。°。°\n\n`
       }
