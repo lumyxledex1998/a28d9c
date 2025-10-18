@@ -433,10 +433,7 @@ export async function handler(chatUpdate) {
       }
       if (!opts['restrict']) if (plugin.tags && plugin.tags.includes('admin')) { continue }
       const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-      
-      // 🎯 LÍNEA CORREGIDA - MÚLTIPLES PREFIJOS
-      let _prefix = plugin.customPrefix ? plugin.customPrefix : (this.prefix ? this.prefix : (global.prefix || ['.', '!', '/', '#', '%']))
-      
+      let _prefix = plugin.customPrefix ? plugin.customPrefix : this.prefix ? this.prefix : global.prefix
       let match = (_prefix instanceof RegExp ?
         [[_prefix.exec(m.text), _prefix]] :
         Array.isArray(_prefix) ?
@@ -445,17 +442,6 @@ export async function handler(chatUpdate) {
             [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]] :
             [[[], new RegExp]]
       ).find(p => p[1])
-
-      // 🎯 CORRECCIÓN DEFINITIVA PARA MÚLTIPLES PREFIJOS
-      if (!match && global.prefix && Array.isArray(global.prefix)) {
-        for (const p of global.prefix) {
-          if (typeof p === 'string' && m.text.startsWith(p)) {
-            const re = new RegExp(`^${p.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')}`)
-            match = [[re.exec(m.text), re]]
-            break
-          }
-        }
-      }
 
       // ===== SISTEMA DE MANTENIMIENTO ITSUNI - INICIO =====
       if (match && match[0]) {
