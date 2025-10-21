@@ -69,7 +69,8 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 let name = conn.getName(m.sender) || 'Usuario'
 let taguser = '@' + m.sender.split('@')[0]
     
-    const isOfficialBot = botJid === officialBotNumber
+    const isOfficialBot = botJid === officialBotNumber.incluides(botJid);
+
     const botType = isOfficialBot ? '🎀 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
     let menuText = `
