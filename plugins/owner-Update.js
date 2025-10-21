@@ -23,7 +23,7 @@ async function makeFkontak() {
 
 let handler = async (m, { conn, args }) => {
   try {
-    await conn.reply(m.chat, 'Actualizando bot 🍭', m, rcanalw)
+    await conn.reply(m.chat, 'Actualizando itsuki 🍓', m, rcanalw)
 
     const cmd = 'git --no-pager pull --rebase --autostash' + (args?.length ? ' ' + args.join(' ') : '')
     const output = execSync(cmd, { cwd: ROOT, encoding: 'utf8' })
