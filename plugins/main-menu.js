@@ -62,7 +62,9 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-        const officialBotNumber = '18292605400@s.whatsapp.net' // REEMPLAZA CON EL NÚMERO DEL BOT OFICIAL
+        const officialBotNumber = [ '18292605400@s.whatsapp.net', 
+  '521667510398@s.whatsapp.net'
+];
 
 let name = conn.getName(m.sender) || 'Usuario'
 let taguser = '@' + m.sender.split('@')[0]
