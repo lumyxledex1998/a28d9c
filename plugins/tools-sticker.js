@@ -37,9 +37,12 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
       try {
         // Usar sticker-creator (más moderno)
+        const userId = m.sender
+        const packstickers = global.db.data.users[userId] || {}
+
         const stickerOptions = {
-          pack: 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ',
-          author: '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑',
+          pack: packstickers.text1 || 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ',
+          author: packstickers.text2 || '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑',
           type: StickerTypes.FULL,
           categories: ['🎨', '✨'],
           quality: 50,
@@ -68,9 +71,12 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       if (isUrl(args[0])) {
         try {
           // Para URLs usar sticker-creator
+          const userId = m.sender
+          const packstickers = global.db.data.users[userId] || {}
+
           const stickerOptions = {
-            pack: 'Itsuki Nakano',
-            author: 'Tutora Virtual',
+            pack: packstickers.text1 || 'Itsuki Nakano',
+            author: packstickers.text2 || 'Tutora Virtual',
             type: StickerTypes.FULL,
             categories: ['🎨', '✨'],
             quality: 50,
@@ -94,10 +100,13 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         sticker: stiker
       }, { quoted: m })
 
-      await conn.reply(m.chat, 
+      const userId = m.sender
+      const packstickers = global.db.data.users[userId] || {}
+
+      await conn.reply(m.chat,
         `🍙✅ *¡Sticker creado con éxito!* 🎨✨\n\n` +
-        `🏷️ *Pack:* ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ\n` +
-        `✍️ *Autor:* 𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑\n\n` +
+        `🏷️ *Pack:* ${packstickers.text1 || 'ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ'}\n` +
+        `✍️ *Autor:* ${packstickers.text2 || '𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑'}\n\n` +
         `📖 *"¡Tu sticker está listo para usar!"* 🍱🎉`,
         m, ctxOk
       )
@@ -107,7 +116,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 
   } catch (error) {
     console.error('Error en sticker:', error)
-    await conn.reply(m.chat, 
+    await conn.reply(m.chat,
       `❌ *Error al crear el sticker*\n\n` +
       `🍙 *"¡Lo siento! No pude crear tu sticker."*\n\n` +
       `🔧 *Error:* ${error.message}\n\n` +
