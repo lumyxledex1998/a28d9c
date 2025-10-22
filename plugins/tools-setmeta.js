@@ -1,3 +1,5 @@
+// Codigo de yuki suou adaptado para itsuki-ia
+
 let handler = async (m, { text, usedPrefix, command }) => {
 const userId = m.sender
 if (command === 'setmeta') {
