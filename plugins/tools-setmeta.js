@@ -35,6 +35,5 @@ return m.reply('🍓 *Se restablecio el pack y autor por defecto para tus sticke
 handler.help = ['setmeta', 'delmeta']
 handler.tags = ['tools']
 handler.command = ['setmeta', 'delmeta']
-handler.group = true
 
 export default handler
