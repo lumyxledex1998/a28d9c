@@ -42,7 +42,7 @@ let handler = async (m, { conn, usedPrefix, command, isOwner, isROwner }) => {
   if (!(isOwner || isROwner)) return
 
   const fq = (await makeFkontak()) || m
-  try { await conn.reply(m.chat, '🎀 Un momento', fq, (typeof rcanalw === 'object' ? rcanalw : {})) } catch {}
+  try { await conn.reply(m.chat, '🎀 *Un momento*...', fq, (typeof rcanalw === 'object' ? rcanalw : {})) } catch {}
 
   let logs = []
   let changedFiles = []
