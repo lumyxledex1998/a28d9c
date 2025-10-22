@@ -7,6 +7,7 @@ const ctxWarn = (global.rcanalw || {})
 const ctxOk = (global.rcanalr || {})
 if (command === 'setmeta') {
 const packParts = text.split(/[\u2022|]/).map(part => part.trim())
+
 if (packParts.length < 2) {
 return m.reply('🌟 *Envia un texto para que itsuki asigne el pack y el autor*.\n> Ejemplo: *${usedPrefix + command} Istuki • Leo*', ctxErr) 
 }
