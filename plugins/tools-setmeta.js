@@ -24,7 +24,7 @@ return conn.reply(m.chat, `🍓 *Se actualizo el pack y autor por defecto para t
 }
 if (command === 'delmeta') {
 if (!global.db.data.users[userId] || (!global.db.data.users[userId].text1 && !global.db.data.users[userId].text2)) {
-return conn.reply(m.chat `🌟 *No tienes establecido un pack de stickers`, m,  ctxErr)
+return conn.reply(m.chat, `🌟 *No tienes establecido un pack de stickers`, m,  ctxErr)
 }
 const packstickers = global.db.data.users[userId]
 delete packstickers.text1
