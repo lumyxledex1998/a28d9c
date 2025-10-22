@@ -9,7 +9,7 @@ if (command === 'setmeta') {
 const packParts = text.split(/[\u2022|]/).map(part => part.trim())
 
 if (packParts.length < 2) {
-return conn.reply(m.chat, `🌟 *Envia un texto para que itsuki asigne el pack y el autor.*\n> Ejemplo ➩ *${usedPrefix + command} Istuki • Leo*`, m, ctxErr) 
+return conn.reply(m.chat, `🌟 *Envia un texto para que itsuki asigne el pack y el autor.*\n> Ejemplo ➩ *${usedPrefix + command} ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ sᴛᴋ • 𝙇𝙚𝙤 𝙓𝙯𝙯𝙨𝙮 👑*`, m, ctxErr) 
 }
 const packText1 = packParts[0]
 const packText2 = packParts[1]
