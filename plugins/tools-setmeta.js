@@ -1,6 +1,6 @@
 // Codigo de yuki suou adaptado para itsuki-ia
 
-let handler = async (m, { text, usedPrefix, command }) => {
+let handler = async (m, { conn, text, usedPrefix, command }) => {
 const userId = m.sender
 const ctxErr = (global.rcanalx || {})
 const ctxWarn = (global.rcanalw || {})
