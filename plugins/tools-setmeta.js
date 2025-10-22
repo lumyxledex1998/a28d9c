@@ -2,6 +2,9 @@
 
 let handler = async (m, { text, usedPrefix, command }) => {
 const userId = m.sender
+const ctxErr = (global.rcanalx || {})
+const ctxWarn = (global.rcanalw || {})
+const ctxOk = (global.rcanalr || {})
 if (command === 'setmeta') {
 const packParts = text.split(/[\u2022|]/).map(part => part.trim())
 if (packParts.length < 2) {
