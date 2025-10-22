@@ -91,7 +91,7 @@ let taguser = '@' + m.sender.split('@')[0]
       menuText += `
 ╭━━━〔 ${tags[tag]} 〕━━━⬣
 ${comandos.map(menu => menu.help.map(cmd =>
-  `┃ 🌷 ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? ' 🙈' : ''}`
+  `┃ 🌷 ${_p}${cmd}${menu.limit ? ' 💋' : ''}${menu.premium ? '' : ''}`
 ).join('\n')).join('\n')}
 ╰━━━━━━━━━━━━━━━━━━━━━━⬣
 `
