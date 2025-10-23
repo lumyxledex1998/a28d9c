@@ -133,6 +133,7 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
 > ꒰⌢ ʚ˚₊‧ 👋🏻 ꒱꒱ :: *HOLA, SOY DANI*
 > ੭੭ ﹙ 🌸 ﹚:: Creador de Itsuki Nakano IA
 > Tengo 17 años y amo la programación. Soy el creador de Itsuki Nakano IA, el proyecto que cambió mi vida. Me apasiona la tecnología y cada día aprendo algo nuevo. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
+
 > ‐ ダ *ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ ᴀɪ - ᴄʀᴇᴀᴅᴏ ᴄᴏɴ 💖* ギ
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif)
