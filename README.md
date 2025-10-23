@@ -130,24 +130,9 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/Line-Neon.jpg)
 
-> ꒰⌢ ʚ˚₊‧ 💫 ꒱꒱ :: *HOLA, SOY DANI* ıllı
-> ੭੭ ﹙ 🌸 ﹚:: *Creador de Itsuki Nakano IA*
-> Tengo 17 años y soy el desarrollador principal detrás de ITSUKI NAKANO IA, un bot premium de WhatsApp con personalidad única y diseño kawaii.
-> ੭੭ ﹙ 💻 ﹚:: *Sobre mí*
-> Soy una persona apasionada por la tecnología, la programación y la creación de proyectos innovadores. Me encanta aprender cosas nuevas cada día, explorar las últimas tendencias en desarrollo y mejorar constantemente mis habilidades.
-> ੭੭ ﹙ 🚀 ﹚:: *Mi misión*
-> Crear herramientas útiles, compartir conocimientos con la comunidad y seguir creciendo como desarrollador. Siempre busco nuevos retos para seguir evolucionando y aportar algo positivo con cada proyecto que creo.
-> ੭੭ ﹙ 🌸 ﹚:: *Sobre Itsuki Nakano IA*
-> Este bot es el resultado de mi dedicación y pasión por combinar tecnología avanzada con un diseño elegante y único. Cada función está pensada para ofrecer la mejor experiencia posible a los usuarios.
-> ੭੭ ﹙ 💎 ﹚:: *Mi filosofía*
-> • Aprender algo nuevo cada día
-> • Compartir conocimientos con la comunidad
-> • Crear proyectos que marquen la diferencia
-> • Nunca dejar de innovar
-> • Combinar tecnología con creatividad
-> ੭੭ ﹙ 🎯 ﹚:: *Visión a futuro*
-> Seguir desarrollando proyectos innovadores, construir una comunidad activa de desarrolladores y usuarios, y llevar la tecnología a un nivel donde todos puedan disfrutarla sin complicaciones.
-> ‐ ダ *ɢʀᴀᴄɪᴀs ᴘᴏʀ sᴇʀ ᴘᴀʀᴛᴇ ᴅᴇ ᴇsᴛᴇ ᴘʀᴏʏᴇᴄᴛᴏ* ギ
+> ꒰⌢ ʚ˚₊‧ 👋🏻 ꒱꒱ :: *HOLA, SOY DANI*
+> ੭੭ ﹙ 🌸 ﹚:: Creador de Itsuki Nakano IA
+> Tengo 17 años y amo la programación. Soy el creador de Itsuki Nakano IA, el proyecto que cambió mi vida. Me apasiona la tecnología y cada día aprendo algo nuevo. Siempre busco nuevos retos para seguir creciendo y aportar algo positivo con lo que hago. 🚀
 > ‐ ダ *ɪᴛsᴜᴋɪ ɴᴀᴋᴀɴᴏ ᴀɪ - ᴄʀᴇᴀᴅᴏ ᴄᴏɴ 💖* ギ
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif)
