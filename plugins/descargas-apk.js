@@ -165,6 +165,5 @@ handler.help = ['apk']
 handler.tags = ['premium']
 handler.command = ['apk', 'apkdl', 'descargarapk']
 handler.register = true
-handler.premium = true
 
 export default handler
