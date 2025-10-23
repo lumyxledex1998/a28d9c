@@ -122,10 +122,10 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
   <img src="https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/line-neon.gif" width="400"/>
 </p>
 
-### **`𝐂𝐫𝐞𝐚𝐝𝐨𝐫 𝐃𝐞 𝐈𝐭𝐬𝐮𝐤𝐢 ☁️`**
+### **`𝐀𝐮𝐭𝐨𝐫 𝐘 𝐂𝐫𝐞𝐚𝐝𝐨𝐫 𝐃𝐞𝐥 𝐏𝐫𝐨𝐲𝐞𝐜𝐭𝐨 ☁️✨`**
 <div style="display: flex; gap: 10px;">
   <a href="https://github.com/xzzys26" style="text-decoration: none;">
-    <img src="https://github.com/BrayanOFC-Li.png" width="130" height="130" alt="BrayanOFC" style="border-radius: 50%;" />
+    <img src="https://github.com/xzzys26.png" width="130" height="130" alt="BrayanOFC" style="border-radius: 50%;" />
   </a>
 
 ![line](https://github.com/BrayanOFC-Li/Lines-Neon-MB/raw/main/assets_MB/Line-Neon.jpg)
