@@ -7,7 +7,7 @@
 </h1>
 
 
-[![Version](https://img.shields.io/badge/Version-3.4.0-pink.svg)]()
+[![Version](https://img.shields.io/badge/Version-4.1.3-pink.svg)]()
 [![Baileys](https://img.shields.io/badge/Baileys-Multi--Device-blue.svg)]()
 [![Plugins](https://img.shields.io/badge/Plugins-1000+-success.svg)]()
 [![Speed](https://img.shields.io/badge/Speed-⚡Ultra--Fast-yellow.svg)]()
