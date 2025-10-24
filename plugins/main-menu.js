@@ -20,7 +20,7 @@ let tags = {
   'rpgnk': '⚔️ 𝗥𝗣𝗚-𝗡𝗞',
   'group': '📚 𝗚𝗥𝗨𝗣𝗢𝗦',
   'downloader': '📥 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗦',
-  'sticker': '🍧 𝗦𝗧𝗜𝗖𝗞𝗘𝗥',
+  'sticker': '🍧 𝗦𝗧𝗜𝗖𝗞𝗘𝗅',
   'audio': '🫧 𝗔𝗨𝗗𝗜𝗢',
   'search': '🔎 𝗕𝗨𝗦𝗤𝗨𝗘𝗗𝗔',
   'tools': '🧰 𝗛𝗘𝗥𝗔𝗠𝗜𝗘𝗡𝗧𝗔𝗦',
@@ -62,12 +62,12 @@ let handler = async (m, { conn, usedPrefix: _p }) => {
 
     // Detectar automáticamente si es bot oficial o sub-bot
     const botJid = conn.user.jid
-    const officialBotNumber = '18292605400@s.whatsapp.net'
+        const officialBotNumber = '18292605400@s.whatsapp.net'
 
-    let name = conn.getName(m.sender) || 'Usuario'
-    let taguser = '@' + m.sender.split('@')[0]
+let name = conn.getName(m.sender) || 'Usuario'
+let taguser = '@' + m.sender.split('@')[0]
 
-    const isOfficialBot = botJid === officialBotNumber
+    const isOfficialBot = botJid === officialBotNumber.includes(botJid.trim());
 
     const botType = isOfficialBot ? '🎀 𝗕𝗼𝘁 𝗢𝗳𝗶𝗰𝗶𝗮𝗹: 𝗜𝘁𝘀𝘂𝗸𝗶 𝗡𝗮𝗸𝗮𝗻𝗼 𝗢𝗳𝗶𝗰𝗶𝗮𝗹 🌟' : '🌱 𝗦𝘂𝗯-𝗕𝗼𝘁: 𝗡𝗼 𝗕𝗼𝘁 𝗢𝗳𝗰𝗶𝗮𝗹 🌟'
 
@@ -99,26 +99,23 @@ ${comandos.map(menu => menu.help.map(cmd =>
 
     await conn.sendMessage(m.chat, { react: { text: '🌸', key: m.key } })
 
-    // Enviar imagen en lugar de video
     await conn.sendMessage(
-      m.chat,
-      {
-        image: { url: 'https://files.catbox.moe/15voeu.jpg' },
-        caption: menuText,
-        contextInfo: {
-          mentionedJid: [userId],
-          externalAdReply: {
-            title: `🌸 ${botname}`,
-            body: `Hola ${name}! ✨`,
-            thumbnailUrl: 'https://files.catbox.moe/15voeu.jpg',
-            sourceUrl: web,
-            mediaType: 1,
-            renderLargerThumbnail: true
-          }
-        }
-      },
-      { quoted: m }
-    )
+  m.chat,
+  {
+    image: { url: 'https://files.catbox.moe/15voeu.jpg' },
+    caption: menuText,
+    contextInfo: {
+      mentionedJid: [userId],
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: idchannel, 
+        serverMessageId: 100, 
+        newsletterName: namechannel 
+      }
+    }
+  },
+  { quoted: m }
+)
 
   } catch (e) {
     await conn.sendMessage(m.chat, { text: `❌ Error en el menú:\n${e}` }, { quoted: m })
