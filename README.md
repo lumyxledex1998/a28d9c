@@ -161,10 +161,8 @@ Itsuki Nakano IA es un bot de WhatsApp inspirado en **Itsuki Nakano**, la quinti
 <details>
 <summary><b>Enlaces Oficiales</b></summary>
 
-➪ Canal Oficial  [`¡Unete Aqui!`](https://whatsapp.com/channel/0029VbBBn9R4NViep4KwCT3Z)
-➪ Grupo Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/EuWgpSFHceLJjT8ayxZ6KE?mode=ems_copy_t)
-➪ Coloboracion Oficial [`¡Unete
-Aqui!`](https://chat.whatsapp.com/JO0a1bD09ZwBypIzwON3tE?mode=ems_copy_t)
+➪ Canal Oficial  [`¡Unete Aqui!`](https://whatsapp.com/channel/0029VbBvZH5LNSa4ovSSbQ2N)
+➪ Comunidad Oficial [`¡Unete Aqui!`](https://chat.whatsapp.com/BXxWuamOOE4K9eKC623FIO)
 </details>
 
 
