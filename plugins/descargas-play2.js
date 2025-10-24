@@ -53,10 +53,15 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }    
 
   try {    
+    // Reacción de búsqueda
+    await conn.sendMessage(m.chat, { react: { text: "🔍", key: m.key } })
     await conn.reply(m.chat, '*🔎🎬 Itsuki está buscando tu video*', m, ctxOk)    
 
     const searchResults = await yts(text)    
-    if (!searchResults.videos.length) throw new Error('No se encontraron resultados')    
+    if (!searchResults.videos.length) {
+      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
+      throw new Error('No se encontraron resultados')    
+    }
 
     const video = searchResults.videos[0]    
     const { url, title, fuente } = await ytdl(video.url)    
@@ -73,6 +78,9 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 > 🍱 Gracias por elegirme para tus descargas     
 `.trim()    
 
+    // Reacción de éxito antes de enviar el video
+    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+
     const buffer = await fetch(url).then(res => res.buffer())    
 
     await conn.sendMessage(    
@@ -88,6 +96,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
   } catch (e) {    
     console.error('❌ Error en play2:', e)    
+    await conn.sendMessage(m.chat, { react: { text: "😢", key: m.key } })
     await conn.reply(m.chat, `❌ Error: ${e.message}`, m, ctxErr)    
   }    
 }    
