@@ -75,7 +75,6 @@ let taguser = '@' + m.sender.split('@')[0]
 ╭━━━〔 🌸 *ITSUKI NAKANO-AI MENU* 🌸 〕━━━⬣
 ┃ 👋🏻 *Hola* @${userId.split('@')[0]} ✨
 ┃ 👑 *Creador*: *${creador}*
-┃ ${botType}
 ┃ ⏳️ *Uptime*: *${uptime}*
 ┃ 💎 *Premium*: *${totalPremium}*
 ┃ 🪷 *Versión*: *${version}*
