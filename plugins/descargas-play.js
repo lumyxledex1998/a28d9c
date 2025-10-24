@@ -25,10 +25,15 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
+    // Reacción de búsqueda
+    await conn.sendMessage(m.chat, { react: { text: "🔍", key: m.key } })
     await conn.reply(m.chat, '*🔎 Itsuki Esta Buscando Tu Audio*', m, ctxOk)
 
     const search = await yts(text)
-    if (!search.videos.length) throw new Error('No encontré resultados para tu búsqueda.')
+    if (!search.videos.length) {
+      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
+      throw new Error('No encontré resultados para tu búsqueda.')
+    }
 
     const video = search.videos[0]
     const { title, url, thumbnail } = video
@@ -73,6 +78,9 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       return conn.reply(m.chat, '*🧋 No se pudo enviar el audio desde ninguna API.*', m, ctxErr)
     }
 
+    // Reacción de éxito antes de enviar el audio
+    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+
     await conn.sendMessage(
       m.chat,
       {
@@ -87,6 +95,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
 
   } catch (e) {
     console.error('❌ Error en play:', e)
+    await conn.sendMessage(m.chat, { react: { text: "😢", key: m.key } })
     await conn.reply(m.chat, `❌ Error: ${e.message}`, m, ctxErr)
   }
 }
