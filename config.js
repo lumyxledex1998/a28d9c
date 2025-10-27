@@ -13,7 +13,7 @@ global.__dirname = (url) => dirname(fileURLToPath(url));
 // Configuraciones principales
 global.owner = [
    ['595972314588', '۪〬.࠭⤿ 👑 . 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
-   ['16503058299', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
+   ['51925390463', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
    ['5216641784469', 'BrayanOFC', true],
 // son pndjos todos menos David y Leo por poco también son
    ['15614809253', 'AyeitsRyze', true],
