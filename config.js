@@ -12,7 +12,7 @@ global.__dirname = (url) => dirname(fileURLToPath(url));
 
 // Configuraciones principales
 global.owner = [
-   ['595972314588', '۪〬.࠭⤿ 👑 ! 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
+   ['595972314588', '۪〬.࠭⤿ 👑 . 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
    ['16503058299', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
    ['5216641784469', 'BrayanOFC', true],
 // son pndjos todos menos David y Leo por poco también son
@@ -100,7 +100,7 @@ global.SIPUTZX_AI = {
 
 global.chatDefaults = {
   isBanned: false,
-  sAutoresponder: 'true',
+  sAutoresponder: '',
   welcome: true,
   autolevelup: false,
   autoAceptar: false,
