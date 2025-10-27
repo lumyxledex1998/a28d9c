@@ -100,7 +100,7 @@ global.SIPUTZX_AI = {
 
 global.chatDefaults = {
   isBanned: false,
-  sAutoresponder: '',
+  sAutoresponder: 'true',
   welcome: true,
   autolevelup: false,
   autoAceptar: false,
